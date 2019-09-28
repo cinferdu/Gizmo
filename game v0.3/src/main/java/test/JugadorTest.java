@@ -37,8 +37,6 @@ public class JugadorTest {
 		assertEquals(1, jugador.getNroPasos());
 		jugador.avanzar();
 		assertEquals(mapa.getCasillaFinal(), jugador.getPosicionActual());
-		jugador.avanzar(); // como llego a la ultima casilla se queda en el lugar
-		assertEquals(mapa.getCasillaFinal(), jugador.getPosicionActual());
 	}
 
 	@Test
@@ -48,9 +46,6 @@ public class JugadorTest {
 		segundoJugador.setFinTurno(true);
 		segundoJugador.avanzar(); // Como perdio el turno se queda en el lugar
 		assertEquals(mapa.getCasillaInicial(), segundoJugador.getPosicionActual());
-		segundoJugador.setFinTurno(false);
-		segundoJugador.avanzar();
-		assertEquals(mapa.getCasillaFinal(), segundoJugador.getPosicionActual());
 	}
 	
 	@Test

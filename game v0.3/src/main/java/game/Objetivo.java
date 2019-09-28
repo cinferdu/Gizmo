@@ -25,7 +25,7 @@ public class Objetivo {
 			this.setDescripcion("LLegar a la casilla final");
 		}
 
-		
+		this.tipo = tipo;
 	}
 
 	public String getDescripcion() {
