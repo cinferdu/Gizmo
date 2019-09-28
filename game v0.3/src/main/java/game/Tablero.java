@@ -15,7 +15,7 @@ public class Tablero {
 
 		this.filas = filas;
 		this.columnas = columnas;
-
+		casilleros = new ArrayList<Casillero>();
 	}
 	
 	public void crearTablero(int filas,int columnas) {
