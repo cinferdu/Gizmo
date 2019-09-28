@@ -130,4 +130,65 @@ public class Casillero {
 	public void setPoder(Poder poder) {
 		this.poder = poder;
 	}
+
+
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		result = prime * result + ((casilleroAbajo == null) ? 0 : casilleroAbajo.hashCode());
+		result = prime * result + ((casilleroArriba == null) ? 0 : casilleroArriba.hashCode());
+		result = prime * result + ((casilleroDer == null) ? 0 : casilleroDer.hashCode());
+		result = prime * result + ((casilleroIzq == null) ? 0 : casilleroIzq.hashCode());
+		result = prime * result + ((objeto == null) ? 0 : objeto.hashCode());
+		result = prime * result + ((poder == null) ? 0 : poder.hashCode());
+		result = prime * result + tipo;
+		return result;
+	}
+
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		Casillero other = (Casillero) obj;
+		if (casilleroAbajo == null) {
+			if (other.casilleroAbajo != null)
+				return false;
+		} else if (!casilleroAbajo.equals(other.casilleroAbajo))
+			return false;
+		if (casilleroArriba == null) {
+			if (other.casilleroArriba != null)
+				return false;
+		} else if (!casilleroArriba.equals(other.casilleroArriba))
+			return false;
+		if (casilleroDer == null) {
+			if (other.casilleroDer != null)
+				return false;
+		} else if (!casilleroDer.equals(other.casilleroDer))
+			return false;
+		if (casilleroIzq == null) {
+			if (other.casilleroIzq != null)
+				return false;
+		} else if (!casilleroIzq.equals(other.casilleroIzq))
+			return false;
+		if (objeto == null) {
+			if (other.objeto != null)
+				return false;
+		} else if (!objeto.equals(other.objeto))
+			return false;
+		if (poder == null) {
+			if (other.poder != null)
+				return false;
+		} else if (!poder.equals(other.poder))
+			return false;
+		if (tipo != other.tipo)
+			return false;
+		return true;
+	}
+	
 }
