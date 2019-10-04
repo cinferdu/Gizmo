@@ -1,4 +1,4 @@
-package game;
+package game2;
 
 public class MiniJuego {
 	private String nombre;
