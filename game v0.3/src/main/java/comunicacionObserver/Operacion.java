@@ -1,0 +1,10 @@
+package comunicacionObserver;
+
+public enum Operacion {
+	ACTUALIZAR_TABLERO, 
+	SELECCIONAR_ACCION, 
+	LANZAMIENTO_DADO,
+	MOVIMIENTO,
+	CASILLA_ACTIVADA,
+	PUNTAJES_FINALES
+}

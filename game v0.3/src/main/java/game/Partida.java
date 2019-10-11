@@ -1,4 +1,4 @@
-package game2;
+package game;
 
 import java.util.Iterator;
 import java.util.List;
@@ -9,35 +9,38 @@ public class Partida {
 	private List<Jugador> jugadores;
 	private int objetivo;
 	private boolean hayGanador;
-	private Tablero tablero;
+	public Tablero tablero;
 	private Jugador jugadorGanador;
 	private int rondaActual;
 
 	public Partida(List<Jugador> participantes, int objetivo) {
 
-		
 		jugadores = participantes;
 		rondaActual = 0;
 		this.objetivo = objetivo;
 		hayGanador = false;
 		jugadorGanador = null;
-		// tablero = new Tablero(file);
+		tablero = new Tablero("dataCasilla.txt");
 
 	}
 
-	public void iniciarPartida(int nroJugadores) {
-
+	public void iniciarPartida() {
+		
 		if (jugadores.size() < 2)
 			return;
-
+		
+		posicionarJugadoresEnElInicio();
+		
 		Jugador jugadorActual;
 		Iterator<Jugador> iteradorJugador;
+		
 		
 		while (!hayGanador) {
 			
 			// Incremento la ronda
 			rondaActual++;
 			iteradorJugador = jugadores.iterator();
+			
 			
 			while (iteradorJugador.hasNext() && this.hayGanador == false) {
 				jugadorActual = iteradorJugador.next();
@@ -46,12 +49,18 @@ public class Partida {
 
 					// Lanza el dado
 					jugadorActual.setNroPasos(tirarDado());
-
+					
+					
 					// El jugador avanza los pasos
 					avanzar(jugadorActual);
-
+					
+					jugadorActual.activarCasilla();
+					
+					
 					// El jugador elije su proxima accion
 					jugadorActual.accion();
+					
+					
 					// Verifico si el jugador cumplio con el objetivo
 					if (verificarObjetivo(jugadorActual))
 						setJugadorGanador(jugadorActual);// El jugador gano la partida
@@ -59,61 +68,42 @@ public class Partida {
 					// Activo el turno del jugador
 					jugadorActual.setPierdeTurno(false);
 				}
-
+				
+				
 				// Fin del turno del jugador.
-
 				// Turno del siguiente jugador.
 			}
+			
+			// MINIJUEGO
 		}
 		
-		//mostrar ganador o resultados 
+		
+		System.out.println("Ganador: " +this.jugadorGanador.getNombre()+" \nMonedas: "+this.jugadorGanador.getMonedas());
+		
+		// TODO mostrar ganador o resultados 
 	}
-/*
-	public void iniciarRonda() {
-		// Incremento la ronda
-		this.setRondaActual(this.getRondaActual() + 1);
-		int i = 0;
-		int valorDado;
 
-		while (i < jugadores.size() && this.hayGanador == false) {
 
-			// Activo el turno del jugador
-			jugadores.get(i).setPierdeTurno(false);
-
-			// Lanza el dado
-			// jugadores.get(i).tirarDado(new DadoTrucado());
-			valorDado = tirarDado();
-
-			// El jugador avanza los pasos
-			avanzar(jugadores.get(i));
-
-			// El jugador elije su proxima accion
-			jugadores.get(i).accion();
-			// Verifico si el jugador cumplio con el objetivo
-			if (verificarObjetivo(jugadores.get(i)))
-				setJugadorGanador(jugadores.get(i));// El jugador gano la partida
-
-			// Fin del turno del jugador.
-
-			// Turno del siguiente jugador.
-			i++;
-		}
-
+	private void posicionarJugadoresEnElInicio() {
+		for (Jugador jugador : jugadores) 
+			jugador.setPosicionActual(this.tablero.getCasillaInicial());
+		
 	}
-*/
+
 	public int tirarDado() {
 		return (int) (Math.random() * 6 + 1);
 	}
 
 	private void avanzar(Jugador jugador) {
-		// TODO Auto-generated method stub
 		Casilla sigcamino = null;
+
 		while (jugador.getNroPasos() > 0) {
+			
 			if ((sigcamino = jugador.getPosicionActual().caminoUnico()) != null)
 				jugador.setPosicionActual(sigcamino);
- 			else
+ 			else {
 				jugador.setPosicionActual(jugador.elegirCamino());
-
+ 			}
 			jugador.decrementarPasos();
 		}
 	}
@@ -124,7 +114,7 @@ public class Partida {
 	}
 
 	public boolean verificarObjetivo(Jugador jugador) {
-		if (jugador.getPuntos() >= this.objetivo) {
+		if (jugador.getMonedas() >= this.objetivo) {
 			this.hayGanador = true;
 			this.jugadorGanador = jugador;
 		}

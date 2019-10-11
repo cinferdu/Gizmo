@@ -1,7 +1,7 @@
 package casillas;
 
-import game2.Jugador;
+import game.Jugador;
 
-public interface TipoDeCasilla {
-	public void activarCasilla(Jugador objetivo);
+public abstract class TipoDeCasilla {
+	public abstract void activarCasilla(Jugador objetivo);
 }

@@ -1,7 +1,6 @@
-package game2;
+package game;
 
 import java.util.ArrayList;
-import java.util.List;
 
 import casillas.Casilla;
 
@@ -9,28 +8,19 @@ public class Tablero {
 	private int filas;
 	private int columnas;
 	private Casilla casillaInicial = null;
-	private Casilla casillaFinal = null;
 	private ArrayList<Casilla> casilleros = null;
-	private String archivo;
-
 	
-	public Tablero(int filas, int columnas, String file) {
-
+	public Tablero(int filas, int columnas) {
 		this.filas = filas;
 		this.columnas = columnas;
-		archivo = file;
 		casilleros = new ArrayList<Casilla>();
 	}
 	
-	public void crearTablero(int filas,int columnas) {
-		
-		setFilas(filas);
-		setColumnas(columnas);
-		//TODO
-		//casilleros = Lectura.cargarTablero(file);
-		
+	public Tablero(String file) {
+		Lectura.cargarTablero(file, this);
+		casillaInicial = casilleros.get(0);
 	}
-
+	
 	public int getFilas() {
 		return filas;
 	}
@@ -55,11 +45,11 @@ public class Tablero {
 		this.casillaInicial = casillaInicial;
 	}
 
-	public Casilla getCasillaFinal() {
-		return casillaFinal;
+	public ArrayList<Casilla> getCasilleros() {
+		return casilleros;
 	}
 
-	public void setCasillaFinal(Casilla casillaFinal) {
-		this.casillaFinal = casillaFinal;
+	public void setCasilleros(ArrayList<Casilla> casilleros) {
+		this.casilleros = casilleros;
 	}
 }

@@ -3,7 +3,7 @@ package casillas;
 import java.util.ArrayList;
 import java.util.List;
 
-import game2.Jugador;
+import game.Jugador;
 import objetos.Objeto;
 
 public class Casilla {
@@ -16,8 +16,10 @@ public class Casilla {
 	public Casilla(int posX, int posY, TipoDeCasilla tipo) {
 		this.posX = posX;
 		this.posY = posY;
+		
 		// Define el tipo de casillero
 		this.tipo = tipo;
+		
 		// Enlaza los casilleros
 		siguientesCasillas = new ArrayList<Casilla>();
 	}
@@ -29,9 +31,9 @@ public class Casilla {
 	}
 
 	public Casilla caminoUnico() {
-		// Retorna la casilla disponible
+		// Retorna la casilla siguiente
 		if (siguientesCasillas.size() == 1) {
-			siguientesCasillas.get(0);
+			return siguientesCasillas.get(0);
 		}
 		return null;
 	}
@@ -85,6 +87,10 @@ public class Casilla {
 
 	public void setPoder(Objeto poder) {
 		this.poder = poder;
+	}
+	
+	public void addSiguiente(Casilla sig) {
+		this.siguientesCasillas.add(sig);
 	}
 
 }

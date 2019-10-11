@@ -1,4 +1,4 @@
-package game2;
+package game;
 
 import java.util.ArrayList;
 
@@ -17,11 +17,10 @@ public class Jugador {
 	private Objeto poder;
 
 	// Constructor de jugador;
-	
-	public Jugador(String nombre, Casilla casillaInicial) {
+	public Jugador(String nombre) {
 		this.nombre = nombre;
 		this.pierdeTurno = false;
-		this.posicionActual = casillaInicial;
+		this.posicionActual = null;
 		
 		
 		this.rondaActual = 0;
@@ -29,14 +28,8 @@ public class Jugador {
 		this.puntos = 0;
 		
 	}
-/*
-	public int tirarDado(DadoTrucado dado) {
-		
-		this.setNroPasos(dado.generar());
-		
-		return dado.generar();
-	}*/
 	
+	// TODO modificar
 	public Casilla elegirCamino(Casilla casilleroActual) {
 		// Elije el casillero
 		int opcion = 0;
@@ -48,6 +41,15 @@ public class Jugador {
 		//Leer opcion
 		// Segun la eleccion
 		return casilleroActual.getSiguientesCasillas().get(opcion);
+	}
+	
+	public Casilla elegirCamino() {
+		ArrayList<Casilla> caminosPosibles = (ArrayList<Casilla>) this.posicionActual.getSiguientesCasillas();
+		int opcion = 0;
+		// Elije el casillero
+			// TODO Agregar metodo de eleccion de camino
+		
+		return caminosPosibles.get(opcion);
 	}
 	
 	public void usarObjeto() {
@@ -65,14 +67,12 @@ public class Jugador {
 	}
 	
 	public boolean accion() {	
+		// TODO
 		int opcion = 0;
 		switch (opcion) {
-
-		// La primera opcion es usar el objeto
 		case 1:
 			this.usarObjeto();
 			break;
-			// El jugador elije usar el poder
 		case 2:
 			this.usarPoder();
 			break;
@@ -87,21 +87,6 @@ public class Jugador {
 		return true;
 	}
 
-
-	/*
-	public void activarCasilla() {
-		
-		switch (this.getPosicionActual().getTipo()) {
-		case 1:
-			//setObjeto(getPosicionActual().getObjeto());
-			break;
-		case 2:
-			setPoder(getPosicionActual().getPoder());
-			break;
-		default:
-			break;
-		} 
-	}*/
 	
 	public String getNombre() {
 		return nombre;
@@ -179,31 +164,8 @@ public class Jugador {
 		this.pierdeTurno = pierdeTurno;
 	}
 
-	public Casilla elegirCamino() {
-		//TODO
-		ArrayList<Casilla> caminosPosibles = (ArrayList<Casilla>) this.posicionActual.getSiguientesCasillas();
-		int opcion = 0;
-		// Elije el casillero
-			// Agregue metodo de eleccion de camino
-		
-		return caminosPosibles.get(opcion);
-		/*
-		
-		// Segun la eleccion
-		switch (opcion) {
-		case 0:
-			return this.getPosicionActual().getCasilleroArriba();
-		case 1:
-			return this.getPosicionActual().getCasilleroAbajo();
-		case 2:
-			return this.getPosicionActual().getCasilleroDer();
-		case 3:
-			return this.getPosicionActual().getCasilleroIzq();
-		default:
-			break;
-		}
-		// Si su eleccion fue no moverse;
-		return this.getPosicionActual();*/
+	public void activarCasilla() {
+		this.posicionActual.activarCasilla(this);
 	}
 
 
