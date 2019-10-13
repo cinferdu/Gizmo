@@ -1,10 +1,10 @@
-package casillas;
+package casilla;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import game.Jugador;
-import objetos.Objeto;
+import objeto.Objeto;
 
 public class Casilla {
 	private int posX;
@@ -24,12 +24,6 @@ public class Casilla {
 		siguientesCasillas = new ArrayList<Casilla>();
 	}
 
-	public boolean esFinal() {
-		if (siguientesCasillas.size() == 0)
-			return true;
-		return false;
-	}
-
 	public Casilla caminoUnico() {
 		// Retorna la casilla siguiente
 		if (siguientesCasillas.size() == 1) {
@@ -38,13 +32,6 @@ public class Casilla {
 		return null;
 	}
 
-	public boolean hayBifurcacion() {
-
-		if (siguientesCasillas.size() > 1)
-			return true;
-		return false;
-	}
-	
 	public void activarCasilla(Jugador player) {
 		this.tipo.activarCasilla(player);
 	}
@@ -93,4 +80,10 @@ public class Casilla {
 		this.siguientesCasillas.add(sig);
 	}
 
+	@Override
+	public String toString() {
+		return "Casilla [" + posX + ", " + posY + ", tipo=" + tipo + "]";
+	}
+
+	
 }

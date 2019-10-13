@@ -1,4 +1,4 @@
-package objetos;
+package objeto;
 
 import java.util.List;
 import java.util.Scanner;
