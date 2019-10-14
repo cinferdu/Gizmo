@@ -1,5 +1,7 @@
 package game;
 
+import static casilla.CreadorDeCasilla.crearInstancia;
+
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -7,8 +9,8 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
-import casillas.Casilla;
-import static casillas.CreadorDeCasilla.crearInstancia;
+
+import casilla.Casilla;
 
 public class Lectura {
 

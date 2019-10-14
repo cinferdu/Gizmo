@@ -1,9 +1,7 @@
 package game;
 
-import java.util.ArrayList;
-
-import casillas.Casilla;
-import objetos.Objeto;
+import casilla.Casilla;
+import objeto.Objeto;
 
 public class Jugador {
 	private int nroPasos;
@@ -15,6 +13,7 @@ public class Jugador {
 	private Casilla posicionActual;
 	private Objeto objeto;
 	private Objeto poder;
+	private Casilla caminoElegido;
 
 	// Constructor de jugador;
 	public Jugador(String nombre) {
@@ -27,30 +26,9 @@ public class Jugador {
 		this.monedas = 0;
 		this.puntos = 0;
 		
+		this.setCaminoElegido(null);
 	}
 	
-	// TODO modificar
-	public Casilla elegirCamino(Casilla casilleroActual) {
-		// Elije el casillero
-		int opcion = 0;
-		// Agregue metodo de eleccion de camino
-		System.out.println("Elija una casilla");
-		for (int i = 0; i < casilleroActual.getSiguientesCasillas().size(); i++) {
-			System.out.println((i+1) + ". " + casilleroActual.getSiguientesCasillas().get(i).getPosX()+"-"+casilleroActual.getSiguientesCasillas().get(i).getPosY());
-		}
-		//Leer opcion
-		// Segun la eleccion
-		return casilleroActual.getSiguientesCasillas().get(opcion);
-	}
-	
-	public Casilla elegirCamino() {
-		ArrayList<Casilla> caminosPosibles = (ArrayList<Casilla>) this.posicionActual.getSiguientesCasillas();
-		int opcion = 0;
-		// Elije el casillero
-			// TODO Agregar metodo de eleccion de camino
-		
-		return caminosPosibles.get(opcion);
-	}
 	
 	public void usarObjeto() {
 		//Activa el efecto del objeto
@@ -166,6 +144,14 @@ public class Jugador {
 
 	public void activarCasilla() {
 		this.posicionActual.activarCasilla(this);
+	}
+
+	public Casilla getCaminoElegido() {
+		return caminoElegido;
+	}
+
+	public void setCaminoElegido(Casilla caminoElegido) {
+		this.caminoElegido = caminoElegido;
 	}
 
 

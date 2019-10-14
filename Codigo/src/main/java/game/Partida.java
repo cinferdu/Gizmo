@@ -1,17 +1,22 @@
 package game;
 
+import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
-import casillas.Casilla;
+import casilla.Casilla;
+import comunicacionObserver.Consumidor;
+import comunicacionObserver.Operacion;
+import comunicacionObserver.Productor;
 
-public class Partida {
+public class Partida implements Productor {
 	private List<Jugador> jugadores;
 	private int objetivo;
 	private boolean hayGanador;
-	public Tablero tablero;
+	private Tablero tablero;
 	private Jugador jugadorGanador;
 	private int rondaActual;
+	private	List<Consumidor> clientes;
 
 	public Partida(List<Jugador> participantes, int objetivo) {
 
@@ -21,7 +26,7 @@ public class Partida {
 		hayGanador = false;
 		jugadorGanador = null;
 		tablero = new Tablero("dataCasilla.txt");
-
+		clientes = new ArrayList<Consumidor>();
 	}
 
 	public void iniciarPartida() {
@@ -34,6 +39,7 @@ public class Partida {
 		Jugador jugadorActual;
 		Iterator<Jugador> iteradorJugador;
 		
+		// TODO observer Actualizar
 		
 		while (!hayGanador) {
 			
@@ -41,25 +47,31 @@ public class Partida {
 			rondaActual++;
 			iteradorJugador = jugadores.iterator();
 			
+			avisar(Operacion.NUEVA_RONDA, this, null);
 			
 			while (iteradorJugador.hasNext() && this.hayGanador == false) {
 				jugadorActual = iteradorJugador.next();
 				
 				if (!jugadorActual.isPierdeTurno()) {
-
+					
 					// Lanza el dado
 					jugadorActual.setNroPasos(tirarDado());
-					
+					avisar(Operacion.LANZAMIENTO_DADO, null, jugadorActual);
 					
 					// El jugador avanza los pasos
 					avanzar(jugadorActual);
 					
 					jugadorActual.activarCasilla();
-					
+					avisar(Operacion.CASILLA_ACTIVADA, null, jugadorActual);
 					
 					// El jugador elije su proxima accion
 					jugadorActual.accion();
 					
+					/*	agregar observer 
+					 * 	esperar respuesta
+					 */
+					
+					// TODO observer Actualizar
 					
 					// Verifico si el jugador cumplio con el objetivo
 					if (verificarObjetivo(jugadorActual))
@@ -69,6 +81,7 @@ public class Partida {
 					jugadorActual.setPierdeTurno(false);
 				}
 				
+				avisar(null, this, jugadorActual);
 				
 				// Fin del turno del jugador.
 				// Turno del siguiente jugador.
@@ -77,6 +90,7 @@ public class Partida {
 			// MINIJUEGO
 		}
 		
+		// TODO observer Actualizar
 		
 		System.out.println("Ganador: " +this.jugadorGanador.getNombre()+" \nMonedas: "+this.jugadorGanador.getMonedas());
 		
@@ -102,8 +116,24 @@ public class Partida {
 			if ((sigcamino = jugador.getPosicionActual().caminoUnico()) != null)
 				jugador.setPosicionActual(sigcamino);
  			else {
-				jugador.setPosicionActual(jugador.elegirCamino());
+ 				avisar(Operacion.SELECCIONAR_CAMINO, this, jugador);
+/* 				
+ 				synchronized (this) {
+					try {
+						if (jugador.getCaminoElegido() == null) {	// tal vez borrar esto
+							this.wait();							
+						}
+					} catch (InterruptedException e) {
+						e.printStackTrace();
+					}
+				}
+*/
+				jugador.setPosicionActual(jugador.getCaminoElegido());
+				jugador.setCaminoElegido(null);
  			}
+			
+			avisar(Operacion.MOVIMIENTO, this, jugador);
+			
 			jugador.decrementarPasos();
 		}
 	}
@@ -172,6 +202,30 @@ public class Partida {
 
 	public void setHayGanador(boolean hayGanador) {
 		this.hayGanador = hayGanador;
+	}
+
+	public void registrar(Consumidor obs) {
+		clientes.add(obs);
+	}
+
+	public void desregistrar(Consumidor obs) {
+		clientes.remove(obs);
+	}
+
+	public void avisar(Operacion operacion, Partida partida, Jugador jugadorActual) {
+		for (Consumidor consumidor : clientes) {
+			consumidor.actualizar(operacion, this, jugadorActual);
+		}
+		
+		// Para que espere un poco antes de volver a continuar y no hacer todo en muy poco tiempo
+		// Tal vez habria que modificarlo
+		synchronized (this) {
+            try {
+				this.wait(1000);
+			} catch (InterruptedException e) {
+				e.printStackTrace();
+			}
+		}
 	}
 
 }
