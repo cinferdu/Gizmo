@@ -1,41 +1,26 @@
 package game;
 
 import java.util.ArrayList;
-import java.util.List;
+
+import casillas.Casilla;
 
 public class Tablero {
 	private int filas;
 	private int columnas;
-	private Casillero casillaInicial = null;
-	private Casillero casillaFinal = null;
-	private ArrayList<Casillero> casilleros = null;
-
+	private Casilla casillaInicial = null;
+	private ArrayList<Casilla> casilleros = null;
 	
 	public Tablero(int filas, int columnas) {
-
 		this.filas = filas;
 		this.columnas = columnas;
-		casilleros = new ArrayList<Casillero>();
+		casilleros = new ArrayList<Casilla>();
 	}
 	
-	public void crearTablero(int filas,int columnas) {
-		
-		setFilas(filas);
-		setColumnas(columnas);
-		
-		// Mini tablero de dos casillas desde el final al principio
-		Casillero casilla2 = new Casillero(0, null, null, null, null,null,null);
-		Casillero casilla1 = new Casillero(0, null, casilla2, null, null,null,null);
-		
-		// Agrego las casillas a la lista
-		casilleros.add(casilla1);
-		casilleros.add(casilla2);
-		
-		setCasillaFinal(casilla2);
-		setCasillaInicial(casilla1);
-		
+	public Tablero(String file) {
+		Lectura.cargarTablero(file, this);
+		casillaInicial = casilleros.get(0);
 	}
-
+	
 	public int getFilas() {
 		return filas;
 	}
@@ -52,23 +37,19 @@ public class Tablero {
 		this.columnas = columnas;
 	}
 
-
-
-
-
-	public Casillero getCasillaInicial() {
+	public Casilla getCasillaInicial() {
 		return casillaInicial;
 	}
 
-	public void setCasillaInicial(Casillero casillaInicial) {
+	public void setCasillaInicial(Casilla casillaInicial) {
 		this.casillaInicial = casillaInicial;
 	}
 
-	public Casillero getCasillaFinal() {
-		return casillaFinal;
+	public ArrayList<Casilla> getCasilleros() {
+		return casilleros;
 	}
 
-	public void setCasillaFinal(Casillero casillaFinal) {
-		this.casillaFinal = casillaFinal;
+	public void setCasilleros(ArrayList<Casilla> casilleros) {
+		this.casilleros = casilleros;
 	}
 }
