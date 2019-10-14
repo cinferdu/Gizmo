@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import game.Jugador;
-import objetos.Objeto;
+import objeto.Objeto;
 
 public class Casilla {
 	private int posX;
