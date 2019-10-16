@@ -1,5 +1,7 @@
 package game;
 
+import java.awt.Color;
+
 import casilla.Casilla;
 import objeto.Objeto;
 
@@ -14,6 +16,7 @@ public class Jugador {
 	private Objeto objeto;
 	private Objeto poder;
 	private Casilla caminoElegido;
+	private Color color;
 
 	// Constructor de jugador;
 	public Jugador(String nombre) {
@@ -27,8 +30,25 @@ public class Jugador {
 		this.puntos = 0;
 		
 		this.setCaminoElegido(null);
+		
+		this.setColor(Color.BLACK);
 	}
 	
+	// Constructor de jugador;
+	public Jugador(String nombre, Color color) {
+		this.nombre = nombre;
+		this.pierdeTurno = false;
+		this.posicionActual = null;
+		
+		
+		this.rondaActual = 0;
+		this.monedas = 0;
+		this.puntos = 0;
+		
+		this.setCaminoElegido(null);
+		
+		this.setColor(color);
+	}
 	
 	public void usarObjeto() {
 		//Activa el efecto del objeto
@@ -65,6 +85,13 @@ public class Jugador {
 		return true;
 	}
 
+	public void aumentarMonedas(int cantidad) {
+		this.monedas+=cantidad;
+	}
+	
+	public void decrementarMonedas(int cantidad) {
+		this.monedas = Math.max(monedas-cantidad, 0);
+	}
 	
 	public String getNombre() {
 		return nombre;
@@ -152,6 +179,14 @@ public class Jugador {
 
 	public void setCaminoElegido(Casilla caminoElegido) {
 		this.caminoElegido = caminoElegido;
+	}
+
+	public Color getColor() {
+		return color;
+	}
+
+	public void setColor(Color color) {
+		this.color = color;
 	}
 
 

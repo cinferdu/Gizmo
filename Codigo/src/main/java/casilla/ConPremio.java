@@ -8,12 +8,12 @@ public class ConPremio extends TipoDeCasilla {
 	private static final int ID = 1;
 
 	public ConPremio() {
-		super(Color.BLUE, "Casilla con Premio");
+		super(Color.BLUE, "con Premio");
 	}
 
 	@Override
 	public void activarCasilla(Jugador objetivo) {
-		objetivo.setMonedas(objetivo.getMonedas()+5);
+		objetivo.aumentarMonedas(5);
 	}
 	
 	public static int getID() {

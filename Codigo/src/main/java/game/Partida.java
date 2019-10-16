@@ -47,7 +47,7 @@ public class Partida implements Productor {
 			rondaActual++;
 			iteradorJugador = jugadores.iterator();
 			
-			avisar(Operacion.NUEVA_RONDA, this, null);
+			avisar(Operacion.NUEVA_RONDA, null);
 			
 			while (iteradorJugador.hasNext() && this.hayGanador == false) {
 				jugadorActual = iteradorJugador.next();
@@ -56,13 +56,13 @@ public class Partida implements Productor {
 					
 					// Lanza el dado
 					jugadorActual.setNroPasos(tirarDado());
-					avisar(Operacion.LANZAMIENTO_DADO, null, jugadorActual);
+					avisar(Operacion.LANZAMIENTO_DADO, jugadorActual);
 					
 					// El jugador avanza los pasos
 					avanzar(jugadorActual);
 					
 					jugadorActual.activarCasilla();
-					avisar(Operacion.CASILLA_ACTIVADA, null, jugadorActual);
+					avisar(Operacion.CASILLA_ACTIVADA, jugadorActual);
 					
 					// El jugador elije su proxima accion
 					jugadorActual.accion();
@@ -79,9 +79,10 @@ public class Partida implements Productor {
 				} else {
 					// Activo el turno del jugador
 					jugadorActual.setPierdeTurno(false);
+					//avisar(null, jugadorActual); Perdio su turno
 				}
 				
-				avisar(null, this, jugadorActual);
+				//avisar(null, jugadorActual); Mostrar monedas y estrellas??
 				
 				// Fin del turno del jugador.
 				// Turno del siguiente jugador.
@@ -116,7 +117,7 @@ public class Partida implements Productor {
 			if ((sigcamino = jugador.getPosicionActual().caminoUnico()) != null)
 				jugador.setPosicionActual(sigcamino);
  			else {
- 				avisar(Operacion.SELECCIONAR_CAMINO, this, jugador);
+ 				avisar(Operacion.SELECCIONAR_CAMINO, jugador);
 /* 				
  				synchronized (this) {
 					try {
@@ -132,7 +133,7 @@ public class Partida implements Productor {
 				jugador.setCaminoElegido(null);
  			}
 			
-			avisar(Operacion.MOVIMIENTO, this, jugador);
+			avisar(Operacion.MOVIMIENTO, jugador);
 			
 			jugador.decrementarPasos();
 		}
@@ -212,13 +213,19 @@ public class Partida implements Productor {
 		clientes.remove(obs);
 	}
 
-	public void avisar(Operacion operacion, Partida partida, Jugador jugadorActual) {
+	public void avisar(Operacion operacion, Jugador jugadorActual) {
 		for (Consumidor consumidor : clientes) {
-			consumidor.actualizar(operacion, this, jugadorActual);
+			consumidor.actualizar(operacion, jugadorActual);
 		}
 		
 		// Para que espere un poco antes de volver a continuar y no hacer todo en muy poco tiempo
 		// Tal vez habria que modificarlo
+		try {
+			Thread.sleep(1000);
+		} catch (InterruptedException e1) {
+			e1.printStackTrace();
+		}
+		/*
 		synchronized (this) {
             try {
 				this.wait(1000);
@@ -226,6 +233,7 @@ public class Partida implements Productor {
 				e.printStackTrace();
 			}
 		}
+		*/
 	}
 
 }

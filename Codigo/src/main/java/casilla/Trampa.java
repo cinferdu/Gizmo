@@ -8,7 +8,7 @@ public class Trampa extends TipoDeCasilla {
 	private static final int ID = 2;
 	
 	public Trampa() {
-		super(Color.RED, "Casilla con Trampa");
+		super(Color.RED, "con Trampa");
 	}
 	
 	@Override

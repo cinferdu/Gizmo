@@ -22,4 +22,9 @@ public abstract class TipoDeCasilla {
 		return nombre;
 	}
 	
+	@Override
+	public String toString() {
+		return nombre;
+	}
+	
 }

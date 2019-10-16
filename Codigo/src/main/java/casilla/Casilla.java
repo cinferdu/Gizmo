@@ -82,7 +82,7 @@ public class Casilla {
 
 	@Override
 	public String toString() {
-		return "Casilla [" + posX + ", " + posY + ", tipo=" + tipo + "]";
+		return "Casilla "+ tipo;
 	}
 
 	
