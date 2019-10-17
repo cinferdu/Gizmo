@@ -1,6 +1,7 @@
 package game;
 
 import java.awt.Color;
+import java.util.ArrayList;
 
 import casilla.Casilla;
 import objeto.Objeto;
@@ -13,46 +14,44 @@ public class Jugador {
 	private int puntos;
 	private boolean pierdeTurno;
 	private Casilla posicionActual;
-	private Objeto objeto;
+	private Objeto mochila_objetos;
 	private Objeto poder;
-	private Casilla caminoElegido;
+	//private Casilla caminoElegido;
 	private Color color;
 
 	// Constructor de jugador;
 	public Jugador(String nombre) {
 		this.nombre = nombre;
-		this.pierdeTurno = false;
-		this.posicionActual = null;
+		pierdeTurno = false;
+		posicionActual = null;
 		
+		rondaActual = 0;
+		monedas = 0;
+		puntos = 0;
 		
-		this.rondaActual = 0;
-		this.monedas = 0;
-		this.puntos = 0;
-		
-		this.setCaminoElegido(null);
-		
+		mochila_objetos = null;
+		//this.setCaminoElegido(null);
 		this.setColor(Color.BLACK);
 	}
 	
-	// Constructor de jugador;
+	// Constructor de jugador con color
 	public Jugador(String nombre, Color color) {
 		this.nombre = nombre;
-		this.pierdeTurno = false;
-		this.posicionActual = null;
+		pierdeTurno = false;
+		posicionActual = null;
 		
+		rondaActual = 0;
+		monedas = 0;
+		puntos = 0;
 		
-		this.rondaActual = 0;
-		this.monedas = 0;
-		this.puntos = 0;
-		
-		this.setCaminoElegido(null);
-		
+		mochila_objetos = null;
+		//this.setCaminoElegido(null);
 		this.setColor(color);
 	}
 	
 	public void usarObjeto() {
 		//Activa el efecto del objeto
-		this.getObjeto().activarEfecto(this);
+		mochila_objetos.activarEfecto(this);
 		
 	}
 	public void usarPoder() {
@@ -125,14 +124,6 @@ public class Jugador {
 		this.posicionActual = posicionActual;
 	}
 
-	public Objeto getObjeto() {
-		return objeto;
-	}
-
-	public void setObjeto(Objeto objeto) {
-		this.objeto = objeto;
-	}
-
 	public Objeto getPoder() {
 		return poder;
 	}
@@ -172,14 +163,14 @@ public class Jugador {
 	public void activarCasilla() {
 		this.posicionActual.activarCasilla(this);
 	}
-
+/*
 	public Casilla getCaminoElegido() {
 		return caminoElegido;
 	}
 
 	public void setCaminoElegido(Casilla caminoElegido) {
 		this.caminoElegido = caminoElegido;
-	}
+	}*/
 
 	public Color getColor() {
 		return color;
@@ -189,5 +180,12 @@ public class Jugador {
 		this.color = color;
 	}
 
+	public Objeto getMochila_objetos() {
+		return mochila_objetos;
+	}
+
+	public void setMochila_objetos(Objeto mochila_objetos) {
+		this.mochila_objetos = mochila_objetos;
+	}
 
 }

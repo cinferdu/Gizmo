@@ -8,6 +8,7 @@ import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 
+import javax.swing.AbstractAction;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
 import javax.swing.JLabel;
@@ -16,22 +17,27 @@ import javax.swing.JScrollPane;
 import javax.swing.JSeparator;
 import javax.swing.JTextArea;
 import javax.swing.text.DefaultCaret;
+import javax.swing.Timer;
 
 import casilla.Casilla;
 import comunicacionObserver.Consumidor;
 import comunicacionObserver.Operacion;
 import game.Jugador;
 import game.Partida;
+import objeto.Objeto;
 
 public class PanelJuego extends JPanel implements Consumidor {
 
 	private static final int SEPARACION_PUNTAJES = 50;
+	private static final int TIEMPO_ELEGIR_CAMINO = 5; // en segundos
+	private static final int TIEMPO_ELEGIR_ACCION = 5; // en segundos
 
 	private static final long serialVersionUID = 3007758429335180626L;
 	private JTextArea textArea;
 	private JScrollPane scrollPane;
 	private Partida partida;
 	private boolean botonPresionado = false;
+	private int dado;
 
 	public PanelJuego(Partida prod) {
 		setBounds(100, 100, 600, 700);
@@ -62,6 +68,7 @@ public class PanelJuego extends JPanel implements Consumidor {
 		add(separator);
 
 		partida = prod;
+		
 	}
 
 	@Override
@@ -86,9 +93,13 @@ public class PanelJuego extends JPanel implements Consumidor {
 			g.fillOval(jugador.getPosicionActual().getPosX() + 10, jugador.getPosicionActual().getPosY() + 10, 10, 10);
 		}
 		imprimirPuntajes(g);
+		
+		if (dado != 0) {
+			g.drawImage(DadoImagen.getDadoImagen(dado), 100, 200, null);
+		}
 	}
-
-	public void actualizar(Operacion operacion, Jugador jugadorActual) {
+	
+	public void actualizar(Operacion operacion, Jugador jugadorActual) { // cambiar por switch?
 		if (operacion == Operacion.NUEVA_RONDA) {
 			this.textArea.append("*** INICIANDO RONDA " + partida.getRondaActual() + " ***\n");
 			return;
@@ -99,6 +110,18 @@ public class PanelJuego extends JPanel implements Consumidor {
 		if (operacion == Operacion.LANZAMIENTO_DADO) {
 			this.textArea
 					.append(jugadorActual.getNombre() + " avanza " + jugadorActual.getNroPasos() + " casillas" + "\n");
+			
+			dado = jugadorActual.getNroPasos();
+			
+			// Es para que deje de mostrar la imagen del dado despues de 1,5 segundos
+			AbstractAction paintTimer  = new AbstractAction() {
+				private static final long serialVersionUID = -5331589571920302500L;
+				public void actionPerformed(ActionEvent e) {
+		            dado = 0;
+		        }
+		    };
+		    new Timer(1500, paintTimer).start();
+		    
 			return;
 		}
 		if (operacion == Operacion.CASILLA_ACTIVADA) {
@@ -111,15 +134,21 @@ public class PanelJuego extends JPanel implements Consumidor {
 
 			Casilla caminoElegido = mostrarOpcionesParaElegirCamino(jugadorActual.getPosicionActual());
 
-			this.botonPresionado = false;
-			jugadorActual.setCaminoElegido(caminoElegido);
+			partida.setRespuestaDePanel(caminoElegido);
+		}
+		if (operacion == Operacion.SELECCIONAR_ACCION) {
+			this.textArea.append(jugadorActual.getNombre() + " seleccione un objeto\n");
+
+			Objeto objetoElegido = mostrarOpcionesParaElegirAccion(jugadorActual);
+
+			partida.setRespuestaDePanel(objetoElegido);
 		}
 		this.textArea.append(jugadorActual.getNombre() + " tiene " + jugadorActual.getMonedas() + " monedas.\n");
 	}
 
 	private Casilla mostrarOpcionesParaElegirCamino(Casilla casilla) {
 		// creo los componentes
-		JLabel mensaje = new JLabel("Seleccione una opcion (tiene 5 segundos)");
+		JLabel mensaje = new JLabel("Seleccione una opcion (tiene "+ TIEMPO_ELEGIR_CAMINO +" segundos)");
 		mensaje.setBounds(345, 565, 250, 20);
 
 		JComboBox<Casilla> listaOpciones = new JComboBox<Casilla>();
@@ -146,7 +175,7 @@ public class PanelJuego extends JPanel implements Consumidor {
 		// espero a que aprete el boton o pasen 5 segundos
 		long tiempo_limite_ini = System.currentTimeMillis();
 		long tiempo_limite_fin = System.currentTimeMillis();
-		while (botonPresionado == false && (tiempo_limite_fin - tiempo_limite_ini) < 5000) {
+		while (botonPresionado == false && (tiempo_limite_fin - tiempo_limite_ini) < TIEMPO_ELEGIR_CAMINO * 1000) {
 			try {
 				Thread.sleep(100);
 				tiempo_limite_fin = System.currentTimeMillis();
@@ -159,8 +188,57 @@ public class PanelJuego extends JPanel implements Consumidor {
 		remove(aceptar);
 		remove(mensaje);
 		revalidate();
+		this.botonPresionado = false;
 
 		return casillaElegida;
+	}
+	
+	private Objeto mostrarOpcionesParaElegirAccion(Jugador jugador) {
+		// creo los componentes
+		JLabel mensaje = new JLabel("Seleccione una opcion (tiene "+ TIEMPO_ELEGIR_ACCION +" segundos)");
+		mensaje.setBounds(345, 565, 250, 20);
+
+		JComboBox<Objeto> listaOpciones = new JComboBox<Objeto>();
+		listaOpciones.setBounds(360, 595, 200, 25);
+/*
+		for (Objeto objeto : jugador.getMochila_objetos()) {
+			listaOpciones.addItem(objeto);
+		}*/
+		listaOpciones.addItem(jugador.getMochila_objetos());
+
+		JButton aceptar = new JButton("Seleccionar");
+		aceptar.setBounds(400, 630, 125, 25);
+		aceptar.addActionListener(new ActionListener() {
+
+			public void actionPerformed(ActionEvent e) {
+				botonPresionado = true;
+			}
+		});
+
+		add(listaOpciones);
+		add(aceptar);
+		add(mensaje);
+		revalidate(); // esto lo puse porque al jcombobox no le aparecia la flecha hacia abajo
+
+		// espero a que aprete el boton o pasen 5 segundos
+		long tiempo_limite_ini = System.currentTimeMillis();
+		long tiempo_limite_fin = System.currentTimeMillis();
+		while (botonPresionado == false && (tiempo_limite_fin - tiempo_limite_ini) < TIEMPO_ELEGIR_ACCION * 1000) {
+			try {
+				Thread.sleep(100);
+				tiempo_limite_fin = System.currentTimeMillis();
+			} catch (InterruptedException e) {
+				e.printStackTrace();
+			}
+		}
+		Objeto objetoElegido = (Objeto) listaOpciones.getSelectedItem();
+		remove(listaOpciones);
+		remove(aceptar);
+		remove(mensaje);
+		revalidate();
+		this.botonPresionado = false;
+
+		return objetoElegido;
 	}
 
 	private void imprimirPuntajes(Graphics g) {

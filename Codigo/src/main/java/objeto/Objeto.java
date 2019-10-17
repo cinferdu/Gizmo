@@ -27,5 +27,9 @@ public abstract class Objeto {
 		return descripcion;
 	}
 
+	@Override
+	public String toString() {
+		return nombre;
+	}
 	
 }
