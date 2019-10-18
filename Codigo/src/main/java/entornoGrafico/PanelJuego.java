@@ -13,7 +13,6 @@ import java.io.File;
 import java.io.IOException;
 
 import javax.imageio.ImageIO;
-import javax.swing.AbstractAction;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
@@ -23,11 +22,11 @@ import javax.swing.JScrollPane;
 import javax.swing.JSeparator;
 import javax.swing.JTextArea;
 import javax.swing.text.DefaultCaret;
-import javax.swing.Timer;
 
 import casilla.Casilla;
 import comunicacionObserver.Consumidor;
 import comunicacionObserver.Operacion;
+import game.Dado;
 import game.Jugador;
 import game.Partida;
 import objeto.Objeto;
@@ -40,6 +39,7 @@ public class PanelJuego extends JPanel implements Consumidor {
 	private static final int TIEMPO_ELEGIR_ACCION = 5; // en segundos
 
 	private ImageIcon fondo;
+	private Image dado = null;
 	
 	private static final long serialVersionUID = 3007758429335180626L;
 	private JTextArea textArea;
@@ -87,13 +87,16 @@ public class PanelJuego extends JPanel implements Consumidor {
 		}
 		Image dimg = img.getScaledInstance(730, 550, Image.SCALE_SMOOTH);
 		fondo = new ImageIcon(dimg);
+		
 	}
 
 	@Override
 	public void paint(Graphics g) {
 		super.paint(g);
-		
 		g.drawImage(fondo.getImage(), 0, 0, null);
+		
+		if(dado != null)
+			g.drawImage(dado, 304, 50, null);
 		// Dibujo las casillas
 		for (Casilla casilla : partida.getTablero().getCasilleros()) {
 			g.setColor(casilla.getTipo().getColor());
@@ -125,6 +128,7 @@ public class PanelJuego extends JPanel implements Consumidor {
 			return;
 		}
 		if (operacion == Operacion.LANZAMIENTO_DADO) {
+			dado = Dado.getImgCara(jugadorActual.getNroPasos()).getScaledInstance(50, 50, Image.SCALE_SMOOTH);
 			this.textArea
 					.append(jugadorActual.getNombre() + " avanza " + jugadorActual.getNroPasos() + " casillas" + "\n");
 			
