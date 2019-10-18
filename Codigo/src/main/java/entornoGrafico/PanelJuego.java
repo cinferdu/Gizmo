@@ -80,11 +80,10 @@ public class PanelJuego extends JPanel implements Consumidor {
 
 		partida = prod;
 		
-		//fondo = new ImageIcon(".\\src\\img\\background.png");
 		// para achicar la imagen
 		BufferedImage img = null;
 		try {
-		    img = ImageIO.read(new File(".\\src\\img\\background.png"));
+		    img = ImageIO.read(new File("img\\background.png"));
 		} catch (IOException e) {
 		    e.printStackTrace();
 		}
