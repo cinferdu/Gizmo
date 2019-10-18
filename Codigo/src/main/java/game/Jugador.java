@@ -4,6 +4,7 @@ import java.awt.Color;
 import java.util.ArrayList;
 
 import casilla.Casilla;
+import objeto.CajaMisteriosa;
 import objeto.Objeto;
 
 public class Jugador {
@@ -14,7 +15,7 @@ public class Jugador {
 	private int puntos;
 	private boolean pierdeTurno;
 	private Casilla posicionActual;
-	private Objeto mochila_objetos;
+	private ArrayList<Objeto> mochila_objetos;
 	private Objeto poder;
 	//private Casilla caminoElegido;
 	private Color color;
@@ -29,7 +30,7 @@ public class Jugador {
 		monedas = 0;
 		puntos = 0;
 		
-		mochila_objetos = null;
+		mochila_objetos = new ArrayList<Objeto>();
 		//this.setCaminoElegido(null);
 		this.setColor(Color.BLACK);
 	}
@@ -44,16 +45,17 @@ public class Jugador {
 		monedas = 0;
 		puntos = 0;
 		
-		mochila_objetos = null;
+		mochila_objetos = new ArrayList<Objeto>();
 		//this.setCaminoElegido(null);
 		this.setColor(color);
 	}
 	
-	public void usarObjeto() {
+	public void usarObjeto(int index) {
 		//Activa el efecto del objeto
-		mochila_objetos.activarEfecto(this);
-		
+		mochila_objetos.get(index).activarEfecto(this);
+		mochila_objetos.remove(index);
 	}
+	
 	public void usarPoder() {
 		//Activa el efecto del poder
 		//this.getPoder().efecto(this);
@@ -62,7 +64,7 @@ public class Jugador {
 	public Objeto activarPoder() {
 		return this.poder;
 	}
-	
+	/*
 	public boolean accion() {	
 		// TODO
 		int opcion = 0;
@@ -82,7 +84,7 @@ public class Jugador {
 		//Finaliza el turno
 		
 		return true;
-	}
+	}*/
 
 	public void aumentarMonedas(int cantidad) {
 		this.monedas+=cantidad;
@@ -180,12 +182,20 @@ public class Jugador {
 		this.color = color;
 	}
 
-	public Objeto getMochila_objetos() {
+	public ArrayList<Objeto> getMochila_objetos() {
 		return mochila_objetos;
 	}
 
-	public void setMochila_objetos(Objeto mochila_objetos) {
+	public void setMochila_objetos(ArrayList<Objeto> mochila_objetos) {
 		this.mochila_objetos = mochila_objetos;
+	}
+
+	public Objeto getMochila_objetos(int index) {
+		return mochila_objetos.get(index);
+	}
+
+	public void addMochila_objetos(Objeto objeto) {
+		this.mochila_objetos.add(objeto);
 	}
 
 }

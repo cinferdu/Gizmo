@@ -1,5 +1,6 @@
 package entornoGrafico;
 
+import java.awt.Color;
 import java.util.ArrayList;
 
 import javax.swing.JFrame;
@@ -30,11 +31,11 @@ public class VentanaJuego extends JFrame {
 		
 		// Creo la partida con los jugadores
 		ArrayList<Jugador> participantes = new ArrayList<Jugador>();
-		participantes.add(new Jugador("Mario"));
-		participantes.add(new Jugador("Luigi"));
-		participantes.get(0).setMochila_objetos(new CajaMisteriosa());
-		participantes.get(1).setMochila_objetos(new CajaMisteriosa());
-		Partida prod = new Partida(participantes, 1);
+		participantes.add(new Jugador("Mario",Color.white));
+		participantes.add(new Jugador("Luigi",Color.green));
+		participantes.get(0).addMochila_objetos(new CajaMisteriosa());
+		participantes.get(1).addMochila_objetos(new CajaMisteriosa());
+		Partida prod = new Partida(participantes, 50);
 		
 		VentanaJuego ventana = new VentanaJuego(prod);
 		ventana.setVisible(true);

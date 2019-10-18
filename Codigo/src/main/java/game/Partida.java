@@ -6,6 +6,7 @@ import java.util.List;
 
 import casilla.Casilla;
 import miniTenis.MiniTenis;
+import objeto.Objeto;
 import comunicacionObserver.Consumidor;
 import comunicacionObserver.Operacion;
 import comunicacionObserver.Productor;
@@ -18,8 +19,8 @@ public class Partida implements Productor {
 	private Tablero tablero;
 	private Jugador jugadorGanador;
 	private int rondaActual;
-	private	List<Consumidor> clientes;
-	
+	private List<Consumidor> clientes;
+
 	private Object respuestaDePanel = null;
 
 	public Partida(List<Jugador> participantes, int objetivo) {
@@ -34,64 +35,64 @@ public class Partida implements Productor {
 	}
 
 	public void iniciarPartida() {
-		
+
 		if (jugadores.size() < 2)
 			return;
-		
+
 		posicionarJugadoresEnElInicio();
-		
+
 		Jugador jugadorActual;
 		Iterator<Jugador> iteradorJugador;
-		
+
 		// TODO observer Actualizar
-		
+
 		while (!hayGanador) {
-			
+
 			// Incremento la ronda
 			rondaActual++;
 			iteradorJugador = jugadores.iterator();
-			
+
 			avisar(Operacion.NUEVA_RONDA, null);
-			
+
 			while (iteradorJugador.hasNext() && this.hayGanador == false) {
 				jugadorActual = iteradorJugador.next();
-				
+
 				if (!jugadorActual.isPierdeTurno()) {
-					
+
 					// Lanza el dado
 					jugadorActual.setNroPasos(Dado.lanzarDado());
 					avisar(Operacion.LANZAMIENTO_DADO, jugadorActual);
-					
+
 					// El jugador avanza los pasos
 					avanzar(jugadorActual);
-					
+
 					jugadorActual.activarCasilla();
 					avisar(Operacion.CASILLA_ACTIVADA, jugadorActual);
-					
+
 					// El jugador elije su proxima accion
-					//jugadorActual.accion();
-					
-					avisar(Operacion.SELECCIONAR_ACCION, jugadorActual);
-					jugadorActual.usarObjeto();
-					// TODO observer Actualizar
-					
+					// jugadorActual.accion();
+					if (jugadorActual.getMochila_objetos().size()!=0) {
+						avisar(Operacion.SELECCIONAR_ACCION, jugadorActual);
+						jugadorActual.usarObjeto((Integer)respuestaDePanel);
+					}
+
 					// Verifico si el jugador cumplio con el objetivo
 					if (verificarObjetivo(jugadorActual))
 						setJugadorGanador(jugadorActual);// El jugador gano la partida
 				} else {
 					// Activo el turno del jugador
 					jugadorActual.setPierdeTurno(false);
-					//avisar(null, jugadorActual); Perdio su turno
+					// avisar(null, jugadorActual); Perdio su turno
 				}
-				
-				//avisar(null, jugadorActual); Mostrar monedas y estrellas??
-				
+
+				// avisar(null, jugadorActual); Mostrar monedas y estrellas??
+
 				// Fin del turno del jugador.
 				// Turno del siguiente jugador.
 			}
-			
+
 			if (!hayGanador) {
-				
+
 				// MINIJUEGO
 				MiniTenis miniGame = new MiniTenis();
 				try {
@@ -100,34 +101,33 @@ public class Partida implements Productor {
 					e.printStackTrace();
 				}
 			}
-			
+
 		}
 		avisar(Operacion.PUNTAJES_FINALES, jugadorGanador);
-		
+
 	}
 
-
 	private void posicionarJugadoresEnElInicio() {
-		for (Jugador jugador : jugadores) 
+		for (Jugador jugador : jugadores)
 			jugador.setPosicionActual(this.tablero.getCasillaInicial());
-		
+
 	}
 
 	private void avanzar(Jugador jugador) {
 		Casilla sigcamino = null;
 
 		while (jugador.getNroPasos() > 0) {
-			
+
 			if ((sigcamino = jugador.getPosicionActual().caminoUnico()) != null)
 				jugador.setPosicionActual(sigcamino);
- 			else {
- 				avisar(Operacion.SELECCIONAR_CAMINO, jugador);
+			else {
+				avisar(Operacion.SELECCIONAR_CAMINO, jugador);
 
 				jugador.setPosicionActual((Casilla) respuestaDePanel);
- 			}
-			
+			}
+
 			avisar(Operacion.MOVIMIENTO, jugador);
-			
+
 			jugador.decrementarPasos();
 		}
 	}
@@ -218,15 +218,16 @@ public class Partida implements Productor {
 		for (Consumidor consumidor : clientes) {
 			consumidor.actualizar(operacion, jugadorActual);
 		}
-		
-		// Para que espere un poco antes de volver a continuar y no hacer todo en muy poco tiempo
+
+		// Para que espere un poco antes de volver a continuar y no hacer todo en muy
+		// poco tiempo
 		// Tal vez habria que modificarlo
 		try {
 			Thread.sleep(1000);
 		} catch (InterruptedException e1) {
 			e1.printStackTrace();
 		}
-		
+
 	}
 
 }

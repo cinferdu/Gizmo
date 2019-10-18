@@ -18,11 +18,11 @@ public class Lectura {
 		File file = null;
 		FileReader fr = null;
 		BufferedReader br = null;
-		HashMap<Integer, Casilla> casillas = new HashMap<Integer, Casilla>();
+		HashMap<Integer, Casilla> casillasHM = new HashMap<Integer, Casilla>();
 		int id;
 		int posX;
 		int posY;
-		int tdc;
+		int tdc; // TIPO DE CASILLA
 		String[] siguientes;
 		String[] anteriores;
 
@@ -46,17 +46,17 @@ public class Lectura {
 				anteriores = linea[4].split("\\|");
 				siguientes = linea[5].split("\\|");
 
-				casillas.put(id, new Casilla(posX, posY, crearInstancia(tdc)));
+				casillasHM.put(id, new Casilla(posX, posY, crearInstancia(tdc)));
 
 				int id_anterior = 0;
 				for (int j = 0; j < anteriores.length
-						&& casillas.containsKey(id_anterior = Integer.valueOf(anteriores[j])); j++) {
-					casillas.get(id_anterior).addSiguiente(casillas.get(id));
+						&& casillasHM.containsKey(id_anterior = Integer.valueOf(anteriores[j])); j++) {
+					casillasHM.get(id_anterior).addSiguiente(casillasHM.get(id));
 				}
 				int id_siguiente = 0;
 				for (int j = 0; j < siguientes.length
-						&& casillas.containsKey(id_siguiente = Integer.valueOf(siguientes[j])); j++) {
-					casillas.get(id).addSiguiente(casillas.get(id_siguiente));
+						&& casillasHM.containsKey(id_siguiente = Integer.valueOf(siguientes[j])); j++) {
+					casillasHM.get(id).addSiguiente(casillasHM.get(id_siguiente));
 				}
 
 			}
@@ -64,8 +64,8 @@ public class Lectura {
 			br.close();
 			
 			ArrayList<Casilla> caminos = new ArrayList<Casilla>();
-			for (int i = 0; i < casillas.size(); i++) {
-				caminos.add(casillas.get(i));
+			for (int i = 0; i < casillasHM.size(); i++) {
+				caminos.add(casillasHM.get(i));
 			}
 			
 			tablero.setCasilleros(caminos);

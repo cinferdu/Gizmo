@@ -58,8 +58,8 @@ public class PuntajesVentana extends JFrame {
 		Graphics2D g2d = (Graphics2D) g;
 		g2d.setColor(Color.yellow);
 		g2d.setFont(new Font("Comic Sans MS", Font.BOLD | Font.ITALIC, 30));
-		g2d.drawString("PUNTAJES", 350, 80);
-		g2d.setColor(Color.orange);
+		g2d.drawString("PUNTAJES FINALES", 280, 80);
+		g2d.setColor(Color.black);
 		g2d.drawString("Nombre", 80, 180);
 		g2d.drawString("Monedas", 700, 180);
 

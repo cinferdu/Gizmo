@@ -5,7 +5,7 @@ import game.Jugador;
 public class CajaMisteriosa extends Objeto {
 
 	public CajaMisteriosa() {
-		super("Caja Misteriosa", "? ? ? ?");
+		super("Caja Misteriosa", "? ? ? ?",false);
 	}
 
 	public void activarEfecto(Jugador jugador) {
