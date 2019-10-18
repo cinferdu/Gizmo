@@ -107,62 +107,63 @@ public class PanelJuego extends JPanel implements Consumidor {
 	}
 
 	public void actualizar(Operacion operacion, Jugador jugadorActual) { // cambiar por switch?
-		if (operacion == Operacion.NUEVA_RONDA) {
+
+		switch (operacion) {
+		case NUEVA_RONDA:
 			this.textArea.append("*** INICIANDO RONDA " + partida.getRondaActual() + " ***\n");
-			return;
-		}
-		if (operacion == Operacion.MOVIMIENTO) {
-			return;
-		}
-		if (operacion == Operacion.LANZAMIENTO_DADO) {
+			break;
+
+		case LANZAMIENTO_DADO:
 			dado = Dado.getImgCara(jugadorActual.getNroPasos()).getScaledInstance(50, 50, Image.SCALE_SMOOTH);
 			this.textArea
 					.append(jugadorActual.getNombre() + " avanza " + jugadorActual.getNroPasos() + " casillas" + "\n");
-			return;
-		}
+			break;
 
-		if (operacion == Operacion.CASILLA_ACTIVADA) {
+		case CASILLA_ACTIVADA:
 			this.textArea.append(jugadorActual.getNombre() + " activo una " + jugadorActual.getPosicionActual() + "\n");
-			return;
-		}
+			break;
 
-		if (operacion == Operacion.SELECCIONAR_CAMINO) {
+		case SELECCIONAR_CAMINO:
 			this.textArea.append(jugadorActual.getNombre() + " seleccione un camino\n");
 			Casilla caminoElegido = (Casilla) mostrarOpciones(1, jugadorActual.getPosicionActual());
-			//Casilla caminoElegido = mostrarOpcionesParaElegirCamino(jugadorActual.getPosicionActual());
 			partida.setRespuestaDePanel(caminoElegido);
-		}
+			break;
 
-		if (operacion == Operacion.SELECCIONAR_ACCION) {
-			
+		case SELECCIONAR_ACCION:
 			this.textArea.append(jugadorActual.getNombre() + " seleccione un objeto\n");
 			int objetoElegido = (Integer) mostrarOpciones(2, jugadorActual);
 
-			if (jugadorActual.getMochila_objetos(objetoElegido).isConObjetivo() == true) { // 
+			if (jugadorActual.getMochila_objetos(objetoElegido).isConObjetivo() == true) {
 				jugadorActual.getMochila_objetos(objetoElegido).setVictima((Jugador) mostrarOpciones(3, jugadorActual));
 			}
 			partida.setRespuestaDePanel(objetoElegido);
-		}
+			break;
 
-		if (operacion == Operacion.PUNTAJES_FINALES) {
+		case SIN_ACCION:
+			textArea.append(jugadorActual.getNombre() + " no tiene ninguna accion que realizar.");
+			break;
+
+		case PUNTAJES_FINALES:
 			PuntajesVentana test = new PuntajesVentana((ArrayList<Jugador>) partida.getJugadores(),
 					partida.getJugadorGanador());
 			test.setVisible(true);
 			test.setFocusable(true);
 			ventanaJuego.dispose();
+			break;
+
+		default:
+			break;
 		}
-		// this.textArea.append(jugadorActual.getNombre() + " tiene " +
-		// jugadorActual.getMonedas() + " monedas.\n");
+
 	}
 
-	// 
 	private Object mostrarOpciones(int tipoOpciones, Object aListar) {
 		// creo los componentes
 		JLabel mensaje = new JLabel("Seleccione una opcion (tiene " + TIEMPO_ELEGIR_OPCION + " segundos)");
 		mensaje.setBounds(345, 565, 250, 20);
 
 		JComboBox<Object> listaOpciones = null;
-		
+
 		// cargo el combobox
 		switch (tipoOpciones) {
 		case 1:
@@ -171,7 +172,7 @@ public class PanelJuego extends JPanel implements Consumidor {
 			for (Casilla elemento : casilla.getSiguientesCasillas()) {
 				listaOpciones.addItem(elemento);
 			}
-			
+
 			break;
 		case 2:
 			Jugador jugador = (Jugador) aListar;
@@ -191,12 +192,11 @@ public class PanelJuego extends JPanel implements Consumidor {
 		default:
 			break;
 		}
-		
-		
+
 		listaOpciones.setBounds(360, 595, 200, 25);
 		JButton aceptar = new JButton("Seleccionar");
 		aceptar.setBounds(400, 630, 125, 25);
-		
+
 		// para saber cuando apreto el boton
 		aceptar.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
@@ -220,7 +220,7 @@ public class PanelJuego extends JPanel implements Consumidor {
 				e.printStackTrace();
 			}
 		}
-		
+
 		Object objetoElegido = null;
 		if (tipoOpciones != 2) {
 			objetoElegido = listaOpciones.getSelectedItem();

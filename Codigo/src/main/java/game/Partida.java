@@ -69,11 +69,13 @@ public class Partida implements Productor {
 					jugadorActual.activarCasilla();
 					avisar(Operacion.CASILLA_ACTIVADA, jugadorActual);
 
-					// El jugador elije su proxima accion
-					// jugadorActual.accion();
+					// Si tiene objetos entra en la etapa de SELECCIONAR_ACCION, sino solo mostrara un objeto
 					if (jugadorActual.getMochila_objetos().size()!=0) {
+						// El jugador elije su proxima accion
 						avisar(Operacion.SELECCIONAR_ACCION, jugadorActual);
 						jugadorActual.usarObjeto((Integer)respuestaDePanel);
+					} else {
+						avisar(Operacion.SIN_ACCION, jugadorActual);
 					}
 
 					// Verifico si el jugador cumplio con el objetivo
