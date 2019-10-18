@@ -9,6 +9,7 @@ import miniTenis.MiniTenis;
 import comunicacionObserver.Consumidor;
 import comunicacionObserver.Operacion;
 import comunicacionObserver.Productor;
+import entornoGrafico.PuntajesVentana;
 
 public class Partida implements Productor {
 	private List<Jugador> jugadores;
@@ -89,19 +90,20 @@ public class Partida implements Productor {
 				// Turno del siguiente jugador.
 			}
 			
-			// MINIJUEGO
-			MiniTenis miniGame = new MiniTenis();
-			try {
-				miniGame.iniciarMiniTenis();
-			} catch (InterruptedException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
+			if (!hayGanador) {
+				
+				// MINIJUEGO
+				MiniTenis miniGame = new MiniTenis();
+				try {
+					miniGame.iniciarMiniTenis();
+				} catch (InterruptedException e) {
+					e.printStackTrace();
+				}
 			}
 			
 		}
+		avisar(Operacion.PUNTAJES_FINALES, jugadorGanador);
 		
-		// TODO observer Actualizar
-		// TODO mostrar ganador o resultados 
 	}
 
 

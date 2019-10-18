@@ -16,17 +16,13 @@ public class VentanaJuego extends JFrame {
 	public VentanaJuego(Partida prod) {
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(100, 100, 900, 700);
-		contentPane = new PanelJuego(prod);
+		contentPane = new PanelJuego(prod,this);
 		//contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 		setContentPane(contentPane);
 		contentPane.setLayout(null);
 		setLocationRelativeTo(null);
 		setResizable(false);
 		setTitle("MARIO PARTY");
-		/*
-		table = new JTable();
-		table.setBounds(444, 11, 147, 321);
-		contentPane.add(table);*/
 	}
 
 
@@ -39,7 +35,7 @@ public class VentanaJuego extends JFrame {
 		participantes.add(new Jugador("Luigi"));
 		participantes.get(0).setMochila_objetos(new CajaMisteriosa());
 		participantes.get(1).setMochila_objetos(new CajaMisteriosa());
-		Partida prod = new Partida(participantes, 50);
+		Partida prod = new Partida(participantes, 1);
 		
 		VentanaJuego ventana = new VentanaJuego(prod);
 		ventana.setVisible(true);

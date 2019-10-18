@@ -11,6 +11,7 @@ import java.awt.event.MouseEvent;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
 
 import javax.imageio.ImageIO;
 import javax.swing.ImageIcon;
@@ -46,9 +47,11 @@ public class PanelJuego extends JPanel implements Consumidor {
 	private JScrollPane scrollPane;
 	private Partida partida;
 	private boolean botonPresionado = false;
+	
+	private VentanaJuego ventanaJuego;
 
-	public PanelJuego(Partida prod) {
-		//setBounds(100, 100, 500, 700);
+	public PanelJuego(Partida prod, VentanaJuego ventanaJuego) {
+		this.ventanaJuego = ventanaJuego;
 		setLayout(null);
 		textArea = new JTextArea();
 		textArea.setBounds(10, 202, 154, 85);
@@ -152,6 +155,12 @@ public class PanelJuego extends JPanel implements Consumidor {
 			Objeto objetoElegido = mostrarOpcionesParaElegirAccion(jugadorActual);
 
 			partida.setRespuestaDePanel(objetoElegido);
+		}
+		if (operacion == Operacion.PUNTAJES_FINALES) {
+			 PuntajesVentana test = new PuntajesVentana((ArrayList<Jugador>) partida.getJugadores(), partida.getJugadorGanador());
+			 test.setVisible(true);
+			 test.setFocusable(true);
+			 ventanaJuego.dispose();
 		}
 		this.textArea.append(jugadorActual.getNombre() + " tiene " + jugadorActual.getMonedas() + " monedas.\n");
 	}
