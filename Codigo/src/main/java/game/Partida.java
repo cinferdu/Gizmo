@@ -18,6 +18,8 @@ public class Partida implements Productor {
 	private Jugador jugadorGanador;
 	private int rondaActual;
 	private	List<Consumidor> clientes;
+	
+	private Object respuestaDePanel = null;
 
 	public Partida(List<Jugador> participantes, int objetivo) {
 
@@ -56,7 +58,7 @@ public class Partida implements Productor {
 				if (!jugadorActual.isPierdeTurno()) {
 					
 					// Lanza el dado
-					jugadorActual.setNroPasos(tirarDado());
+					jugadorActual.setNroPasos(Dado.lanzarDado());
 					avisar(Operacion.LANZAMIENTO_DADO, jugadorActual);
 					
 					// El jugador avanza los pasos
@@ -66,12 +68,10 @@ public class Partida implements Productor {
 					avisar(Operacion.CASILLA_ACTIVADA, jugadorActual);
 					
 					// El jugador elije su proxima accion
-					jugadorActual.accion();
+					//jugadorActual.accion();
 					
-					/*	agregar observer 
-					 * 	esperar respuesta
-					 */
-					
+					avisar(Operacion.SELECCIONAR_ACCION, jugadorActual);
+					jugadorActual.usarObjeto();
 					// TODO observer Actualizar
 					
 					// Verifico si el jugador cumplio con el objetivo
@@ -100,10 +100,9 @@ public class Partida implements Productor {
 			
 		}
 		
-		// TODO observer Actualizar
-		
 		System.out.println("Ganador: " +this.jugadorGanador.getNombre()+" \nMonedas: "+this.jugadorGanador.getMonedas());
 		
+		// TODO observer Actualizar
 		// TODO mostrar ganador o resultados 
 	}
 
@@ -112,10 +111,6 @@ public class Partida implements Productor {
 		for (Jugador jugador : jugadores) 
 			jugador.setPosicionActual(this.tablero.getCasillaInicial());
 		
-	}
-
-	public int tirarDado() {
-		return (int) (Math.random() * 6 + 1);
 	}
 
 	private void avanzar(Jugador jugador) {
@@ -127,19 +122,8 @@ public class Partida implements Productor {
 				jugador.setPosicionActual(sigcamino);
  			else {
  				avisar(Operacion.SELECCIONAR_CAMINO, jugador);
-/* 				
- 				synchronized (this) {
-					try {
-						if (jugador.getCaminoElegido() == null) {	// tal vez borrar esto
-							this.wait();							
-						}
-					} catch (InterruptedException e) {
-						e.printStackTrace();
-					}
-				}
-*/
-				jugador.setPosicionActual(jugador.getCaminoElegido());
-				jugador.setCaminoElegido(null);
+
+				jugador.setPosicionActual((Casilla) respuestaDePanel);
  			}
 			
 			avisar(Operacion.MOVIMIENTO, jugador);
@@ -214,6 +198,14 @@ public class Partida implements Productor {
 		this.hayGanador = hayGanador;
 	}
 
+	public Object getRespuestaDePanel() {
+		return respuestaDePanel;
+	}
+
+	public void setRespuestaDePanel(Object respuestaDePanel) {
+		this.respuestaDePanel = respuestaDePanel;
+	}
+
 	public void registrar(Consumidor obs) {
 		clientes.add(obs);
 	}
@@ -234,15 +226,7 @@ public class Partida implements Productor {
 		} catch (InterruptedException e1) {
 			e1.printStackTrace();
 		}
-		/*
-		synchronized (this) {
-            try {
-				this.wait(1000);
-			} catch (InterruptedException e) {
-				e.printStackTrace();
-			}
-		}
-		*/
+		
 	}
 
 }

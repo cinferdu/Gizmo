@@ -6,6 +6,7 @@ import javax.swing.JFrame;
 
 import game.Jugador;
 import game.Partida;
+import objeto.CajaMisteriosa;
 
 public class VentanaJuego extends JFrame {
 	private static final long serialVersionUID = 5146957524880202935L;
@@ -14,7 +15,7 @@ public class VentanaJuego extends JFrame {
 	
 	public VentanaJuego(Partida prod) {
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		setBounds(100, 100, 600, 700);
+		setBounds(100, 100, 900, 700);
 		contentPane = new PanelJuego(prod);
 		//contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 		setContentPane(contentPane);
@@ -36,6 +37,8 @@ public class VentanaJuego extends JFrame {
 		ArrayList<Jugador> participantes = new ArrayList<Jugador>();
 		participantes.add(new Jugador("Mario"));
 		participantes.add(new Jugador("Luigi"));
+		participantes.get(0).setMochila_objetos(new CajaMisteriosa());
+		participantes.get(1).setMochila_objetos(new CajaMisteriosa());
 		Partida prod = new Partida(participantes, 50);
 		
 		VentanaJuego ventana = new VentanaJuego(prod);
