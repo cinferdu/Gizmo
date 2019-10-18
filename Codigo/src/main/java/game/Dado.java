@@ -13,11 +13,11 @@ public class Dado {
 	public static final Image CARA_SEIS = new ImageIcon("img//cara6.png").getImage();
 
 	public static int lanzarDado() {
-		return (int) Math.random() * 6 + 1;
+		return (int) (Math.random() * 6 + 1);
 	}
 
 	public static int lanzarDado(int caras) {
-		return (int) Math.random() * caras + 1;
+		return (int) (Math.random() * caras + 1);
 	}
 	
 	public static Image getImgCara(int nroPasos) {

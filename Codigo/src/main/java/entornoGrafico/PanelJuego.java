@@ -96,7 +96,7 @@ public class PanelJuego extends JPanel implements Consumidor {
 		g.drawImage(fondo.getImage(), 0, 0, null);
 		
 		if(dado != null)
-			g.drawImage(dado, 304, 50, null);
+			g.drawImage(dado, 302, 50, null);
 		// Dibujo las casillas
 		for (Casilla casilla : partida.getTablero().getCasilleros()) {
 			g.setColor(casilla.getTipo().getColor());

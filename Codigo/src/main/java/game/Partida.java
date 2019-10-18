@@ -103,10 +103,6 @@ public class Partida implements Productor {
 			jugador.setPosicionActual(this.tablero.getCasillaInicial());
 		
 	}
-/*
-	public int tirarDado() {
-		return (int) (Math.random() * 6 + 1);
-	}*/
 
 	private void avanzar(Jugador jugador) {
 		Casilla sigcamino = null;
