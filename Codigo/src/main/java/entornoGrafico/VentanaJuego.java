@@ -15,7 +15,7 @@ public class VentanaJuego extends JFrame {
 	
 	public VentanaJuego(Partida prod) {
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		setBounds(100, 100, 600, 700);
+		setBounds(100, 100, 900, 700);
 		contentPane = new PanelJuego(prod);
 		//contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 		setContentPane(contentPane);

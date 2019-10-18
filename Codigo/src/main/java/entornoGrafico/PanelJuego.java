@@ -3,12 +3,18 @@ package entornoGrafico;
 import java.awt.Color;
 import java.awt.Font;
 import java.awt.Graphics;
+import java.awt.Image;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.awt.image.BufferedImage;
+import java.io.File;
+import java.io.IOException;
 
+import javax.imageio.ImageIO;
 import javax.swing.AbstractAction;
+import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
 import javax.swing.JLabel;
@@ -27,20 +33,22 @@ import game.Partida;
 import objeto.Objeto;
 
 public class PanelJuego extends JPanel implements Consumidor {
-
+	private static final int INICIO_PUNTAJES = 730;
 	private static final int SEPARACION_PUNTAJES = 50;
+	
 	private static final int TIEMPO_ELEGIR_CAMINO = 5; // en segundos
 	private static final int TIEMPO_ELEGIR_ACCION = 5; // en segundos
 
+	private ImageIcon fondo;
+	
 	private static final long serialVersionUID = 3007758429335180626L;
 	private JTextArea textArea;
 	private JScrollPane scrollPane;
 	private Partida partida;
 	private boolean botonPresionado = false;
-	private int dado;
 
 	public PanelJuego(Partida prod) {
-		setBounds(100, 100, 600, 700);
+		//setBounds(100, 100, 500, 700);
 		setLayout(null);
 		textArea = new JTextArea();
 		textArea.setBounds(10, 202, 154, 85);
@@ -69,12 +77,23 @@ public class PanelJuego extends JPanel implements Consumidor {
 
 		partida = prod;
 		
+		//fondo = new ImageIcon(".\\src\\img\\background.png");
+		// para achicar la imagen
+		BufferedImage img = null;
+		try {
+		    img = ImageIO.read(new File(".\\src\\img\\background.png"));
+		} catch (IOException e) {
+		    e.printStackTrace();
+		}
+		Image dimg = img.getScaledInstance(730, 550, Image.SCALE_SMOOTH);
+		fondo = new ImageIcon(dimg);
 	}
 
 	@Override
 	public void paint(Graphics g) {
 		super.paint(g);
-
+		
+		g.drawImage(fondo.getImage(), 0, 0, null);
 		// Dibujo las casillas
 		for (Casilla casilla : partida.getTablero().getCasilleros()) {
 			g.setColor(casilla.getTipo().getColor());
@@ -92,11 +111,9 @@ public class PanelJuego extends JPanel implements Consumidor {
 			i++;
 			g.fillOval(jugador.getPosicionActual().getPosX() + 10, jugador.getPosicionActual().getPosY() + 10, 10, 10);
 		}
-		imprimirPuntajes(g);
 		
-		if (dado != 0) {
-			g.drawImage(DadoImagen.getDadoImagen(dado), 100, 200, null);
-		}
+		imprimirPuntajes(g);
+
 	}
 	
 	public void actualizar(Operacion operacion, Jugador jugadorActual) { // cambiar por switch?
@@ -111,17 +128,6 @@ public class PanelJuego extends JPanel implements Consumidor {
 			this.textArea
 					.append(jugadorActual.getNombre() + " avanza " + jugadorActual.getNroPasos() + " casillas" + "\n");
 			
-			dado = jugadorActual.getNroPasos();
-			
-			// Es para que deje de mostrar la imagen del dado despues de 1,5 segundos
-			AbstractAction paintTimer  = new AbstractAction() {
-				private static final long serialVersionUID = -5331589571920302500L;
-				public void actionPerformed(ActionEvent e) {
-		            dado = 0;
-		        }
-		    };
-		    new Timer(1500, paintTimer).start();
-		    
 			return;
 		}
 		if (operacion == Operacion.CASILLA_ACTIVADA) {
@@ -243,19 +249,19 @@ public class PanelJuego extends JPanel implements Consumidor {
 
 	private void imprimirPuntajes(Graphics g) {
 		g.setColor(Color.LIGHT_GRAY);
-		g.fillRect(450, 0, 150, 550);
+		g.fillRect(INICIO_PUNTAJES-10, 0, 180, 550);
 		int jugador_nro = 0;
 		g.setColor(Color.BLACK);
 		g.setFont(new Font(Font.SANS_SERIF, Font.BOLD, 15));
 		for (Jugador jugador : partida.getJugadores()) {
 
-			g.drawString(jugador.getNombre(), 460, 50 + jugador_nro * SEPARACION_PUNTAJES);
-			g.drawString("Monedas: ", 460, 70 + jugador_nro * SEPARACION_PUNTAJES);
-			g.drawString(jugador.getMonedas() + "", 550, 70 + jugador_nro * SEPARACION_PUNTAJES);
+			g.drawString(jugador.getNombre(), INICIO_PUNTAJES, 50 + jugador_nro * SEPARACION_PUNTAJES);
+			g.drawString("Monedas: ", INICIO_PUNTAJES, 70 + jugador_nro * SEPARACION_PUNTAJES);
+			g.drawString(jugador.getMonedas() + "", INICIO_PUNTAJES + 145, 70 + jugador_nro * SEPARACION_PUNTAJES);
 			if (jugador.isPierdeTurno()) {
 				g.setColor(Color.RED);
 				g.setFont(new Font(Font.SANS_SERIF, Font.ITALIC, 10));
-				g.drawString("Pierde su turno", 520, 50 + jugador_nro * SEPARACION_PUNTAJES);
+				g.drawString("Perdera su turno", INICIO_PUNTAJES + 80, 50 + jugador_nro * SEPARACION_PUNTAJES);
 				g.setColor(Color.BLACK);
 				g.setFont(new Font(Font.SANS_SERIF, Font.BOLD, 15));
 			}
