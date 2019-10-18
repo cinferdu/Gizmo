@@ -5,6 +5,7 @@ import java.util.Iterator;
 import java.util.List;
 
 import casilla.Casilla;
+import miniTenis.MiniTenis;
 import comunicacionObserver.Consumidor;
 import comunicacionObserver.Operacion;
 import comunicacionObserver.Productor;
@@ -89,6 +90,14 @@ public class Partida implements Productor {
 			}
 			
 			// MINIJUEGO
+			MiniTenis miniGame = new MiniTenis();
+			try {
+				miniGame.iniciarMiniTenis();
+			} catch (InterruptedException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			
 		}
 		
 		// TODO observer Actualizar
