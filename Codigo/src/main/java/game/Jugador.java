@@ -4,7 +4,6 @@ import java.awt.Color;
 import java.util.ArrayList;
 
 import casilla.Casilla;
-import objeto.CajaMisteriosa;
 import objeto.Objeto;
 
 public class Jugador {
@@ -17,83 +16,61 @@ public class Jugador {
 	private Casilla posicionActual;
 	private ArrayList<Objeto> mochila_objetos;
 	private Objeto poder;
-	//private Casilla caminoElegido;
 	private Color color;
 
-	// Constructor de jugador;
-	public Jugador(String nombre) {
-		this.nombre = nombre;
-		pierdeTurno = false;
-		posicionActual = null;
-		
-		rondaActual = 0;
-		monedas = 0;
-		puntos = 0;
-		
-		mochila_objetos = new ArrayList<Objeto>();
-		//this.setCaminoElegido(null);
-		this.setColor(Color.BLACK);
-	}
-	
 	// Constructor de jugador con color
 	public Jugador(String nombre, Color color) {
 		this.nombre = nombre;
 		pierdeTurno = false;
 		posicionActual = null;
-		
+
 		rondaActual = 0;
 		monedas = 0;
 		puntos = 0;
-		
+
 		mochila_objetos = new ArrayList<Objeto>();
-		//this.setCaminoElegido(null);
 		this.setColor(color);
 	}
-	
+
+	// Constructor de jugador;
+	public Jugador(String nombre) { 
+		this(nombre,Color.BLACK);				// llama al constructor de arriba
+	}
+
 	public void usarObjeto(int index) {
-		//Activa el efecto del objeto
+		// Activa el efecto del objeto
 		mochila_objetos.get(index).activarEfecto(this);
 		mochila_objetos.remove(index);
 	}
-	
+
 	public void usarPoder() {
-		//Activa el efecto del poder
-		//this.getPoder().efecto(this);
+		// Activa el efecto del poder
+		// this.getPoder().efecto(this);
 	}
-	
+
 	public Objeto activarPoder() {
 		return this.poder;
 	}
 	/*
-	public boolean accion() {	
-		// TODO
-		int opcion = 0;
-		switch (opcion) {
-		case 1:
-			this.usarObjeto();
-			break;
-		case 2:
-			this.usarPoder();
-			break;
-			
-
-		default:
-			break;
-		}
-
-		//Finaliza el turno
-		
-		return true;
-	}*/
+	 * public boolean accion() { // TODO int opcion = 0; switch (opcion) { case 1:
+	 * this.usarObjeto(); break; case 2: this.usarPoder(); break;
+	 * 
+	 * 
+	 * default: break; }
+	 * 
+	 * //Finaliza el turno
+	 * 
+	 * return true; }
+	 */
 
 	public void aumentarMonedas(int cantidad) {
-		this.monedas+=cantidad;
+		this.monedas += cantidad;
 	}
-	
+
 	public void decrementarMonedas(int cantidad) {
-		this.monedas = Math.max(monedas-cantidad, 0);
+		this.monedas = Math.max(monedas - cantidad, 0);
 	}
-	
+
 	public String getNombre() {
 		return nombre;
 	}
@@ -141,7 +118,7 @@ public class Jugador {
 	public void setNroPasos(int nroPasos) {
 		this.nroPasos = nroPasos;
 	}
-	
+
 	public void decrementarPasos() {
 		this.nroPasos--;
 	}
@@ -165,14 +142,12 @@ public class Jugador {
 	public void activarCasilla() {
 		this.posicionActual.activarCasilla(this);
 	}
-/*
-	public Casilla getCaminoElegido() {
-		return caminoElegido;
-	}
-
-	public void setCaminoElegido(Casilla caminoElegido) {
-		this.caminoElegido = caminoElegido;
-	}*/
+	/*
+	 * public Casilla getCaminoElegido() { return caminoElegido; }
+	 * 
+	 * public void setCaminoElegido(Casilla caminoElegido) { this.caminoElegido =
+	 * caminoElegido; }
+	 */
 
 	public Color getColor() {
 		return color;

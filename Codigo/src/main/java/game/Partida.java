@@ -5,12 +5,10 @@ import java.util.Iterator;
 import java.util.List;
 
 import casilla.Casilla;
-import miniTenis.MiniTenis;
-import objeto.Objeto;
 import comunicacionObserver.Consumidor;
 import comunicacionObserver.Operacion;
 import comunicacionObserver.Productor;
-import entornoGrafico.PuntajesVentana;
+import miniTenis.MiniTenis;
 
 public class Partida implements Productor {
 	private List<Jugador> jugadores;

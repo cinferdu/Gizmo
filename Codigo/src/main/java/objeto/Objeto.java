@@ -1,7 +1,5 @@
 package objeto;
 
-import java.util.List;
-
 import game.Jugador;
 
 public abstract class Objeto {
@@ -15,10 +13,6 @@ public abstract class Objeto {
 		this.descripcion = descripcion;
 		this.conObjetivo = conObjetivo;
 		this.victima = null;
-	}
-
-	public Jugador elegirObjetivo(List<Jugador> jugadores, Jugador jugadorActual) {
-		return jugadorActual;
 	}
 
 	public abstract void activarEfecto(Jugador jugador);

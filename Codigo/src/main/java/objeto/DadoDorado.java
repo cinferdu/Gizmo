@@ -10,7 +10,7 @@ public class DadoDorado extends Objeto {
 
 	@Override
 	public void activarEfecto(Jugador jugador) {
-		jugador.aumentarMonedas((int) Math.random() * 10 + 1);
+		jugador.aumentarMonedas((int) (Math.random() * 10 + 1));
 	}
 
 }

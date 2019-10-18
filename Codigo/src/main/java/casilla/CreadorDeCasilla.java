@@ -10,6 +10,10 @@ public class CreadorDeCasilla {
 		if (ConPremio.getID() == id) 
 			return new ConPremio();
 		
+		if (ConItem.getID() == id) {
+			return new ConItem();
+		}
+		
 		return null;
 	}
 }
