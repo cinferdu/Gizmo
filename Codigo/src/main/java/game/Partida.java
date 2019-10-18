@@ -100,8 +100,6 @@ public class Partida implements Productor {
 			
 		}
 		
-		System.out.println("Ganador: " +this.jugadorGanador.getNombre()+" \nMonedas: "+this.jugadorGanador.getMonedas());
-		
 		// TODO observer Actualizar
 		// TODO mostrar ganador o resultados 
 	}
