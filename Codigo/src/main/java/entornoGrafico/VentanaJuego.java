@@ -9,6 +9,7 @@ import game.Jugador;
 import game.Partida;
 import objeto.CajaMisteriosa;
 import objeto.DadoDorado;
+import objeto.PistolaCongelante;
 import objeto.GuanteBlanco;
 
 public class VentanaJuego extends JFrame {
@@ -37,6 +38,7 @@ public class VentanaJuego extends JFrame {
 		participantes.add(new Jugador("Luigi",Color.green));
 		participantes.get(0).addMochila_objetos(new DadoDorado());
 		participantes.get(0).addMochila_objetos(new GuanteBlanco());
+		participantes.get(0).addMochila_objetos(new PistolaCongelante());
 		participantes.get(1).addMochila_objetos(new DadoDorado());
 		Partida prod = new Partida(participantes, 50);
 		

@@ -157,7 +157,7 @@ public class PanelJuego extends JPanel implements Consumidor {
 			break;
 
 		case PERDIO_TURNO:
-			textArea.append(jugadorActual.getNombre() + " la proxima sera.\n");
+			textArea.append(jugadorActual.getNombre() + ", la proxima vez sera.\n");
 			break;
 
 		case PUNTAJES_FINALES:
