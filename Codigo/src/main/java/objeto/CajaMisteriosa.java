@@ -9,6 +9,6 @@ public class CajaMisteriosa extends Objeto {
 	}
 
 	public void activarEfecto(Jugador jugador) {
-		jugador.aumentarMonedas((int) (Math.random() * 10));
+		jugador.aumentarMonedas((int) (Math.random() * 4 + 1));
 	}
 }

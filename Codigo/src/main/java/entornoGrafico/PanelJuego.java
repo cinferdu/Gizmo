@@ -6,6 +6,8 @@ import java.awt.Graphics;
 import java.awt.Image;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
@@ -45,8 +47,11 @@ public class PanelJuego extends JPanel implements Consumidor {
 	private Partida partida;
 	private boolean botonPresionado = false;
 
+	// para mostrarOpciones(...) listener
 	private JComboBox<Object> listaOpciones = null;
 	private JLabel descripcion = null;
+	private Casilla caminoElegido = null;
+	
 	private VentanaJuego ventanaJuego;
 
 	public PanelJuego(Partida prod, VentanaJuego ventanaJuego) {
@@ -127,8 +132,8 @@ public class PanelJuego extends JPanel implements Consumidor {
 
 		case SELECCIONAR_CAMINO:
 			this.textArea.append(jugadorActual.getNombre() + " seleccione un camino\n");
-			Casilla caminoElegido = (Casilla) mostrarOpciones(1, jugadorActual.getPosicionActual());
-			
+			mostrarOpciones(jugadorActual.getPosicionActual());
+
 			partida.setRespuestaDePanel(caminoElegido);
 			break;
 
@@ -150,7 +155,7 @@ public class PanelJuego extends JPanel implements Consumidor {
 		case SIN_ACCION:
 			textArea.append(jugadorActual.getNombre() + " no puede realizar ninguna accion.\n");
 			break;
-			
+
 		case PERDIO_TURNO:
 			textArea.append(jugadorActual.getNombre() + " la proxima sera.\n");
 			break;
@@ -214,11 +219,11 @@ public class PanelJuego extends JPanel implements Consumidor {
 				botonPresionado = true;
 			}
 		});
-		
+
 		JLabel descripcion_titulo = null;
 		if (tipoOpciones == 2) {
 			// a descripcion lo cargo con la descripcion del primer objeto
-			descripcion = new JLabel(((Objeto)listaOpciones.getItemAt(0)).getDescripcion());
+			descripcion = new JLabel(((Objeto) listaOpciones.getItemAt(0)).getDescripcion());
 			descripcion_titulo = new JLabel("Descripcion:");
 			descripcion_titulo.setBounds(600, 565, 250, 20);
 			descripcion.setBounds(600, 580, 280, 50);
@@ -231,7 +236,7 @@ public class PanelJuego extends JPanel implements Consumidor {
 				}
 			});
 		}
-		
+
 		add(listaOpciones);
 		add(aceptar);
 		add(mensaje);
@@ -240,7 +245,7 @@ public class PanelJuego extends JPanel implements Consumidor {
 		// espero a que aprete el boton o pasen 5 segundos
 		long tiempo_limite_ini = System.currentTimeMillis();
 		long tiempo_limite_fin = System.currentTimeMillis();
-		while (botonPresionado == false && (tiempo_limite_fin - tiempo_limite_ini) < (TIEMPO_ELEGIR_OPCION * 1000) ) {
+		while (botonPresionado == false && (tiempo_limite_fin - tiempo_limite_ini) < (TIEMPO_ELEGIR_OPCION * 1000)) {
 			try {
 				Thread.sleep(100);
 				tiempo_limite_fin = System.currentTimeMillis();
@@ -255,22 +260,72 @@ public class PanelJuego extends JPanel implements Consumidor {
 		} else {
 			remove(descripcion_titulo);
 			remove(descripcion);
-			
-			if (botonPresionado == true) 
+
+			if (botonPresionado == true)
 				objetoElegido = listaOpciones.getSelectedIndex();
-			else 
+			else
 				objetoElegido = null;
-			
+
 		}
 		remove(listaOpciones);
 		remove(aceptar);
 		remove(mensaje);
 		revalidate();
 		this.botonPresionado = false;
-		
+
 		listaOpciones = null;
-		
+
 		return objetoElegido;
+	}
+
+	private void mostrarOpciones(final Casilla aListar) {
+		
+		// creo los componentes
+		JLabel mensaje = new JLabel("Haga clic la siguiente casilla, para avanzar (tiene " + TIEMPO_ELEGIR_OPCION + " segundos)");
+		//JLabel mensaje_2 = new JLabel("Seleccione la siguiente casilla (tiene " + TIEMPO_ELEGIR_OPCION + " segundos)");
+		mensaje.setBounds(345, 565, 400, 20);
+
+		add(mensaje);
+		//add(mensaje_2);
+		revalidate(); // esto lo puse porque al jcombobox no le aparecia la flecha hacia abajo
+		
+		// Para elegir camino
+		addMouseListener(new MouseAdapter() {
+			public void mouseClicked(MouseEvent e) {
+				for (Casilla camino : aListar.getSiguientesCasillas()) {
+					if (e.getX() > camino.getPosX() && e.getX() < (camino.getPosX()+TAMANIO_CASILLA)
+							&& e.getY() > camino.getPosY() && e.getY() < (camino.getPosY()+TAMANIO_CASILLA)) {
+						
+						caminoElegido = camino;
+						
+						botonPresionado = true; // lo uso como "casilla seleccionada"
+					}
+					
+				}
+			}
+		});
+		
+		// espero a que aprete el boton o pasen 5 segundos
+		long tiempo_limite_ini = System.currentTimeMillis();
+		long tiempo_limite_fin = System.currentTimeMillis();
+		while (botonPresionado == false && (tiempo_limite_fin - tiempo_limite_ini) < (TIEMPO_ELEGIR_OPCION * 1000)) {
+			try {
+				Thread.sleep(100);
+				tiempo_limite_fin = System.currentTimeMillis();
+			} catch (InterruptedException e) {
+				e.printStackTrace();
+			}
+		}
+
+		remove(mensaje);
+		revalidate();
+		
+		if (botonPresionado) {
+			botonPresionado = false;
+		} else {
+			caminoElegido = aListar.getSiguientesCasillas().get(0);
+		}
+
 	}
 
 	private void imprimirPuntajes(Graphics g) {
@@ -281,7 +336,7 @@ public class PanelJuego extends JPanel implements Consumidor {
 		g.drawString("¿Perdera", INICIO_PUNTAJES + 110, 12);
 		g.drawString("su", INICIO_PUNTAJES + 120, 22);
 		g.drawString("turno?", INICIO_PUNTAJES + 120, 32);
-		
+
 		int jugador_nro = 0;
 		g.setFont(new Font(Font.SANS_SERIF, Font.BOLD, 15));
 		for (Jugador jugador : partida.getJugadores()) {
@@ -289,7 +344,7 @@ public class PanelJuego extends JPanel implements Consumidor {
 			g.drawString(jugador.getNombre(), INICIO_PUNTAJES, 50 + jugador_nro * SEPARACION_PUNTAJES);
 			g.drawString("Monedas: ", INICIO_PUNTAJES, 70 + jugador_nro * SEPARACION_PUNTAJES);
 			g.drawString(jugador.getMonedas() + "", INICIO_PUNTAJES + 135, 70 + jugador_nro * SEPARACION_PUNTAJES);
-			
+
 			// Si pierde o no su proximo turno
 			g.setColor(Color.GREEN);
 			g.setFont(new Font(Font.SANS_SERIF, Font.BOLD, 10));
