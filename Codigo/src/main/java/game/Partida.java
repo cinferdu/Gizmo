@@ -11,7 +11,7 @@ import comunicacionObserver.Productor;
 import miniTenis.MiniTenis;
 
 public class Partida implements Productor {
-	private List<Jugador> jugadores;
+	private ArrayList<Jugador> jugadores;
 	private int objetivo;
 	private boolean hayGanador;
 	private Tablero tablero;
@@ -21,7 +21,7 @@ public class Partida implements Productor {
 
 	private Object respuestaDePanel = null;
 
-	public Partida(List<Jugador> participantes, int objetivo) {
+	public Partida(ArrayList<Jugador> participantes, int objetivo) {
 
 		jugadores = participantes;
 		rondaActual = 0;
@@ -68,10 +68,13 @@ public class Partida implements Productor {
 					avisar(Operacion.CASILLA_ACTIVADA, jugadorActual);
 
 					// Si tiene objetos entra en la etapa de SELECCIONAR_ACCION, sino solo mostrara un objeto
-					if (jugadorActual.getMochila_objetos().size()!=0) {
+					if (jugadorActual.getMochila_objetos().size() != 0) {
 						// El jugador elije su proxima accion
 						avisar(Operacion.SELECCIONAR_ACCION, jugadorActual);
-						jugadorActual.usarObjeto((Integer)respuestaDePanel);
+						
+						if (respuestaDePanel != null) 
+							jugadorActual.usarObjeto((Integer) respuestaDePanel);
+						
 					} else {
 						avisar(Operacion.SIN_ACCION, jugadorActual);
 					}
@@ -82,10 +85,10 @@ public class Partida implements Productor {
 				} else {
 					// Activo el turno del jugador
 					jugadorActual.setPierdeTurno(false);
-					// avisar(null, jugadorActual); Perdio su turno
+					avisar(Operacion.PERDIO_TURNO, jugadorActual); // Perdio su turno
 				}
 
-				// avisar(null, jugadorActual); Mostrar monedas y estrellas??
+				avisar(Operacion.ACTUALIZAR_TABLERO, jugadorActual); // Mostrar monedas y estrellas??
 
 				// Fin del turno del jugador.
 				// Turno del siguiente jugador.
@@ -150,11 +153,11 @@ public class Partida implements Productor {
 	 * public void iniciarMiniJuego(MiniJuego miniJuego) { // minijuego pendiente }
 	 */
 
-	public List<Jugador> getJugadores() {
+	public ArrayList<Jugador> getJugadores() {
 		return jugadores;
 	}
 
-	public void setJugadores(List<Jugador> jugadores) {
+	public void setJugadores(ArrayList<Jugador> jugadores) {
 		this.jugadores = jugadores;
 	}
 
@@ -219,8 +222,8 @@ public class Partida implements Productor {
 			consumidor.actualizar(operacion, jugadorActual);
 		}
 
-		// Para que espere un poco antes de volver a continuar y no hacer todo en muy
-		// poco tiempo
+		// Para que espere un poco antes de volver a continuar y
+		// no hacer todo en muy poco tiempo
 		// Tal vez habria que modificarlo
 		try {
 			Thread.sleep(1000);

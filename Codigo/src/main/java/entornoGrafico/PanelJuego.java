@@ -33,8 +33,8 @@ import objeto.Objeto;
 public class PanelJuego extends JPanel implements Consumidor {
 	private static final int INICIO_PUNTAJES = 730;
 	private static final int SEPARACION_PUNTAJES = 50;
-
-	private static final int TIEMPO_ELEGIR_OPCION = 5; // en segundos
+	private static final int TAMANIO_CASILLA = 30;
+	private static final int TIEMPO_ELEGIR_OPCION = 10; // en segundos
 
 	private ImageIcon fondo;
 	private Image dado = null;
@@ -45,6 +45,8 @@ public class PanelJuego extends JPanel implements Consumidor {
 	private Partida partida;
 	private boolean botonPresionado = false;
 
+	private JComboBox<Object> listaOpciones = null;
+	private JLabel descripcion = null;
 	private VentanaJuego ventanaJuego;
 
 	public PanelJuego(Partida prod, VentanaJuego ventanaJuego) {
@@ -66,7 +68,7 @@ public class PanelJuego extends JPanel implements Consumidor {
 		textArea.setText("");
 
 		JSeparator separator = new JSeparator();
-		separator.setBounds(0, 560, 600, 50);
+		separator.setBounds(0, 560, 900, 50);
 		add(separator);
 
 		partida = prod;
@@ -93,7 +95,7 @@ public class PanelJuego extends JPanel implements Consumidor {
 		// Dibujo las casillas
 		for (Casilla casilla : partida.getTablero().getCasilleros()) {
 			g.setColor(casilla.getTipo().getColor());
-			g.fillOval(casilla.getPosX(), casilla.getPosY(), 30, 30);
+			g.fillOval(casilla.getPosX(), casilla.getPosY(), TAMANIO_CASILLA, TAMANIO_CASILLA);
 		}
 
 		// Dibujo los jugadores
@@ -126,12 +128,18 @@ public class PanelJuego extends JPanel implements Consumidor {
 		case SELECCIONAR_CAMINO:
 			this.textArea.append(jugadorActual.getNombre() + " seleccione un camino\n");
 			Casilla caminoElegido = (Casilla) mostrarOpciones(1, jugadorActual.getPosicionActual());
+			
 			partida.setRespuestaDePanel(caminoElegido);
 			break;
 
 		case SELECCIONAR_ACCION:
 			this.textArea.append(jugadorActual.getNombre() + " seleccione un objeto\n");
-			int objetoElegido = (Integer) mostrarOpciones(2, jugadorActual);
+			Object control_null = mostrarOpciones(2, jugadorActual);
+			if (control_null == null) {
+				partida.setRespuestaDePanel(null);
+				return;
+			}
+			int objetoElegido = (Integer) control_null;
 
 			if (jugadorActual.getMochila_objetos(objetoElegido).isConObjetivo() == true) {
 				jugadorActual.getMochila_objetos(objetoElegido).setVictima((Jugador) mostrarOpciones(3, jugadorActual));
@@ -140,7 +148,11 @@ public class PanelJuego extends JPanel implements Consumidor {
 			break;
 
 		case SIN_ACCION:
-			textArea.append(jugadorActual.getNombre() + " no tiene ninguna accion que realizar.");
+			textArea.append(jugadorActual.getNombre() + " no puede realizar ninguna accion.\n");
+			break;
+			
+		case PERDIO_TURNO:
+			textArea.append(jugadorActual.getNombre() + " la proxima sera.\n");
 			break;
 
 		case PUNTAJES_FINALES:
@@ -162,8 +174,6 @@ public class PanelJuego extends JPanel implements Consumidor {
 		JLabel mensaje = new JLabel("Seleccione una opcion (tiene " + TIEMPO_ELEGIR_OPCION + " segundos)");
 		mensaje.setBounds(345, 565, 250, 20);
 
-		JComboBox<Object> listaOpciones = null;
-
 		// cargo el combobox
 		switch (tipoOpciones) {
 		case 1:
@@ -183,7 +193,8 @@ public class PanelJuego extends JPanel implements Consumidor {
 			break;
 		case 3:
 			listaOpciones = new JComboBox<Object>();
-			ArrayList<Jugador> posiblesObjetivos = (ArrayList<Jugador>) partida.getJugadores();
+			// Lo clono para que al hacer el remove no borre ese jugador en la partida
+			ArrayList<Jugador> posiblesObjetivos = (ArrayList<Jugador>) partida.getJugadores().clone();
 			posiblesObjetivos.remove((Jugador) aListar);
 			for (Jugador elemento : posiblesObjetivos) {
 				listaOpciones.addItem(elemento);
@@ -203,7 +214,24 @@ public class PanelJuego extends JPanel implements Consumidor {
 				botonPresionado = true;
 			}
 		});
-
+		
+		JLabel descripcion_titulo = null;
+		if (tipoOpciones == 2) {
+			// a descripcion lo cargo con la descripcion del primer objeto
+			descripcion = new JLabel(((Objeto)listaOpciones.getItemAt(0)).getDescripcion());
+			descripcion_titulo = new JLabel("Descripcion:");
+			descripcion_titulo.setBounds(600, 565, 250, 20);
+			descripcion.setBounds(600, 580, 280, 50);
+			add(descripcion_titulo);
+			add(descripcion);
+			listaOpciones.addActionListener(new ActionListener() {
+				public void actionPerformed(ActionEvent e) {
+					Objeto item = (Objeto) listaOpciones.getSelectedItem();
+					descripcion.setText(item.getDescripcion());
+				}
+			});
+		}
+		
 		add(listaOpciones);
 		add(aceptar);
 		add(mensaje);
@@ -212,7 +240,7 @@ public class PanelJuego extends JPanel implements Consumidor {
 		// espero a que aprete el boton o pasen 5 segundos
 		long tiempo_limite_ini = System.currentTimeMillis();
 		long tiempo_limite_fin = System.currentTimeMillis();
-		while (botonPresionado == false && (tiempo_limite_fin - tiempo_limite_ini) < TIEMPO_ELEGIR_OPCION * 1000) {
+		while (botonPresionado == false && (tiempo_limite_fin - tiempo_limite_ini) < (TIEMPO_ELEGIR_OPCION * 1000) ) {
 			try {
 				Thread.sleep(100);
 				tiempo_limite_fin = System.currentTimeMillis();
@@ -225,35 +253,53 @@ public class PanelJuego extends JPanel implements Consumidor {
 		if (tipoOpciones != 2) {
 			objetoElegido = listaOpciones.getSelectedItem();
 		} else {
-			objetoElegido = listaOpciones.getSelectedIndex();
+			remove(descripcion_titulo);
+			remove(descripcion);
+			
+			if (botonPresionado == true) 
+				objetoElegido = listaOpciones.getSelectedIndex();
+			else 
+				objetoElegido = null;
+			
 		}
 		remove(listaOpciones);
 		remove(aceptar);
 		remove(mensaje);
 		revalidate();
 		this.botonPresionado = false;
-
+		
+		listaOpciones = null;
+		
 		return objetoElegido;
 	}
 
 	private void imprimirPuntajes(Graphics g) {
 		g.setColor(Color.LIGHT_GRAY);
 		g.fillRect(INICIO_PUNTAJES - 10, 0, 180, 550);
-		int jugador_nro = 0;
 		g.setColor(Color.BLACK);
+		g.setFont(new Font(Font.DIALOG, Font.BOLD, 10));
+		g.drawString("¿Perdera", INICIO_PUNTAJES + 110, 12);
+		g.drawString("su", INICIO_PUNTAJES + 120, 22);
+		g.drawString("turno?", INICIO_PUNTAJES + 120, 32);
+		
+		int jugador_nro = 0;
 		g.setFont(new Font(Font.SANS_SERIF, Font.BOLD, 15));
 		for (Jugador jugador : partida.getJugadores()) {
 
 			g.drawString(jugador.getNombre(), INICIO_PUNTAJES, 50 + jugador_nro * SEPARACION_PUNTAJES);
 			g.drawString("Monedas: ", INICIO_PUNTAJES, 70 + jugador_nro * SEPARACION_PUNTAJES);
-			g.drawString(jugador.getMonedas() + "", INICIO_PUNTAJES + 145, 70 + jugador_nro * SEPARACION_PUNTAJES);
+			g.drawString(jugador.getMonedas() + "", INICIO_PUNTAJES + 135, 70 + jugador_nro * SEPARACION_PUNTAJES);
+			
+			// Si pierde o no su proximo turno
+			g.setColor(Color.GREEN);
+			g.setFont(new Font(Font.SANS_SERIF, Font.BOLD, 10));
 			if (jugador.isPierdeTurno()) {
-				g.setColor(Color.RED);
-				g.setFont(new Font(Font.SANS_SERIF, Font.ITALIC, 10));
-				g.drawString("Perdera su turno", INICIO_PUNTAJES + 80, 50 + jugador_nro * SEPARACION_PUNTAJES);
-				g.setColor(Color.BLACK);
-				g.setFont(new Font(Font.SANS_SERIF, Font.BOLD, 15));
+				g.drawString("SI", INICIO_PUNTAJES + 130, 50 + jugador_nro * SEPARACION_PUNTAJES);
+			} else {
+				g.drawString("NO", INICIO_PUNTAJES + 130, 50 + jugador_nro * SEPARACION_PUNTAJES);
 			}
+			g.setColor(Color.BLACK);
+			g.setFont(new Font(Font.SANS_SERIF, Font.BOLD, 15));
 			jugador_nro++;
 		}
 	}

@@ -173,4 +173,10 @@ public class Jugador {
 		this.mochila_objetos.add(objeto);
 	}
 
+	@Override
+	public String toString() {
+		return nombre;
+	}
+
+	
 }

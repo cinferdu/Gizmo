@@ -8,6 +8,8 @@ import javax.swing.JFrame;
 import game.Jugador;
 import game.Partida;
 import objeto.CajaMisteriosa;
+import objeto.DadoDorado;
+import objeto.GuanteBlanco;
 
 public class VentanaJuego extends JFrame {
 	private static final long serialVersionUID = 5146957524880202935L;
@@ -27,14 +29,15 @@ public class VentanaJuego extends JFrame {
 
 
 	public static void main(String[] args) {
-		int fps = 15;
+		int fps = 30;
 		
 		// Creo la partida con los jugadores
 		ArrayList<Jugador> participantes = new ArrayList<Jugador>();
 		participantes.add(new Jugador("Mario",Color.white));
 		participantes.add(new Jugador("Luigi",Color.green));
-		participantes.get(0).addMochila_objetos(new CajaMisteriosa());
-		participantes.get(1).addMochila_objetos(new CajaMisteriosa());
+		participantes.get(0).addMochila_objetos(new DadoDorado());
+		participantes.get(0).addMochila_objetos(new GuanteBlanco());
+		participantes.get(1).addMochila_objetos(new DadoDorado());
 		Partida prod = new Partida(participantes, 50);
 		
 		VentanaJuego ventana = new VentanaJuego(prod);
