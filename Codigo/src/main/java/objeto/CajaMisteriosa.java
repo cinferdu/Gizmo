@@ -1,5 +1,7 @@
 package objeto;
 
+import java.util.Random;
+
 import game.Jugador;
 
 public class CajaMisteriosa extends Objeto {
@@ -9,6 +11,13 @@ public class CajaMisteriosa extends Objeto {
 	}
 
 	public void activarEfecto(Jugador jugador) {
-		jugador.aumentarMonedas((int) (Math.random() * 4 + 1));
+		int cantidad = (int) (Math.random() * 4); // [0, 3]
+		int signo = ((int) Math.random() * -2); // 0 o -1
+		
+		if (signo < 0) {
+			jugador.decrementarMonedas(cantidad);
+		} else {
+			jugador.aumentarMonedas(cantidad);
+		}
 	}
 }
