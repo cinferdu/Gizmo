@@ -17,6 +17,7 @@ public class Jugador {
 	private ArrayList<Objeto> mochila_objetos;
 	private Objeto poder;
 	private Color color;
+	private int miniJuegoPuntos;
 
 	// Constructor de jugador con color
 	public Jugador(String nombre, Color color) {
@@ -27,14 +28,15 @@ public class Jugador {
 		rondaActual = 0;
 		monedas = 0;
 		puntos = 0;
+		miniJuegoPuntos = 0;
 
 		mochila_objetos = new ArrayList<Objeto>();
 		this.setColor(color);
 	}
 
 	// Constructor de jugador;
-	public Jugador(String nombre) { 
-		this(nombre,Color.BLACK);				// llama al constructor de arriba
+	public Jugador(String nombre) {
+		this(nombre, Color.BLACK); // llama al constructor de arriba
 	}
 
 	public void usarObjeto(int index) {
@@ -178,5 +180,12 @@ public class Jugador {
 		return nombre;
 	}
 
+	public void setMiniJuegoPuntos(int puntos) {
+		miniJuegoPuntos = puntos;
+	}
 	
+	public int getMiniJuegoPuntos() {
+		return this.miniJuegoPuntos;
+	}
+
 }

@@ -7,9 +7,9 @@ import java.awt.Toolkit;
 import java.awt.event.KeyEvent;
 
 public class Racquet {
-	private static final int Y = 330;
-	private static final int WITH = 60;
-	private static final int HEIGHT = 25;
+	private static final int Y = 300;
+	private static final int WITH = 35;
+	private static final int HEIGHT = 50;
 	int x = 0;
 	int xa = 0;
 	private MiniTenis game;
@@ -26,7 +26,7 @@ public class Racquet {
 	public void paint(Graphics2D g) {
 		Toolkit t = Toolkit.getDefaultToolkit ();
         Image imagen = t.getImage ("tubo.png");
-        g.drawImage(imagen,x,Y-10, game);
+        g.drawImage(imagen,x,Y, game);
 	}
 
 	public void keyReleased(KeyEvent e) {
@@ -45,6 +45,6 @@ public class Racquet {
 	}
 
 	public int getTopY() {
-		return Y - HEIGHT;
+		return Y - HEIGHT-50;
 	}
 }

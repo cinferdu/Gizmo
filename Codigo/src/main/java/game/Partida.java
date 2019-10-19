@@ -95,14 +95,22 @@ public class Partida implements Productor {
 			}
 
 			if (!hayGanador) {
-
-				// MINIJUEGO
-				MiniTenis miniGame = new MiniTenis();
-				try {
-					miniGame.iniciarMiniTenis();
-				} catch (InterruptedException e) {
-					e.printStackTrace();
+				for (Iterator<Jugador> iterator = jugadores.iterator(); iterator.hasNext();) {
+					Jugador jugador = iterator.next();
+					// MINIJUEGO
+					MiniTenis miniGame = new MiniTenis();
+					try {
+						miniGame.setGamerName(jugador.getNombre());
+						int score = miniGame.iniciarMiniTenis(jugador.getNombre());
+						jugador.setMiniJuegoPuntos(score);
+					} catch (InterruptedException e) {
+						e.printStackTrace();
+					}
 				}
+				Jugador mejor = getMejorPuntajeEnMiniJuego();
+				mejor.aumentarMonedas(mejor.getMiniJuegoPuntos()/3);
+				this.limpiarMiniPuntajes();
+				
 			}
 
 		}
@@ -231,6 +239,23 @@ public class Partida implements Productor {
 			e1.printStackTrace();
 		}
 
+	}
+	
+	private Jugador getMejorPuntajeEnMiniJuego() {
+		Jugador mejorPuntaje = this.jugadores.get(0);
+		for(int i=1;i<jugadores.size();i++) {
+			if(this.jugadores.get(i).getMiniJuegoPuntos() > mejorPuntaje.getMiniJuegoPuntos())
+				mejorPuntaje = this.jugadores.get(i);
+		}
+		return mejorPuntaje;
+	}
+	
+	private void limpiarMiniPuntajes() {
+		
+		for (Iterator<Jugador>  iterator = jugadores.iterator(); iterator.hasNext();) {
+			Jugador jugador = iterator.next();
+			jugador.setMiniJuegoPuntos(0);
+		}
 	}
 
 }
