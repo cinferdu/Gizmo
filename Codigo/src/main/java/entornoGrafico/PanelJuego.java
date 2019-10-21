@@ -4,6 +4,7 @@ import java.awt.Color;
 import java.awt.Font;
 import java.awt.Graphics;
 import java.awt.Image;
+import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
@@ -30,6 +31,7 @@ import comunicacionObserver.Operacion;
 import game.Dado;
 import game.Jugador;
 import game.Partida;
+import game.Personaje;
 import objeto.Objeto;
 
 public class PanelJuego extends JPanel implements Consumidor {
@@ -105,8 +107,11 @@ public class PanelJuego extends JPanel implements Consumidor {
 
 		// Dibujo los jugadores
 		for (Jugador jugador : partida.getJugadores()) {
-			g.setColor(jugador.getColor());
-			g.fillOval(jugador.getPosicionActual().getPosX() + 10, jugador.getPosicionActual().getPosY() + 10, 10, 10);
+			//jugador.getPersonaje().move(jugador.getPosicionActual().getPosX(), jugador.getPosicionActual().getPosY(),this);
+			Toolkit t = Toolkit.getDefaultToolkit ();
+			Image imagen = t.getImage ("Personajes/"+jugador.getPersonaje().getName()+"-body.png");
+	        g.drawImage(imagen,jugador.getPosicionActual().getPosX(),jugador.getPosicionActual().getPosY()-12,30,40,null);
+			
 		}
 
 		imprimirPuntajes(g);

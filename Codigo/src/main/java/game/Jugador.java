@@ -18,9 +18,10 @@ public class Jugador {
 	private Objeto poder;
 	private Color color;
 	private int miniJuegoPuntos;
+	private Personaje personaje;
 
 	// Constructor de jugador con color
-	public Jugador(String nombre, Color color) {
+	public Jugador(String nombre) {
 		this.nombre = nombre;
 		pierdeTurno = false;
 		posicionActual = null;
@@ -31,13 +32,21 @@ public class Jugador {
 		miniJuegoPuntos = 0;
 
 		mochila_objetos = new ArrayList<Objeto>();
-		this.setColor(color);
+		//this.setColor(color);
+	}
+	
+	public void setPersonaje(Personaje personaje) {
+		this.personaje = personaje;
+	}
+	
+	public Personaje getPersonaje() {
+		return this.personaje;
 	}
 
 	// Constructor de jugador;
-	public Jugador(String nombre) {
+	/*public Jugador(String nombre) {
 		this(nombre, Color.BLACK); // llama al constructor de arriba
-	}
+	}*/
 
 	public void usarObjeto(int index) {
 		// Activa el efecto del objeto

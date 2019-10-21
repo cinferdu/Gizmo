@@ -25,7 +25,7 @@ public class Racquet {
 
 	public void paint(Graphics2D g) {
 		Toolkit t = Toolkit.getDefaultToolkit ();
-        Image imagen = t.getImage ("tubo.png");
+        Image imagen = t.getImage ("miniJuego/miniTenis/tubo.png");
         g.drawImage(imagen,x,Y, game);
 	}
 

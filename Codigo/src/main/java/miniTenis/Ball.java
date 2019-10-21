@@ -46,7 +46,7 @@ public class Ball {
 	public void paint(Graphics2D g) {
 		//------------------------
 		Toolkit t = Toolkit.getDefaultToolkit ();
-        Image imagen = t.getImage ("ball.png");
+        Image imagen = t.getImage ("miniJuego/miniTenis/ball.png");
         g.drawImage(imagen, x, y, game);
         
 		//g.fillOval(x, y, DIAMETER, DIAMETER);
