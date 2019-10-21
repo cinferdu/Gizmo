@@ -8,8 +8,8 @@ import java.awt.event.KeyEvent;
 
 public class Racquet {
 	private static final int Y = 300;
-	private static final int WITH = 35;
-	private static final int HEIGHT = 50;
+	private static final int WITH = 50;
+	private static final int HEIGHT = 100;
 	int x = 0;
 	int xa = 0;
 	private MiniTenis game;
@@ -45,6 +45,6 @@ public class Racquet {
 	}
 
 	public int getTopY() {
-		return Y - HEIGHT-50;
+		return Y - HEIGHT;
 	}
 }

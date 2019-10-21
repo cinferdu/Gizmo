@@ -6,7 +6,7 @@ import java.awt.Rectangle;
 import java.awt.Toolkit;
 
 public class Ball {
-	private static final int DIAMETER = 30;
+	private static final int DIAMETER = 20;
 	
 	int x = 0;
 	int y = 0;
