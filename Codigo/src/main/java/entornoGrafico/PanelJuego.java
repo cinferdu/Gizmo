@@ -1,6 +1,8 @@
 package entornoGrafico;
 
 import java.awt.Color;
+import java.awt.Cursor;
+import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.Graphics;
 import java.awt.Image;
@@ -9,16 +11,14 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
-import java.awt.image.BufferedImage;
-import java.io.File;
-import java.io.IOException;
 import java.util.ArrayList;
 
-import javax.imageio.ImageIO;
+import javax.swing.BorderFactory;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
 import javax.swing.JLabel;
+import javax.swing.JLayeredPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JSeparator;
@@ -31,7 +31,6 @@ import comunicacionObserver.Operacion;
 import game.Dado;
 import game.Jugador;
 import game.Partida;
-import game.Personaje;
 import objeto.Objeto;
 
 public class PanelJuego extends JPanel implements Suscriptor {
@@ -40,8 +39,10 @@ public class PanelJuego extends JPanel implements Suscriptor {
 	private static final int TAMANIO_CASILLA = 30;
 	private static final int TIEMPO_ELEGIR_OPCION = 10; // en segundos
 
-	private ImageIcon fondo;
+	
+	private Image fondo;
 	private Image dado = null;
+	private Image dado_boton;
 
 	private static final long serialVersionUID = 3007758429335180626L;
 	private JTextArea textArea;
@@ -59,7 +60,7 @@ public class PanelJuego extends JPanel implements Suscriptor {
 	public PanelJuego(Partida prod, VentanaJuego ventanaJuego) {
 		this.ventanaJuego = ventanaJuego;
 		setLayout(null);
-		textArea = new JTextArea();
+		textArea = new JTextArea("");
 		textArea.setBounds(10, 202, 154, 85);
 		textArea.setEditable(false);
 
@@ -72,7 +73,6 @@ public class PanelJuego extends JPanel implements Suscriptor {
 		scrollPane.setBounds(0, 565, 330, 100);
 		add(scrollPane);
 
-		textArea.setText("");
 
 		JSeparator separator = new JSeparator();
 		separator.setBounds(0, 560, 900, 50);
@@ -80,25 +80,24 @@ public class PanelJuego extends JPanel implements Suscriptor {
 
 		partida = prod;
 
-		// para achicar la imagen
-		BufferedImage img = null;
-		try {
-			img = ImageIO.read(new File("img\\background.png"));
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-		Image dimg = img.getScaledInstance(730, 550, Image.SCALE_SMOOTH);
-		fondo = new ImageIcon(dimg);
-
+		fondo = ImgExtra.FONDO;
+		dado_boton = ImgExtra.BOTON_DADO;
+		
 	}
 
 	@Override
 	public void paint(Graphics g) {
 		super.paint(g);
-		g.drawImage(fondo.getImage(), 0, 0, null);
+		g.drawImage(fondo, 0, 0, null);
 
-		if (dado != null)
+		if (dado != null) 
 			g.drawImage(dado, 302, 50, null);
+		else {
+			g.drawImage(ImgExtra.CUADR_TEXTO, 25, 25, null);
+			g.drawString("Haga clic sobre los dados", 50, 50);
+			g.drawString("para iniciar su turno", 50, 65);
+			g.drawImage(dado_boton, 280, 30, null);
+		}
 		// Dibujo las casillas
 		for (Casilla casilla : partida.getTablero().getCasilleros()) {
 			g.setColor(casilla.getTipo().getColor());
@@ -111,20 +110,23 @@ public class PanelJuego extends JPanel implements Suscriptor {
 			Toolkit t = Toolkit.getDefaultToolkit ();
 			Image imagen = t.getImage ("Personajes/"+jugador.getPersonaje().getName()+"-body.png");
 	        g.drawImage(imagen,jugador.getPosicionActual().getPosX(),jugador.getPosicionActual().getPosY()-12,30,40,null);
-			
 		}
 
+		
 		imprimirPuntajes(g);
 
 	}
 
-	public void actualizar(Operacion operacion, Jugador jugadorActual) { // cambiar por switch?
+	public void actualizar(Operacion operacion, Jugador jugadorActual) { 
 
 		switch (operacion) {
 		case NUEVA_RONDA:
 			this.textArea.append("*** INICIANDO RONDA " + partida.getRondaActual() + " ***\n");
 			break;
-
+		case BOTON_DADO:
+			esperarLanzamientoDelDado();
+			
+			break;
 		case LANZAMIENTO_DADO:
 			dado = Dado.getImgCara(jugadorActual.getNroPasos()).getScaledInstance(50, 50, Image.SCALE_SMOOTH);
 			this.textArea
@@ -136,7 +138,8 @@ public class PanelJuego extends JPanel implements Suscriptor {
 			break;
 
 		case SELECCIONAR_CAMINO:
-			this.textArea.append(jugadorActual.getNombre() + " seleccione un camino\n");
+			textArea.append(jugadorActual.getNombre() + " te quedan "+ jugadorActual.getNroPasos() +" pasos\n");
+			textArea.append(jugadorActual.getNombre() + " seleccione un camino\n");
 			mostrarOpciones(jugadorActual.getPosicionActual());
 
 			partida.setRespuestaDePanel(caminoElegido);
@@ -162,7 +165,7 @@ public class PanelJuego extends JPanel implements Suscriptor {
 			break;
 
 		case PERDIO_TURNO:
-			textArea.append(jugadorActual.getNombre() + ", la proxima vez sera.\n");
+			textArea.append(jugadorActual.getNombre() + ", perdiste tu turno.\n");
 			break;
 
 		case PUNTAJES_FINALES:
@@ -177,6 +180,26 @@ public class PanelJuego extends JPanel implements Suscriptor {
 			break;
 		}
 		repaint();
+	}
+
+	private void esperarLanzamientoDelDado() {
+		dado = null;
+		addMouseListener(new MouseAdapter() {
+			public void mouseClicked(MouseEvent e) {
+					if (e.getX() > 280 && e.getX() < (280 + dado_boton.getHeight(null))  && e.getY() > 30 && e.getY() < (280 + dado_boton.getWidth(null))) {
+						botonPresionado = true;
+					}
+			}
+		});
+		while (!botonPresionado) {
+			try {
+				Thread.sleep(100);
+			} catch (InterruptedException e1) {
+				e1.printStackTrace();
+			}
+		}
+		botonPresionado = false;
+		
 	}
 
 	private Object mostrarOpciones(int tipoOpciones, Object aListar) {
@@ -292,7 +315,6 @@ public class PanelJuego extends JPanel implements Suscriptor {
 		mensaje.setBounds(345, 565, 400, 20);
 
 		add(mensaje);
-		revalidate(); // esto lo puse porque al jcombobox no le aparecia la flecha hacia abajo
 		
 		// Para elegir camino
 		addMouseListener(new MouseAdapter() {
@@ -311,7 +333,8 @@ public class PanelJuego extends JPanel implements Suscriptor {
 		});
 		
 		repaint();
-		// espero a que aprete el boton o pasen 5 segundos
+		
+		// espero a que aprete el boton o pasen 10 segundos
 		long tiempo_limite_ini = System.currentTimeMillis();
 		long tiempo_limite_fin = System.currentTimeMillis();
 		while (botonPresionado == false && (tiempo_limite_fin - tiempo_limite_ini) < (TIEMPO_ELEGIR_OPCION * 1000)) {

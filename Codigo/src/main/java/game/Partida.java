@@ -57,7 +57,7 @@ public class Partida implements Publicador {
 
 				if (!jugadorActual.isPierdeTurno()) {
 
-					// Lanza el dado
+					avisar(Operacion.BOTON_DADO, jugadorActual); // Lanza el dado
 					jugadorActual.setNroPasos(Dado.lanzarDado());
 					avisar(Operacion.LANZAMIENTO_DADO, jugadorActual);
 
@@ -235,7 +235,7 @@ public class Partida implements Publicador {
 		// no hacer todo en muy poco tiempo
 		// Tal vez habria que modificarlo
 		try {
-			Thread.sleep(1000);
+			Thread.sleep(500);
 		} catch (InterruptedException e1) {
 			e1.printStackTrace();
 		}
