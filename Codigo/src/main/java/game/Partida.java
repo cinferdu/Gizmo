@@ -5,19 +5,19 @@ import java.util.Iterator;
 import java.util.List;
 
 import casilla.Casilla;
-import comunicacionObserver.Consumidor;
+import comunicacionObserver.Suscriptor;
 import comunicacionObserver.Operacion;
-import comunicacionObserver.Productor;
+import comunicacionObserver.Publicador;
 import miniTenis.MiniTenis;
 
-public class Partida implements Productor {
+public class Partida implements Publicador {
 	private ArrayList<Jugador> jugadores;
 	private int objetivo;
 	private boolean hayGanador;
 	private Tablero tablero;
 	private Jugador jugadorGanador;
 	private int rondaActual;
-	private List<Consumidor> clientes;
+	private List<Suscriptor> clientes;
 
 	private Object respuestaDePanel = null;
 
@@ -29,16 +29,16 @@ public class Partida implements Productor {
 		hayGanador = false;
 		jugadorGanador = null;
 		tablero = new Tablero("dataCasilla.txt");
-		clientes = new ArrayList<Consumidor>();
+		clientes = new ArrayList<Suscriptor>();
 	}
 
 	public void iniciarPartida() {
 
 		if (jugadores.size() < 2)
 			return;
-
+		
 		posicionarJugadoresEnElInicio();
-
+		
 		Jugador jugadorActual;
 		Iterator<Jugador> iteradorJugador;
 
@@ -67,14 +67,15 @@ public class Partida implements Productor {
 					jugadorActual.activarCasilla();
 					avisar(Operacion.CASILLA_ACTIVADA, jugadorActual);
 
-					// Si tiene objetos entra en la etapa de SELECCIONAR_ACCION, sino solo mostrara un objeto
+					// Si tiene objetos entra en la etapa de SELECCIONAR_ACCION, sino solo mostrara
+					// un mensaje
 					if (jugadorActual.getMochila_objetos().size() != 0) {
 						// El jugador elije su proxima accion
 						avisar(Operacion.SELECCIONAR_ACCION, jugadorActual);
-						
-						if (respuestaDePanel != null) 
+
+						if (respuestaDePanel != null)
 							jugadorActual.usarObjeto((Integer) respuestaDePanel);
-						
+
 					} else {
 						avisar(Operacion.SIN_ACCION, jugadorActual);
 					}
@@ -108,9 +109,9 @@ public class Partida implements Productor {
 					}
 				}
 				Jugador mejor = getMejorPuntajeEnMiniJuego();
-				mejor.aumentarMonedas(mejor.getMiniJuegoPuntos()/3);
+				mejor.aumentarMonedas(mejor.getMiniJuegoPuntos() / 3);
 				this.limpiarMiniPuntajes();
-				
+
 			}
 
 		}
@@ -217,16 +218,16 @@ public class Partida implements Productor {
 		this.respuestaDePanel = respuestaDePanel;
 	}
 
-	public void registrar(Consumidor obs) {
+	public void registrar(Suscriptor obs) {
 		clientes.add(obs);
 	}
 
-	public void desregistrar(Consumidor obs) {
+	public void desregistrar(Suscriptor obs) {
 		clientes.remove(obs);
 	}
 
 	public void avisar(Operacion operacion, Jugador jugadorActual) {
-		for (Consumidor consumidor : clientes) {
+		for (Suscriptor consumidor : clientes) {
 			consumidor.actualizar(operacion, jugadorActual);
 		}
 
@@ -240,19 +241,19 @@ public class Partida implements Productor {
 		}
 
 	}
-	
+
 	private Jugador getMejorPuntajeEnMiniJuego() {
 		Jugador mejorPuntaje = this.jugadores.get(0);
-		for(int i=1;i<jugadores.size();i++) {
-			if(this.jugadores.get(i).getMiniJuegoPuntos() > mejorPuntaje.getMiniJuegoPuntos())
+		for (int i = 1; i < jugadores.size(); i++) {
+			if (this.jugadores.get(i).getMiniJuegoPuntos() > mejorPuntaje.getMiniJuegoPuntos())
 				mejorPuntaje = this.jugadores.get(i);
 		}
 		return mejorPuntaje;
 	}
-	
+
 	private void limpiarMiniPuntajes() {
-		
-		for (Iterator<Jugador>  iterator = jugadores.iterator(); iterator.hasNext();) {
+
+		for (Iterator<Jugador> iterator = jugadores.iterator(); iterator.hasNext();) {
 			Jugador jugador = iterator.next();
 			jugador.setMiniJuegoPuntos(0);
 		}

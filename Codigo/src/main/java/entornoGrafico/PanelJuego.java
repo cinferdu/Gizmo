@@ -26,7 +26,7 @@ import javax.swing.JTextArea;
 import javax.swing.text.DefaultCaret;
 
 import casilla.Casilla;
-import comunicacionObserver.Consumidor;
+import comunicacionObserver.Suscriptor;
 import comunicacionObserver.Operacion;
 import game.Dado;
 import game.Jugador;
@@ -34,7 +34,7 @@ import game.Partida;
 import game.Personaje;
 import objeto.Objeto;
 
-public class PanelJuego extends JPanel implements Consumidor {
+public class PanelJuego extends JPanel implements Suscriptor {
 	private static final int INICIO_PUNTAJES = 730;
 	private static final int SEPARACION_PUNTAJES = 50;
 	private static final int TAMANIO_CASILLA = 30;
@@ -176,7 +176,7 @@ public class PanelJuego extends JPanel implements Consumidor {
 		default:
 			break;
 		}
-
+		repaint();
 	}
 
 	private Object mostrarOpciones(int tipoOpciones, Object aListar) {
@@ -246,7 +246,8 @@ public class PanelJuego extends JPanel implements Consumidor {
 		add(aceptar);
 		add(mensaje);
 		revalidate(); // esto lo puse porque al jcombobox no le aparecia la flecha hacia abajo
-
+		repaint();
+		
 		// espero a que aprete el boton o pasen 5 segundos
 		long tiempo_limite_ini = System.currentTimeMillis();
 		long tiempo_limite_fin = System.currentTimeMillis();
@@ -276,6 +277,7 @@ public class PanelJuego extends JPanel implements Consumidor {
 		remove(aceptar);
 		remove(mensaje);
 		revalidate();
+		repaint();
 		this.botonPresionado = false;
 
 		listaOpciones = null;
@@ -287,29 +289,28 @@ public class PanelJuego extends JPanel implements Consumidor {
 		
 		// creo los componentes
 		JLabel mensaje = new JLabel("Haga clic la siguiente casilla, para avanzar (tiene " + TIEMPO_ELEGIR_OPCION + " segundos)");
-		//JLabel mensaje_2 = new JLabel("Seleccione la siguiente casilla (tiene " + TIEMPO_ELEGIR_OPCION + " segundos)");
 		mensaje.setBounds(345, 565, 400, 20);
 
 		add(mensaje);
-		//add(mensaje_2);
 		revalidate(); // esto lo puse porque al jcombobox no le aparecia la flecha hacia abajo
 		
 		// Para elegir camino
 		addMouseListener(new MouseAdapter() {
 			public void mouseClicked(MouseEvent e) {
 				for (Casilla camino : aListar.getSiguientesCasillas()) {
+					
 					if (e.getX() > camino.getPosX() && e.getX() < (camino.getPosX()+TAMANIO_CASILLA)
 							&& e.getY() > camino.getPosY() && e.getY() < (camino.getPosY()+TAMANIO_CASILLA)) {
 						
 						caminoElegido = camino;
-						
-						botonPresionado = true; // lo uso como "casilla seleccionada"
+						botonPresionado = true; // => "casilla seleccionada"
 					}
 					
 				}
 			}
 		});
 		
+		repaint();
 		// espero a que aprete el boton o pasen 5 segundos
 		long tiempo_limite_ini = System.currentTimeMillis();
 		long tiempo_limite_fin = System.currentTimeMillis();
@@ -323,7 +324,6 @@ public class PanelJuego extends JPanel implements Consumidor {
 		}
 
 		remove(mensaje);
-		revalidate();
 		
 		if (botonPresionado) {
 			botonPresionado = false;

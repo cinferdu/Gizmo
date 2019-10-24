@@ -8,7 +8,6 @@ import objeto.Objeto;
 
 public class Jugador {
 	private int nroPasos;
-	private int rondaActual;
 	private String nombre;
 	private int monedas;
 	private int puntos;
@@ -26,7 +25,6 @@ public class Jugador {
 		pierdeTurno = false;
 		posicionActual = null;
 
-		rondaActual = 0;
 		monedas = 0;
 		puntos = 0;
 		miniJuegoPuntos = 0;
@@ -42,11 +40,6 @@ public class Jugador {
 	public Personaje getPersonaje() {
 		return this.personaje;
 	}
-
-	// Constructor de jugador;
-	/*public Jugador(String nombre) {
-		this(nombre, Color.BLACK); // llama al constructor de arriba
-	}*/
 
 	public void usarObjeto(int index) {
 		// Activa el efecto del objeto
@@ -132,14 +125,6 @@ public class Jugador {
 
 	public void decrementarPasos() {
 		this.nroPasos--;
-	}
-
-	public int getRondaActual() {
-		return rondaActual;
-	}
-
-	public void setRondaActual(int rondaActual) {
-		this.rondaActual = rondaActual;
 	}
 
 	public boolean isPierdeTurno() {

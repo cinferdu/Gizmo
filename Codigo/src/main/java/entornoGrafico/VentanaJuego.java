@@ -1,6 +1,5 @@
 package entornoGrafico;
 
-import java.awt.Color;
 import java.util.ArrayList;
 
 import javax.swing.JFrame;
@@ -8,7 +7,6 @@ import javax.swing.JFrame;
 import game.Jugador;
 import game.Partida;
 import game.Personaje;
-import objeto.CajaMisteriosa;
 import objeto.DadoDorado;
 import objeto.PistolaCongelante;
 import objeto.GuanteBlanco;
@@ -16,7 +14,6 @@ import objeto.GuanteBlanco;
 public class VentanaJuego extends JFrame {
 	private static final long serialVersionUID = 5146957524880202935L;
 	private PanelJuego contentPane;
-	// private JTable table;
 
 	public VentanaJuego(Partida prod) {
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);

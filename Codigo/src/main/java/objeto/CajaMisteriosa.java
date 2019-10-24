@@ -1,7 +1,5 @@
 package objeto;
 
-import java.util.Random;
-
 import game.Jugador;
 
 public class CajaMisteriosa extends Objeto {
