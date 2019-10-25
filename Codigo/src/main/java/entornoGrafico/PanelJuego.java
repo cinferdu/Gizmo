@@ -39,7 +39,6 @@ public class PanelJuego extends JPanel implements Suscriptor {
 	private static final int TAMANIO_CASILLA = 30;
 	private static final int TIEMPO_ELEGIR_OPCION = 10; // en segundos
 
-	
 	private Image fondo;
 	private Image dado = null;
 	private Image dado_boton;
@@ -47,7 +46,7 @@ public class PanelJuego extends JPanel implements Suscriptor {
 	private static final long serialVersionUID = 3007758429335180626L;
 	private JTextArea textArea;
 	private JScrollPane scrollPane;
-	private Partida partida;
+	private JLabel modificadorDelCursor;
 	private boolean botonPresionado = false;
 
 	// para mostrarOpciones(...) listener
@@ -55,6 +54,7 @@ public class PanelJuego extends JPanel implements Suscriptor {
 	private JLabel descripcion = null;
 	private Casilla caminoElegido = null;
 	
+	private Partida partida;
 	private VentanaJuego ventanaJuego;
 
 	public PanelJuego(Partida prod, VentanaJuego ventanaJuego) {
@@ -82,7 +82,11 @@ public class PanelJuego extends JPanel implements Suscriptor {
 
 		fondo = ImgExtra.FONDO;
 		dado_boton = ImgExtra.BOTON_DADO;
-		
+		modificadorDelCursor = new JLabel();
+		modificadorDelCursor.setBounds(280, 30, 100, 100);
+		modificadorDelCursor.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
+		modificadorDelCursor.setVisible(true);
+		add(modificadorDelCursor);
 	}
 
 	@Override
@@ -90,13 +94,16 @@ public class PanelJuego extends JPanel implements Suscriptor {
 		super.paint(g);
 		g.drawImage(fondo, 0, 0, null);
 
-		if (dado != null) 
+		if (dado != null) {
 			g.drawImage(dado, 302, 50, null);
+			modificadorDelCursor.setVisible(false);
+		}
 		else {
 			g.drawImage(ImgExtra.CUADR_TEXTO, 25, 25, null);
 			g.drawString("Haga clic sobre los dados", 50, 50);
 			g.drawString("para iniciar su turno", 50, 65);
 			g.drawImage(dado_boton, 280, 30, null);
+			modificadorDelCursor.setVisible(true);
 		}
 		// Dibujo las casillas
 		for (Casilla casilla : partida.getTablero().getCasilleros()) {
@@ -209,14 +216,6 @@ public class PanelJuego extends JPanel implements Suscriptor {
 
 		// cargo el combobox
 		switch (tipoOpciones) {
-		case 1:
-			Casilla casilla = (Casilla) aListar;
-			listaOpciones = new JComboBox<Object>();
-			for (Casilla elemento : casilla.getSiguientesCasillas()) {
-				listaOpciones.addItem(elemento);
-			}
-
-			break;
 		case 2:
 			Jugador jugador = (Jugador) aListar;
 			listaOpciones = new JComboBox<Object>();
