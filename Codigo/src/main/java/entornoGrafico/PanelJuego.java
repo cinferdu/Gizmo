@@ -2,6 +2,7 @@ package entornoGrafico;
 
 import java.awt.Color;
 import java.awt.Cursor;
+import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.Graphics;
 import java.awt.Image;
@@ -12,9 +13,12 @@ import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.util.ArrayList;
 
+import javax.swing.BorderFactory;
+import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
 import javax.swing.JLabel;
+import javax.swing.JLayeredPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JSeparator;
@@ -78,15 +82,11 @@ public class PanelJuego extends JPanel implements Suscriptor {
 
 		fondo = ImgExtra.FONDO;
 		dado_boton = ImgExtra.BOTON_DADO;
-		
 		modificadorDelCursor = new JLabel();
 		modificadorDelCursor.setBounds(280, 30, 100, 100);
 		modificadorDelCursor.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
 		modificadorDelCursor.setVisible(true);
 		add(modificadorDelCursor);
-		
-		revalidate();
-		repaint();
 	}
 
 	@Override
@@ -131,7 +131,6 @@ public class PanelJuego extends JPanel implements Suscriptor {
 			this.textArea.append("*** INICIANDO RONDA " + partida.getRondaActual() + " ***\n");
 			break;
 		case BOTON_DADO:
-			repaint();
 			esperarLanzamientoDelDado();
 			
 			break;
@@ -177,17 +176,16 @@ public class PanelJuego extends JPanel implements Suscriptor {
 			break;
 
 		case PUNTAJES_FINALES:
-			PuntajesVentana ventanaFinal = new PuntajesVentana((ArrayList<Jugador>) partida.getJugadores(),
+			PuntajesVentana test = new PuntajesVentana((ArrayList<Jugador>) partida.getJugadores(),
 					partida.getJugadorGanador());
-			ventanaFinal.setVisible(true);
-			ventanaFinal.setFocusable(true);
+			test.setVisible(true);
+			test.setFocusable(true);
 			ventanaJuego.dispose();
 			break;
 
 		default:
 			break;
 		}
-		
 		repaint();
 	}
 
@@ -208,6 +206,7 @@ public class PanelJuego extends JPanel implements Suscriptor {
 			}
 		}
 		botonPresionado = false;
+		
 	}
 
 	private Object mostrarOpciones(int tipoOpciones, Object aListar) {
@@ -332,8 +331,7 @@ public class PanelJuego extends JPanel implements Suscriptor {
 			}
 		});
 		
-		revalidate();
-		//repaint();
+		repaint();
 		
 		// espero a que aprete el boton o pasen 10 segundos
 		long tiempo_limite_ini = System.currentTimeMillis();

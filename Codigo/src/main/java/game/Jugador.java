@@ -182,6 +182,4 @@ public class Jugador {
 		return this.miniJuegoPuntos;
 	}
 
-	
-
 }

@@ -27,6 +27,8 @@ public class VentanaJuego extends JFrame {
 	}
 
 	public static void main(String[] args) {
+		int fps = 30;
+
 		// Creo la partida con los jugadores
 		ArrayList<Jugador> participantes = new ArrayList<Jugador>();
 		Partida prod = new Partida(participantes, 50);
@@ -46,6 +48,10 @@ public class VentanaJuego extends JFrame {
 		participantes.get(1).addMochila_objetos(new DadoDorado());
 
 		ventana.setVisible(true);
+
+		HiloActualizador hilo = new HiloActualizador(ventana.contentPane, 1000 / fps); // 1 segundo / 15 FPS = 66,66
+																						// milisegundos
+		hilo.start();
 
 		prod.registrar(ventana.contentPane);
 		prod.iniciarPartida();
