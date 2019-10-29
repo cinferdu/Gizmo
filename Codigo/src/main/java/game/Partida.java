@@ -69,7 +69,7 @@ public class Partida implements Publicador {
 
 					// Si tiene objetos entra en la etapa de SELECCIONAR_ACCION, sino solo mostrara
 					// un mensaje
-					if (jugadorActual.getMochila_objetos().size() != 0) {
+					if (!jugadorActual.isMochilaVacia()) {
 						// El jugador elije su proxima accion
 						avisar(Operacion.SELECCIONAR_ACCION, jugadorActual);
 

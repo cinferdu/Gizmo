@@ -27,7 +27,7 @@ public class VentanaJuego extends JFrame {
 	}
 
 	public static void main(String[] args) {
-		int fps = 30;
+		
 
 		// Creo la partida con los jugadores
 		ArrayList<Jugador> participantes = new ArrayList<Jugador>();
@@ -42,15 +42,14 @@ public class VentanaJuego extends JFrame {
 		jug2.setPersonaje(new Personaje("luigi", ventana));
 		participantes.add(jug2);
 		
+		participantes.get(0).addMochila_objetos(new PistolaCongelante());
 		participantes.get(0).addMochila_objetos(new DadoDorado());
 		participantes.get(0).addMochila_objetos(new GuanteBlanco());
-		participantes.get(0).addMochila_objetos(new PistolaCongelante());
 		participantes.get(1).addMochila_objetos(new DadoDorado());
 
 		ventana.setVisible(true);
 
-		HiloActualizador hilo = new HiloActualizador(ventana.contentPane, 1000 / fps); // 1 segundo / 15 FPS = 66,66
-																						// milisegundos
+		HiloActualizador hilo = new HiloActualizador(ventana.contentPane, 33);
 		hilo.start();
 
 		prod.registrar(ventana.contentPane);

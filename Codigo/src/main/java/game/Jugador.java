@@ -1,7 +1,6 @@
 package game;
 
 import java.awt.Color;
-import java.util.ArrayList;
 
 import casilla.Casilla;
 import objeto.Objeto;
@@ -13,7 +12,7 @@ public class Jugador {
 	private int puntos;
 	private boolean pierdeTurno;
 	private Casilla posicionActual;
-	private ArrayList<Objeto> mochila_objetos;
+	private Objeto[] mochila_objetos;
 	private Objeto poder;
 	private Color color;
 	private int miniJuegoPuntos;
@@ -29,22 +28,22 @@ public class Jugador {
 		puntos = 0;
 		miniJuegoPuntos = 0;
 
-		mochila_objetos = new ArrayList<Objeto>();
-		//this.setColor(color);
+		mochila_objetos = new Objeto[3];
+		// this.setColor(color);
 	}
-	
+
 	public void setPersonaje(Personaje personaje) {
 		this.personaje = personaje;
 	}
-	
+
 	public Personaje getPersonaje() {
 		return this.personaje;
 	}
 
-	public void usarObjeto(int index) {
+	public void usarObjeto(int indice) {
 		// Activa el efecto del objeto
-		mochila_objetos.get(index).activarEfecto(this);
-		mochila_objetos.remove(index);
+		mochila_objetos[indice].activarEfecto(this);
+		mochila_objetos[indice] = null;
 	}
 
 	public void usarPoder() {
@@ -153,20 +152,28 @@ public class Jugador {
 		this.color = color;
 	}
 
-	public ArrayList<Objeto> getMochila_objetos() {
+	public Objeto[] getMochila_objetos() {
 		return mochila_objetos;
 	}
 
-	public void setMochila_objetos(ArrayList<Objeto> mochila_objetos) {
+	public void setMochila_objetos(Objeto[] mochila_objetos) {
 		this.mochila_objetos = mochila_objetos;
 	}
 
 	public Objeto getMochila_objetos(int index) {
-		return mochila_objetos.get(index);
+		return mochila_objetos[index];
 	}
 
 	public void addMochila_objetos(Objeto objeto) {
-		this.mochila_objetos.add(objeto);
+		int i = 0;
+		// busco un lugar vacio
+		while (mochila_objetos[i] != null && i < mochila_objetos.length)
+			i++;
+
+		// si encontre el lugar vacio, agrego el objeto
+		if (mochila_objetos[i] == null) {
+			mochila_objetos[i] = objeto;
+		}
 	}
 
 	@Override
@@ -177,9 +184,18 @@ public class Jugador {
 	public void setMiniJuegoPuntos(int puntos) {
 		miniJuegoPuntos = puntos;
 	}
-	
+
 	public int getMiniJuegoPuntos() {
 		return this.miniJuegoPuntos;
+	}
+
+	public boolean isMochilaVacia() {
+		int i = 0;
+		for (int j = 0; j < mochila_objetos.length; j++) {
+			if (mochila_objetos[j] != null)
+				i++;
+		}
+		return i == 0;
 	}
 
 }

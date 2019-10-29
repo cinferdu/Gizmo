@@ -19,4 +19,5 @@ public class GuanteBlanco extends Objeto {
 		victima.decrementarMonedas(5);
 	}
 
+
 }

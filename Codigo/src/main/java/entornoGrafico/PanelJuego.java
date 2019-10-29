@@ -12,14 +12,19 @@ import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.util.ArrayList;
+import java.util.Enumeration;
 
+import javax.swing.AbstractButton;
+import javax.swing.Action;
 import javax.swing.BorderFactory;
+import javax.swing.ButtonGroup;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
 import javax.swing.JLabel;
 import javax.swing.JLayeredPane;
 import javax.swing.JPanel;
+import javax.swing.JRadioButton;
 import javax.swing.JScrollPane;
 import javax.swing.JSeparator;
 import javax.swing.JTextArea;
@@ -49,11 +54,10 @@ public class PanelJuego extends JPanel implements Suscriptor {
 	private JLabel modificadorDelCursor;
 	private boolean botonPresionado = false;
 
-	// para mostrarOpciones(...) listener
-	private JComboBox<Object> listaOpciones = null;
-	private JLabel descripcion = null;
+	// para mostrarOpciones(...)
 	private Casilla caminoElegido = null;
-	
+	private Jugador jugadorSeleccionado = null;
+
 	private Partida partida;
 	private VentanaJuego ventanaJuego;
 
@@ -72,7 +76,6 @@ public class PanelJuego extends JPanel implements Suscriptor {
 
 		scrollPane.setBounds(0, 565, 330, 100);
 		add(scrollPane);
-
 
 		JSeparator separator = new JSeparator();
 		separator.setBounds(0, 560, 900, 50);
@@ -97,8 +100,7 @@ public class PanelJuego extends JPanel implements Suscriptor {
 		if (dado != null) {
 			g.drawImage(dado, 302, 50, null);
 			modificadorDelCursor.setVisible(false);
-		}
-		else {
+		} else {
 			g.drawImage(ImgExtra.CUADR_TEXTO, 25, 25, null);
 			g.drawString("Haga clic sobre los dados", 50, 50);
 			g.drawString("para iniciar su turno", 50, 65);
@@ -113,18 +115,16 @@ public class PanelJuego extends JPanel implements Suscriptor {
 
 		// Dibujo los jugadores
 		for (Jugador jugador : partida.getJugadores()) {
-			//jugador.getPersonaje().move(jugador.getPosicionActual().getPosX(), jugador.getPosicionActual().getPosY(),this);
-			Toolkit t = Toolkit.getDefaultToolkit ();
-			Image imagen = t.getImage ("Personajes/"+jugador.getPersonaje().getName()+"-body.png");
-	        g.drawImage(imagen,jugador.getPosicionActual().getPosX(),jugador.getPosicionActual().getPosY()-12,30,40,null);
+			Toolkit t = Toolkit.getDefaultToolkit();
+			Image imagen = t.getImage("Personajes/" + jugador.getPersonaje().getName() + "-body.png");
+			g.drawImage(imagen, jugador.getPosicionActual().getPosX(), jugador.getPosicionActual().getPosY() - 12, 30, 40, null);
 		}
 
-		
 		imprimirPuntajes(g);
 
 	}
 
-	public void actualizar(Operacion operacion, Jugador jugadorActual) { 
+	public void actualizar(Operacion operacion, Jugador jugadorActual) {
 
 		switch (operacion) {
 		case NUEVA_RONDA:
@@ -132,7 +132,7 @@ public class PanelJuego extends JPanel implements Suscriptor {
 			break;
 		case BOTON_DADO:
 			esperarLanzamientoDelDado();
-			
+
 			break;
 		case LANZAMIENTO_DADO:
 			dado = Dado.getImgCara(jugadorActual.getNroPasos()).getScaledInstance(50, 50, Image.SCALE_SMOOTH);
@@ -145,26 +145,26 @@ public class PanelJuego extends JPanel implements Suscriptor {
 			break;
 
 		case SELECCIONAR_CAMINO:
-			textArea.append(jugadorActual.getNombre() + " te quedan "+ jugadorActual.getNroPasos() +" pasos\n");
+			textArea.append(jugadorActual.getNombre() + " te quedan " + jugadorActual.getNroPasos() + " pasos\n");
 			textArea.append(jugadorActual.getNombre() + " seleccione un camino\n");
-			mostrarOpciones(jugadorActual.getPosicionActual());
+			mostrarOpcionesCamino(jugadorActual.getPosicionActual());
 
 			partida.setRespuestaDePanel(caminoElegido);
 			break;
 
 		case SELECCIONAR_ACCION:
 			this.textArea.append(jugadorActual.getNombre() + " seleccione un objeto\n");
-			Object control_null = mostrarOpciones(2, jugadorActual);
-			if (control_null == null) {
-				partida.setRespuestaDePanel(null);
-				return;
+			int objetoElegido = mostrarOpcionesObjetos(jugadorActual);
+			
+			if (objetoElegido != -1) { 
+				if (jugadorActual.getMochila_objetos(objetoElegido).isConObjetivo() == true)
+					jugadorActual.getMochila_objetos(objetoElegido).setVictima(jugadorSeleccionado);
+				
+				partida.setRespuestaDePanel(objetoElegido);
+			}else {
+				partida.setRespuestaDePanel(null); 
 			}
-			int objetoElegido = (Integer) control_null;
-
-			if (jugadorActual.getMochila_objetos(objetoElegido).isConObjetivo() == true) {
-				jugadorActual.getMochila_objetos(objetoElegido).setVictima((Jugador) mostrarOpciones(3, jugadorActual));
-			}
-			partida.setRespuestaDePanel(objetoElegido);
+			
 			break;
 
 		case SIN_ACCION:
@@ -176,10 +176,10 @@ public class PanelJuego extends JPanel implements Suscriptor {
 			break;
 
 		case PUNTAJES_FINALES:
-			PuntajesVentana test = new PuntajesVentana((ArrayList<Jugador>) partida.getJugadores(),
+			PuntajesVentana ventanaPuntos = new PuntajesVentana((ArrayList<Jugador>) partida.getJugadores(),
 					partida.getJugadorGanador());
-			test.setVisible(true);
-			test.setFocusable(true);
+			ventanaPuntos.setVisible(true);
+			ventanaPuntos.setFocusable(true);
 			ventanaJuego.dispose();
 			break;
 
@@ -193,9 +193,10 @@ public class PanelJuego extends JPanel implements Suscriptor {
 		dado = null;
 		addMouseListener(new MouseAdapter() {
 			public void mouseClicked(MouseEvent e) {
-					if (e.getX() > 280 && e.getX() < (280 + dado_boton.getHeight(null))  && e.getY() > 30 && e.getY() < (280 + dado_boton.getWidth(null))) {
-						botonPresionado = true;
-					}
+				if (e.getX() > 280 && e.getX() < (280 + dado_boton.getHeight(null)) && e.getY() > 30
+						&& e.getY() < (280 + dado_boton.getWidth(null))) {
+					botonPresionado = true;
+				}
 			}
 		});
 		while (!botonPresionado) {
@@ -206,40 +207,96 @@ public class PanelJuego extends JPanel implements Suscriptor {
 			}
 		}
 		botonPresionado = false;
-		
+
 	}
 
-	private Object mostrarOpciones(int tipoOpciones, Object aListar) {
-		// creo los componentes
-		JLabel mensaje = new JLabel("Seleccione una opcion (tiene " + TIEMPO_ELEGIR_OPCION + " segundos)");
-		mensaje.setBounds(345, 565, 250, 20);
 
-		// cargo el combobox
-		switch (tipoOpciones) {
-		case 2:
-			Jugador jugador = (Jugador) aListar;
-			listaOpciones = new JComboBox<Object>();
-			for (Objeto elemento : jugador.getMochila_objetos()) {
-				listaOpciones.addItem(elemento);
-			}
-			break;
-		case 3:
-			listaOpciones = new JComboBox<Object>();
-			// Lo clono para que al hacer el remove no borre ese jugador en la partida
-			ArrayList<Jugador> posiblesObjetivos = (ArrayList<Jugador>) partida.getJugadores().clone();
-			posiblesObjetivos.remove((Jugador) aListar);
-			for (Jugador elemento : posiblesObjetivos) {
-				listaOpciones.addItem(elemento);
-			}
-			break;
-		default:
-			break;
+	private int mostrarOpcionesObjetos(Jugador jugadorActual) {
+		Objeto[] aListar = jugadorActual.getMochila_objetos();
+		ArrayList<JRadioButton> botonesUsados = new ArrayList<JRadioButton>();
+
+		// creo los componentes
+		JLabel mensaje = new JLabel(
+				"Seleccione un objeto para utilizarlo (tiene " + TIEMPO_ELEGIR_OPCION + " segundos)");
+		mensaje.setBounds(345, 555, 400, 35);
+		add(mensaje);
+
+		JLabel mensajeObj = new JLabel("Seleccione un jugador");
+		mensajeObj.setBounds(345, 600, 400, 35);
+		add(mensajeObj);
+
+		// Lo clono para que el remove no borre ese jugador en la partida
+		ArrayList<Jugador> posiblesObjetivos = (ArrayList<Jugador>) partida.getJugadores().clone();
+		posiblesObjetivos.remove(jugadorActual);
+
+		// Si es necesario elegir un objetivo
+		ButtonGroup grupoJugadores = new ButtonGroup();
+		int elementosCargados = 0;
+		for (Jugador jugador : posiblesObjetivos) {
+			JRadioButton jrPlayer = new JRadioButton(jugador.getNombre());
+			jrPlayer.setBounds(350 + elementosCargados * 150, 625, 150, 20);
+			jrPlayer.setActionCommand(elementosCargados + "");
+			
+			grupoJugadores.add(jrPlayer);
+			add(jrPlayer);
+
+			if (elementosCargados == 0)
+				jrPlayer.setSelected(true);
+
+			botonesUsados.add(jrPlayer);
+			elementosCargados++;
 		}
 
-		listaOpciones.setBounds(360, 595, 200, 25);
-		JButton aceptar = new JButton("Seleccionar");
-		aceptar.setBounds(400, 630, 125, 25);
+		ButtonGroup grupoObjeto = new ButtonGroup();
+		elementosCargados = 0;
+		
+		// cargo los objetos
+		for (Objeto elemento : aListar) {
+			
+			// si es distinto de null lo agrego
+			if (elemento != null) {
+				JRadioButton jrButton = new JRadioButton(elemento.toString());
+				jrButton.setActionCommand(elementosCargados + "");
+				jrButton.setBounds(350 + elementosCargados * 150, 577, 150, 35);
 
+				if (elemento.isConObjetivo()) {
+					jrButton.addActionListener(new ActionListener() {
+						@Override
+						public void actionPerformed(ActionEvent e) {
+							mostrarObjetivos(grupoJugadores, mensajeObj);
+						}
+					});
+				} else {
+					jrButton.addActionListener(new ActionListener() {
+						@Override
+						public void actionPerformed(ActionEvent e) {
+							ocultarObjetivos(grupoJugadores, mensajeObj);
+						}
+					});
+
+				}
+
+				if (elementosCargados == 0) {
+					jrButton.setSelected(true);
+					
+					if (elemento.isConObjetivo()) 
+						mostrarObjetivos(grupoJugadores, mensajeObj);
+					else
+						ocultarObjetivos(grupoJugadores, mensajeObj);
+				}
+
+				grupoObjeto.add(jrButton);
+				this.add(jrButton);
+				elementosCargados++;
+
+				botonesUsados.add(jrButton);
+			}
+		}
+
+		JButton aceptar = new JButton("Seleccionar");
+		aceptar.setBounds(440, 645, 125, 25);
+		add(aceptar);
+		
 		// para saber cuando apreto el boton
 		aceptar.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
@@ -247,30 +304,9 @@ public class PanelJuego extends JPanel implements Suscriptor {
 			}
 		});
 
-		JLabel descripcion_titulo = null;
-		if (tipoOpciones == 2) {
-			// a descripcion lo cargo con la descripcion del primer objeto
-			descripcion = new JLabel(((Objeto) listaOpciones.getItemAt(0)).getDescripcion());
-			descripcion_titulo = new JLabel("Descripcion:");
-			descripcion_titulo.setBounds(600, 565, 250, 20);
-			descripcion.setBounds(600, 580, 280, 50);
-			add(descripcion_titulo);
-			add(descripcion);
-			listaOpciones.addActionListener(new ActionListener() {
-				public void actionPerformed(ActionEvent e) {
-					Objeto item = (Objeto) listaOpciones.getSelectedItem();
-					descripcion.setText(item.getDescripcion());
-				}
-			});
-		}
+		revalidate();
 
-		add(listaOpciones);
-		add(aceptar);
-		add(mensaje);
-		revalidate(); // esto lo puse porque al jcombobox no le aparecia la flecha hacia abajo
-		repaint();
-		
-		// espero a que aprete el boton o pasen 5 segundos
+		// espero a que aprete el boton o pasen los segundos
 		long tiempo_limite_ini = System.currentTimeMillis();
 		long tiempo_limite_fin = System.currentTimeMillis();
 		while (botonPresionado == false && (tiempo_limite_fin - tiempo_limite_ini) < (TIEMPO_ELEGIR_OPCION * 1000)) {
@@ -282,57 +318,76 @@ public class PanelJuego extends JPanel implements Suscriptor {
 			}
 		}
 
-		Object objetoElegido = null;
-		if (tipoOpciones != 2) {
-			objetoElegido = listaOpciones.getSelectedItem();
-		} else {
-			remove(descripcion_titulo);
-			remove(descripcion);
+		int objetoElegido = -1;
+		if (botonPresionado == true)
+			objetoElegido = Integer.valueOf(grupoObjeto.getSelection().getActionCommand());
 
-			if (botonPresionado == true)
-				objetoElegido = listaOpciones.getSelectedIndex();
-			else
-				objetoElegido = null;
-
-		}
-		remove(listaOpciones);
 		remove(aceptar);
 		remove(mensaje);
+		remove(mensajeObj);
+		
 		revalidate();
 		repaint();
-		this.botonPresionado = false;
+		botonPresionado = false;
 
-		listaOpciones = null;
+		int jg_selec = Integer.valueOf(grupoJugadores.getSelection().getActionCommand());
+		jugadorSeleccionado = posiblesObjetivos.get(jg_selec);
 
+		limpiarGrupo(botonesUsados);
+		
 		return objetoElegido;
+
 	}
 
-	private void mostrarOpciones(final Casilla aListar) {
-		
+	private void limpiarGrupo(ArrayList<JRadioButton> botonesUsados) {
+		for (JRadioButton jRadioButton : botonesUsados) {
+			this.remove(jRadioButton);
+		}
+	}
+
+	private void mostrarObjetivos(ButtonGroup grupoJugadores, JLabel mensaje) {
+		for (Enumeration<AbstractButton> buttons = grupoJugadores.getElements(); buttons.hasMoreElements();) {
+			AbstractButton button = buttons.nextElement();
+			button.setVisible(true);
+		}
+		mensaje.setVisible(true);
+	}
+
+	private void ocultarObjetivos(ButtonGroup grupoJugadores, JLabel mensaje) {
+		for (Enumeration<AbstractButton> buttons = grupoJugadores.getElements(); buttons.hasMoreElements();) {
+			AbstractButton button = buttons.nextElement();
+			button.setVisible(false);
+		}
+		mensaje.setVisible(false);
+	}
+
+	private void mostrarOpcionesCamino(final Casilla aListar) {
+
 		// creo los componentes
-		JLabel mensaje = new JLabel("Haga clic la siguiente casilla, para avanzar (tiene " + TIEMPO_ELEGIR_OPCION + " segundos)");
+		JLabel mensaje = new JLabel(
+				"Haga clic la siguiente casilla, para avanzar (tiene " + TIEMPO_ELEGIR_OPCION + " segundos)");
 		mensaje.setBounds(345, 565, 400, 20);
 
 		add(mensaje);
-		
+
 		// Para elegir camino
 		addMouseListener(new MouseAdapter() {
 			public void mouseClicked(MouseEvent e) {
 				for (Casilla camino : aListar.getSiguientesCasillas()) {
-					
-					if (e.getX() > camino.getPosX() && e.getX() < (camino.getPosX()+TAMANIO_CASILLA)
-							&& e.getY() > camino.getPosY() && e.getY() < (camino.getPosY()+TAMANIO_CASILLA)) {
-						
+
+					if (e.getX() > camino.getPosX() && e.getX() < (camino.getPosX() + TAMANIO_CASILLA)
+							&& e.getY() > camino.getPosY() && e.getY() < (camino.getPosY() + TAMANIO_CASILLA)) {
+
 						caminoElegido = camino;
 						botonPresionado = true; // => "casilla seleccionada"
 					}
-					
+
 				}
 			}
 		});
-		
+
 		repaint();
-		
+
 		// espero a que aprete el boton o pasen 10 segundos
 		long tiempo_limite_ini = System.currentTimeMillis();
 		long tiempo_limite_fin = System.currentTimeMillis();
@@ -346,7 +401,7 @@ public class PanelJuego extends JPanel implements Suscriptor {
 		}
 
 		remove(mensaje);
-		
+
 		if (botonPresionado) {
 			botonPresionado = false;
 		} else {
