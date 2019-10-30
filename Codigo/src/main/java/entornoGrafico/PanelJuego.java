@@ -226,7 +226,8 @@ public class PanelJuego extends JPanel implements Suscriptor {
 		add(mensajeObj);
 
 		// Lo clono para que el remove no borre ese jugador en la partida
-		ArrayList<Jugador> posiblesObjetivos = (ArrayList<Jugador>) partida.getJugadores().clone();
+		ArrayList<Jugador> posiblesObjetivos =  new ArrayList<Jugador>(partida.getJugadores());
+		
 		posiblesObjetivos.remove(jugadorActual);
 
 		// Si es necesario elegir un objetivo
@@ -249,6 +250,7 @@ public class PanelJuego extends JPanel implements Suscriptor {
 
 		ButtonGroup grupoObjeto = new ButtonGroup();
 		elementosCargados = 0;
+		int objetoNumero = 0; // posicion en la mochila
 		
 		// cargo los objetos
 		for (Objeto elemento : aListar) {
@@ -256,7 +258,7 @@ public class PanelJuego extends JPanel implements Suscriptor {
 			// si es distinto de null lo agrego
 			if (elemento != null) {
 				JRadioButton jrButton = new JRadioButton(elemento.toString());
-				jrButton.setActionCommand(elementosCargados + "");
+				jrButton.setActionCommand(objetoNumero + "");
 				jrButton.setBounds(350 + elementosCargados * 150, 577, 150, 35);
 
 				if (elemento.isConObjetivo()) {
@@ -291,6 +293,8 @@ public class PanelJuego extends JPanel implements Suscriptor {
 
 				botonesUsados.add(jrButton);
 			}
+			
+			objetoNumero++;
 		}
 
 		JButton aceptar = new JButton("Seleccionar");
