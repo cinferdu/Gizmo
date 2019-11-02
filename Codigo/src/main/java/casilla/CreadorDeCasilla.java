@@ -4,13 +4,13 @@ public class CreadorDeCasilla {
 	 
 	// Devuelve una instacia de TipoDeCasilla
 	public static TipoDeCasilla crearInstancia(int id) {
-		if (Trampa.getID() == id) 
+		if (Trampa.ID == id) 
 			return new Trampa();
 		
-		if (ConPremio.getID() == id) 
+		if (ConPremio.ID == id) 
 			return new ConPremio();
 		
-		if (ConItem.getID() == id) {
+		if (ConItem.ID == id) {
 			return new ConItem();
 		}
 		

@@ -1,6 +1,7 @@
 package game;
 
 import java.awt.Color;
+import java.util.ArrayList;
 
 import casilla.Casilla;
 import objeto.Objeto;
@@ -12,7 +13,7 @@ public class Jugador {
 	private int puntos;
 	private boolean pierdeTurno;
 	private Casilla posicionActual;
-	private Objeto[] mochila_objetos;
+	private ArrayList<Objeto> mochila_objetos;
 	private Objeto poder;
 	private Color color;
 	private int miniJuegoPuntos;
@@ -28,7 +29,7 @@ public class Jugador {
 		puntos = 0;
 		miniJuegoPuntos = 0;
 
-		mochila_objetos = new Objeto[3];
+		mochila_objetos = new ArrayList<Objeto>(3);
 		// this.setColor(color);
 	}
 
@@ -42,8 +43,8 @@ public class Jugador {
 
 	public void usarObjeto(int indice) {
 		// Activa el efecto del objeto
-		mochila_objetos[indice].activarEfecto(this);
-		mochila_objetos[indice] = null;
+		mochila_objetos.get(indice).activarEfecto(this);
+		mochila_objetos.remove(indice);
 	}
 
 	public void usarPoder() {
@@ -152,27 +153,21 @@ public class Jugador {
 		this.color = color;
 	}
 
-	public Objeto[] getMochila_objetos() {
+	public ArrayList<Objeto> getMochila_objetos() {
 		return mochila_objetos;
 	}
 
-	public void setMochila_objetos(Objeto[] mochila_objetos) {
+	public void setMochila_objetos(ArrayList<Objeto> mochila_objetos) {
 		this.mochila_objetos = mochila_objetos;
 	}
 
 	public Objeto getMochila_objetos(int index) {
-		return mochila_objetos[index];
+		return mochila_objetos.get(index);
 	}
 
 	public void addMochila_objetos(Objeto objeto) {
-		int i = 0;
-		// busco un lugar vacio
-		while (mochila_objetos[i] != null && i < mochila_objetos.length)
-			i++;
-
-		// si encontre el lugar vacio, agrego el objeto
-		if (mochila_objetos[i] == null) {
-			mochila_objetos[i] = objeto;
+		if (mochila_objetos.size() < 3) {
+			mochila_objetos.add(objeto);
 		}
 	}
 
@@ -190,12 +185,7 @@ public class Jugador {
 	}
 
 	public boolean isMochilaVacia() {
-		int i = 0;
-		for (int j = 0; j < mochila_objetos.length; j++) {
-			if (mochila_objetos[j] != null)
-				i++;
-		}
-		return i == 0;
+		return mochila_objetos.isEmpty();
 	}
 
 }

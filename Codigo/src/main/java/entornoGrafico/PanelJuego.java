@@ -2,7 +2,6 @@ package entornoGrafico;
 
 import java.awt.Color;
 import java.awt.Cursor;
-import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.Graphics;
 import java.awt.Image;
@@ -15,14 +14,9 @@ import java.util.ArrayList;
 import java.util.Enumeration;
 
 import javax.swing.AbstractButton;
-import javax.swing.Action;
-import javax.swing.BorderFactory;
 import javax.swing.ButtonGroup;
-import javax.swing.ImageIcon;
 import javax.swing.JButton;
-import javax.swing.JComboBox;
 import javax.swing.JLabel;
-import javax.swing.JLayeredPane;
 import javax.swing.JPanel;
 import javax.swing.JRadioButton;
 import javax.swing.JScrollPane;
@@ -31,8 +25,8 @@ import javax.swing.JTextArea;
 import javax.swing.text.DefaultCaret;
 
 import casilla.Casilla;
-import comunicacionObserver.Suscriptor;
 import comunicacionObserver.Operacion;
+import comunicacionObserver.Suscriptor;
 import game.Dado;
 import game.Jugador;
 import game.Partida;
@@ -212,7 +206,7 @@ public class PanelJuego extends JPanel implements Suscriptor {
 
 
 	private int mostrarOpcionesObjetos(Jugador jugadorActual) {
-		Objeto[] aListar = jugadorActual.getMochila_objetos();
+		ArrayList<Objeto> aListar = jugadorActual.getMochila_objetos();
 		ArrayList<JRadioButton> botonesUsados = new ArrayList<JRadioButton>();
 
 		// creo los componentes

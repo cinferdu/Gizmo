@@ -5,7 +5,7 @@ import java.awt.Color;
 import game.Jugador;
 
 public class Trampa extends TipoDeCasilla {
-	private static final int ID = 2;
+	public static final int ID = 2;
 	
 	public Trampa() {
 		super(Color.RED, "con Trampa");
