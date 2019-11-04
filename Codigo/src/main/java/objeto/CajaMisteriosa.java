@@ -9,10 +9,9 @@ public class CajaMisteriosa extends Objeto {
 	}
 
 	public void activarEfecto(Jugador jugador) {
-		int cantidad = (int) (Math.random() * 4); // [0, 3]
-		int signo = ((int) Math.random() * -2); // 0 o -1
+		int cantidad = ((int) Math.random() * 9) - 4; // [-4, 4]
 		
-		if (signo < 0) {
+		if (cantidad < 0) {
 			jugador.decrementarMonedas(cantidad);
 		} else {
 			jugador.aumentarMonedas(cantidad);
