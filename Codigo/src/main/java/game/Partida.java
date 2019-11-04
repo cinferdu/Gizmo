@@ -30,6 +30,7 @@ public class Partida implements Publicador {
 		jugadorGanador = null;
 		tablero = new Tablero("dataCasilla.txt");
 		clientes = new ArrayList<Suscriptor>();
+		posicionarJugadoresEnElInicio();
 	}
 
 	public void iniciarPartida() {
@@ -37,7 +38,6 @@ public class Partida implements Publicador {
 		if (jugadores.size() < 2)
 			return;
 		
-		posicionarJugadoresEnElInicio();
 		
 		Jugador jugadorActual;
 		Iterator<Jugador> iteradorJugador;
