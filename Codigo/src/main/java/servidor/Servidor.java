@@ -3,31 +3,32 @@ package servidor;
 import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.Socket;
-import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.TreeMap;
 
 public class Servidor {
 
-	private static final int PUERTO = 15234;
+	private static final int PUERTO = 15000;
 	
 	private HashMap<String, Socket> clientesConectados; // nombre + socket
-	private ArrayList<Sala> lobby; // Sala "especial" no tiene duenio ni limite
-	private ArrayList<Sala> salas; // agregar el lobby aca -> .get(0)==lobby
+	private Sala lobby; // Sala "especial" no tiene duenio ni limite
+	private TreeMap<Integer, Sala> salas; // agregar el lobby aca -> .get(0)==lobby
 	private ServerSocket serverSocket;
 	
 	public Servidor() {
 		clientesConectados = new HashMap<String, Socket>();
-		lobby = new ArrayList<Sala>();
-		salas = new ArrayList<Sala>();
+		lobby = new Sala();
+		salas = new TreeMap<Integer, Sala>();
 		
 		try {
 			serverSocket = new ServerSocket(PUERTO);
+			
 			System.out.println("Servidor Online");
 			while (true) {
 				System.out.println("Esperando clientes...");
 				Socket cliente = serverSocket.accept();
-				
-				ListenerClient hilo = new ListenerClient(cliente, clientesConectados, lobby, salas);
+				System.out.println(cliente.getLocalAddress().getHostAddress());
+				ListenerThread hilo = new ListenerThread(cliente, clientesConectados, lobby, salas);
 				hilo.start();
 			}
 			

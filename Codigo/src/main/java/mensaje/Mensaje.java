@@ -1,14 +1,14 @@
 package mensaje;
 
-import servidor.ListenerClient;
+import servidor.ListenerThread;
 
 public abstract class Mensaje {
 	
-	protected ListenerClient lc;
+	protected ListenerThread lc;
 	
 	public abstract void ejecutar();
 	
-	public void setListener(ListenerClient lc) {
+	public void setListener(ListenerThread lc) {
 		this.lc = lc;
 	}
 	
