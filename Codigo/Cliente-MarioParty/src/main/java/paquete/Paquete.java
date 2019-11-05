@@ -5,15 +5,20 @@ import java.io.Serializable;
 public class Paquete implements Serializable {
 	private static final long serialVersionUID = 1L;
 	
-	private String comando;
+	private String tipo_msj;
 
+	public Paquete(String cadena) {
+		tipo_msj = cadena;
+	}
+	
 	public String getComando() {
-		return comando;
+		return tipo_msj;
 	}
 
 	public void setComando(String comando) {
-		this.comando = comando;
+		this.tipo_msj = comando;
 	}
+	
 	
 	
 }

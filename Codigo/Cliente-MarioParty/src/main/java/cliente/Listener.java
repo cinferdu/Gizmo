@@ -1,15 +1,12 @@
 package cliente;
 
 import java.io.DataInputStream;
-import java.io.DataOutputStream;
-
-import javax.swing.JFrame;
 
 import com.google.gson.Gson;
 
-import game.Jugador;
-import game.Partida;
+import mensaje.Mensaje;
 import paquete.Paquete;
+import paquete.PaqueteToMensaje;
 
 public class Listener extends Thread {
 	
@@ -23,22 +20,30 @@ public class Listener extends Thread {
 	
 	@Override
 	public void run() {
-		while (true) {			
+		
+		Mensaje msj = null;
+		
+		while (true) {
 			try {
-				Cliente.test("todo el mundo");
-				String cadenaLeida = cliente.recibirMsg();//leer.readUTF();
-				Paquete comando = new Gson().fromJson(cadenaLeida, Paquete.class);
-				Cliente.test("comando");
-				cliente.ventanaActual.dispose();
+				String cadenaLeida = leer.readUTF();
+				Paquete paquete = new Gson().fromJson(cadenaLeida, Paquete.class);
+				msj = PaqueteToMensaje.getMensaje(paquete, cadenaLeida);
 				
-				//Recibo mensajes del servidor 
-				//Msg msgRecibido = (Msg) cliente.recibirMsg();
-				//Ejecuto la acción
-				//msgRecibido.realizarAccion(cliente);
+				msj.setListener(this);
+				msj.ejecutar();
 			}
 			catch (Exception ex) {
 				ex.printStackTrace();
 			}
 		}
 	}
+
+	public Cliente getCliente() {
+		return cliente;
+	}
+
+	public void setCliente(Cliente cliente) {
+		this.cliente = cliente;
+	}
+	
 }

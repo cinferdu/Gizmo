@@ -20,7 +20,7 @@ public class MsjDesconectar extends Mensaje {
 	@Override
 	public void ejecutar() {
 		String nombre = lc.getNombreCliente();
-		HashMap<String, Socket> clientes = lc.getClientesConectados();
+		HashMap<String, DataOutputStream> clientes = lc.getClientesConectados();
 
 		synchronized (clientes) {
 			clientes.remove(nombre);
@@ -31,7 +31,7 @@ public class MsjDesconectar extends Mensaje {
 			sala.removeCliente(nombre);
 			for (String nombreJugador : sala.getNombreJugadores()) {
 				try {
-					new DataOutputStream(clientes.get(nombreJugador).getOutputStream()).writeUTF(new Gson().toJson("se desconecto " + nombre));
+					new DataOutputStream(clientes.get(nombreJugador)).writeUTF(new Gson().toJson("se desconecto " + nombre));
 				} catch (IOException e) {
 					System.err.println("No se pudo enviar el mensaje");
 					e.printStackTrace();

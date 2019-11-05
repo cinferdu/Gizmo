@@ -5,8 +5,6 @@ import java.io.BufferedOutputStream;
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
-import java.io.ObjectInputStream;
-import java.io.ObjectOutputStream;
 import java.net.Socket;
 import java.util.HashMap;
 import java.util.TreeMap;
@@ -15,12 +13,12 @@ import com.google.gson.Gson;
 
 import mensaje.Mensaje;
 import paquete.Paquete;
-import paquete.PaqueteToComando;
+import paquete.PaqueteToMensaje;
 
 public class ListenerThread extends Thread {
 	private String nombreCliente;
 	private int id_salaActiva; // sala en la que se encuetra el cliente
-	private HashMap<String, Socket> clientesConectados;
+	private HashMap<String, DataOutputStream> clientesConectados;
 	private DataInputStream entrada;
 	private DataOutputStream salida;
 	private Sala lobby;
@@ -28,7 +26,7 @@ public class ListenerThread extends Thread {
 	
 	private Gson gson = new Gson();
 
-	public ListenerThread(Socket clienteRead, Socket clienteWrite, HashMap<String, Socket> clientesConectados, Sala lobby, TreeMap<Integer, Sala> salas) {
+	public ListenerThread(Socket clienteRead, Socket clienteWrite, HashMap<String, DataOutputStream> clientesConectados, Sala lobby, TreeMap<Integer, Sala> salas) {
 		
 		try {
 			salida = new DataOutputStream(new BufferedOutputStream(clienteWrite.getOutputStream()));
@@ -46,17 +44,17 @@ public class ListenerThread extends Thread {
 	
 	@Override
 	public void run() {
-		Paquete comando = null;
+		Paquete paquete = null;
 		
 		try {
 			String cadenaLeida = entrada.readUTF();
-			System.out.println(cadenaLeida);
-			while ( (comando = gson.fromJson(cadenaLeida, Paquete.class)) != null) {//preguntar si es Desconectar
-				Mensaje msj = PaqueteToComando.getMensaje(comando.getComando());
+			//System.out.println(cadenaLeida);
+			while ( (paquete = gson.fromJson(cadenaLeida, Paquete.class)) != null) {//preguntar si es Desconectar
+				Mensaje msj = PaqueteToMensaje.getMensaje(paquete,cadenaLeida);
 				msj.setListener(this);
 				msj.ejecutar();
 
-				Servidor.test("Ejecutado");
+				//Servidor.test("Ejecutado");
 				cadenaLeida = entrada.readUTF();
 			}
 			
@@ -93,7 +91,7 @@ public class ListenerThread extends Thread {
 		return gson;
 	}
 
-	public HashMap<String, Socket> getClientesConectados() {
+	public HashMap<String, DataOutputStream> getClientesConectados() {
 		return clientesConectados;
 	}
 
@@ -121,7 +119,7 @@ public class ListenerThread extends Thread {
 		this.gson = gson;
 	}
 
-	public void setClientesConectados(HashMap<String, Socket> clientesConectados) {
+	public void setClientesConectados(HashMap<String, DataOutputStream> clientesConectados) {
 		this.clientesConectados = clientesConectados;
 	}
 

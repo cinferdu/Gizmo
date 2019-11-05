@@ -1,15 +1,7 @@
 package mensaje;
 
-import java.net.Socket;
-import java.util.HashMap;
-
-import mensajeRespuesta.RespLogin;
-
 public class MsjLogin extends Mensaje {
 
-	/**
-	 * 
-	 */
 	private static final long serialVersionUID = 906137322216468141L;
 	private String nombre;
 

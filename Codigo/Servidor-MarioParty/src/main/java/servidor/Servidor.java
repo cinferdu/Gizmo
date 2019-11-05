@@ -1,5 +1,6 @@
 package servidor;
 
+import java.io.DataOutputStream;
 import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.Socket;
@@ -10,13 +11,13 @@ public class Servidor {
 
 	private static final int PUERTO = 10200;
 	
-	private HashMap<String, Socket> clientesConectados; // nombre + socket
+	private HashMap<String, DataOutputStream> clientesConectados; // nombre + socket
 	private Sala lobby; // Sala "especial" no tiene duenio ni limite
 	private TreeMap<Integer, Sala> salas; // agregar el lobby aca -> .get(0)==lobby
 	private ServerSocket serverSocket;
 	
 	public Servidor() {
-		clientesConectados = new HashMap<String, Socket>();
+		clientesConectados = new HashMap<String, DataOutputStream>();
 		lobby = new Sala();
 		salas = new TreeMap<Integer, Sala>();
 		

@@ -60,7 +60,6 @@ public class Login extends JFrame {
 				
 				if (nombre.length() > 0) {
 					cliente.enviarMensaje(new PaqueteLogin(nombre));
-					//cliente.enviarMensaje(new MsjClienteLogin(nombre));
 				}
 			}
 		});
