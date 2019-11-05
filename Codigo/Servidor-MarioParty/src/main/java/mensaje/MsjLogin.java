@@ -4,6 +4,8 @@ import java.net.Socket;
 import java.util.HashMap;
 
 import mensajeRespuesta.RespLogin;
+import paquete.PaqueteLogin;
+import servidor.Servidor;
 
 public class MsjLogin extends Mensaje {
 
@@ -18,13 +20,14 @@ public class MsjLogin extends Mensaje {
 		HashMap<String, Socket> clientes = lc.getClientesConectados(); // Modif
 		boolean resultado = !clientes.containsKey(nombre);
 		
+		PaqueteLogin aEnviar = new PaqueteLogin(nombre);
+		aEnviar.setResultado(resultado);
 		if (resultado) {
 			lc.setNombreCliente(nombre);
-			lc.enviarMensaje(new RespLogin(resultado,lc.getSalas()));
+			lc.enviarMensaje(aEnviar);
 		}else {
-			lc.enviarMensaje(new RespLogin(resultado,null));
+			lc.enviarMensaje(aEnviar);
 		}
-		
 	}
 
 }

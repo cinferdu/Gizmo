@@ -1,27 +1,21 @@
 package entornoGrafico;
 
-import java.awt.BorderLayout;
-import java.awt.EventQueue;
+import java.awt.Font;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 
+import javax.swing.JButton;
 import javax.swing.JFrame;
+import javax.swing.JLabel;
 import javax.swing.JPanel;
+import javax.swing.JTextField;
+import javax.swing.SwingConstants;
 import javax.swing.border.EmptyBorder;
-
-import com.google.gson.Gson;
 
 import cliente.Cliente;
 import mensaje.MsjLogin;
-import mensajeCliente.MsjClienteLogin;
-import mensajeCliente.Paquete;
+import paquete.Paquete;
 import paquete.PaqueteLogin;
-
-import javax.swing.JTextField;
-import javax.swing.JLabel;
-import javax.swing.JButton;
-import java.awt.event.ActionListener;
-import java.awt.event.ActionEvent;
-import java.awt.Font;
-import javax.swing.SwingConstants;
 
 public class Login extends JFrame {
 
@@ -63,9 +57,10 @@ public class Login extends JFrame {
 		btnNewButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				String nombre = textField.getText().trim();
-				System.out.println(new Gson().toJson(new PaqueteLogin(nombre)));
+				
 				if (nombre.length() > 0) {
-					cliente.enviarMensaje((Object) new PaqueteLogin(nombre));
+					cliente.enviarMensaje(new PaqueteLogin(nombre));
+					//cliente.enviarMensaje(new MsjClienteLogin(nombre));
 				}
 			}
 		});

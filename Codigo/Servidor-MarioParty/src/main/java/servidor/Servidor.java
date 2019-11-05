@@ -8,7 +8,7 @@ import java.util.TreeMap;
 
 public class Servidor {
 
-	private static final int PUERTO = 15123;
+	private static final int PUERTO = 10200;
 	
 	private HashMap<String, Socket> clientesConectados; // nombre + socket
 	private Sala lobby; // Sala "especial" no tiene duenio ni limite
@@ -22,14 +22,18 @@ public class Servidor {
 		
 		try {
 			serverSocket = new ServerSocket(PUERTO);
-			
+			Socket clientewrite;
+			Socket clienteread;
 			System.out.println("Servidor Online");
 			while (true) {
 				System.out.println("Esperando clientes...");
-				Socket cliente = serverSocket.accept();
-				System.out.println(cliente.getLocalAddress().getHostAddress());
-				ListenerThread hilo = new ListenerThread(cliente, clientesConectados, lobby, salas);
+				clientewrite = serverSocket.accept();
+				clienteread = serverSocket.accept();
+				System.out.println(clientewrite.getLocalAddress().getHostAddress());
+				ListenerThread hilo = new ListenerThread(clienteread, clientewrite, clientesConectados, lobby, salas);
+				System.out.println("...");
 				hilo.start();
+				
 			}
 			
 		} catch (IOException e) {
@@ -42,4 +46,7 @@ public class Servidor {
 		new Servidor();
 	}
 
+	public static void test(String msj) {
+		System.out.println("...." + msj);
+	}
 }

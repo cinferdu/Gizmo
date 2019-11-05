@@ -7,6 +7,7 @@ public class PaqueteLogin extends Paquete {
 	
 	public PaqueteLogin(String nombre) {
 		this.nombre = nombre;
+		this.setComando("login");
 	}
 	
 	public String getNombre() {
@@ -20,6 +21,7 @@ public class PaqueteLogin extends Paquete {
 	public void setNombre(String nombre) {
 		this.nombre = nombre;
 	}
+	
 	public void setResultado(boolean resultado) {
 		this.resultado = resultado;
 	} 

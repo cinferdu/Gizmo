@@ -1,5 +1,7 @@
 package servidor;
 
+import java.io.BufferedInputStream;
+import java.io.BufferedOutputStream;
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
@@ -12,24 +14,26 @@ import java.util.TreeMap;
 import com.google.gson.Gson;
 
 import mensaje.Mensaje;
-import mensaje.MsjDesconectar;
+import paquete.Paquete;
+import paquete.PaqueteToComando;
 
 public class ListenerThread extends Thread {
 	private String nombreCliente;
 	private int id_salaActiva; // sala en la que se encuetra el cliente
 	private HashMap<String, Socket> clientesConectados;
-	private ObjectInputStream entrada;
-	private ObjectOutputStream salida;
+	private DataInputStream entrada;
+	private DataOutputStream salida;
 	private Sala lobby;
 	private TreeMap<Integer, Sala> salas = new TreeMap<Integer, Sala>(); // key=ID
 	
 	private Gson gson = new Gson();
 
-	public ListenerThread(Socket cliente, HashMap<String, Socket> clientesConectados, Sala lobby, TreeMap<Integer, Sala> salas) {
+	public ListenerThread(Socket clienteRead, Socket clienteWrite, HashMap<String, Socket> clientesConectados, Sala lobby, TreeMap<Integer, Sala> salas) {
 		
 		try {
-			entrada = new ObjectInputStream(cliente.getInputStream());
-			salida = new ObjectOutputStream(cliente.getOutputStream());
+			salida = new DataOutputStream(new BufferedOutputStream(clienteWrite.getOutputStream()));
+			salida.flush();
+			entrada = new DataInputStream(new BufferedInputStream(clienteRead.getInputStream()));
 		} catch (IOException e) {
 			System.err.println("Error cliente");
 			e.printStackTrace();
@@ -42,30 +46,30 @@ public class ListenerThread extends Thread {
 	
 	@Override
 	public void run() {
-		Mensaje comando = null;
+		Paquete comando = null;
 		
 		try {
-			String cadenaLeida = (String) entrada.readObject();
-			
-			while ( (comando = gson.fromJson(cadenaLeida, Mensaje.class)) instanceof MsjDesconectar == false ) {//preguntar si es Desconectar
-				
-				comando.setListener(this);
-				comando.ejecutar();
-				
-				salida.flush(); 
+			String cadenaLeida = entrada.readUTF();
+			System.out.println(cadenaLeida);
+			while ( (comando = gson.fromJson(cadenaLeida, Paquete.class)) != null) {//preguntar si es Desconectar
+				Mensaje msj = PaqueteToComando.getMensaje(comando.getComando());
+				msj.setListener(this);
+				msj.ejecutar();
+
+				Servidor.test("Ejecutado");
 				cadenaLeida = entrada.readUTF();
 			}
 			
 			
 			
-		} catch (IOException | ClassNotFoundException e ) {
+		} catch (IOException e ) {
 			System.err.println("Error de conexion con el cliente " + nombreCliente);
 			e.printStackTrace();
 		}
-		
+		/*
 		comando.setListener(this);
 		comando.ejecutar();
-		
+		*/
 		// DESCONEXION
 		// lo borro de las listas de conectado
 		// .close() a todo
@@ -77,11 +81,11 @@ public class ListenerThread extends Thread {
 		return nombreCliente;
 	}
 
-	public ObjectInputStream getEntrada() {
+	public DataInputStream getEntrada() {
 		return entrada;
 	}
 
-	public ObjectOutputStream getSalida() {
+	public DataOutputStream getSalida() {
 		return salida;
 	}
 
@@ -105,11 +109,11 @@ public class ListenerThread extends Thread {
 		this.nombreCliente = nombreCliente;
 	}
 
-	public void setEntrada(ObjectInputStream entrada) {
+	public void setEntrada(DataInputStream entrada) {
 		this.entrada = entrada;
 	}
 
-	public void setSalida(ObjectOutputStream salida) {
+	public void setSalida(DataOutputStream salida) {
 		this.salida = salida;
 	}
 
@@ -137,9 +141,10 @@ public class ListenerThread extends Thread {
 		this.id_salaActiva = salaActiva;
 	}
 
-	public void enviarMensaje(Mensaje mensaje) {
+	public void enviarMensaje(Object mensaje) {
 		try {
 			salida.writeUTF(gson.toJson(mensaje));
+			salida.flush();
 		} catch (IOException e) {
 			System.err.println("No se pudo enviar el mensaje");
 			e.printStackTrace();
