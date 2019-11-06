@@ -5,11 +5,8 @@ import java.io.Serializable;
 import servidor.ListenerThread;
 
 public abstract class Mensaje implements Serializable{
-	
-	/**
-	 * 
-	 */
-	private static final long serialVersionUID = -8121363586181763380L;
+
+	private static final long serialVersionUID = 1L;
 	protected ListenerThread lc;
 	
 	public abstract void ejecutar();

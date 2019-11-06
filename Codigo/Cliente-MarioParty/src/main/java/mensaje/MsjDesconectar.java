@@ -1,20 +1,8 @@
 package mensaje;
 
-import java.io.DataOutputStream;
-import java.io.IOException;
-import java.net.Socket;
-import java.util.HashMap;
-
-import com.google.gson.Gson;
-
-import cliente.Sala;
-
-												// 	Rehacer //
+// 	Rehacer //
 public class MsjDesconectar extends Mensaje {
 
-	/**
-	 * 
-	 */
 	private static final long serialVersionUID = -7264591593086243786L;
 
 	@Override

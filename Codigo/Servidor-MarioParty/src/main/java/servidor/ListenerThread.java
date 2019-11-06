@@ -22,7 +22,7 @@ public class ListenerThread extends Thread {
 	private DataInputStream entrada;
 	private DataOutputStream salida;
 	private Sala lobby;
-	private TreeMap<Integer, Sala> salas = new TreeMap<Integer, Sala>(); // key=ID
+	private TreeMap<Integer, Sala> salas = new TreeMap<Integer, Sala>(); // <- cambiar
 	
 	private Gson gson = new Gson();
 
@@ -139,7 +139,7 @@ public class ListenerThread extends Thread {
 		this.id_salaActiva = salaActiva;
 	}
 
-	public void enviarMensaje(Object mensaje) {
+	public void enviarPaquete(Object mensaje) {
 		try {
 			salida.writeUTF(gson.toJson(mensaje));
 			salida.flush();
@@ -149,6 +149,8 @@ public class ListenerThread extends Thread {
 		}
 	}
 
-	
+	public void agregarSala(Sala nuevaSala) {
+		this.salas.put(nuevaSala.getId_sala(), nuevaSala);
+	}
 	
 }

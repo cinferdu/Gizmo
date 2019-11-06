@@ -7,18 +7,26 @@ public class Paquete implements Serializable {
 	
 	private String tipo_msj;
 
-	public Paquete(String cadena) {
-		tipo_msj = cadena;
+	protected boolean resultado;
+
+	public Paquete(String tipo) {
+		tipo_msj = tipo;
 	}
 	
-	public String getComando() {
+	public String getTipoMensaje() {
 		return tipo_msj;
 	}
 
-	public void setComando(String comando) {
-		this.tipo_msj = comando;
+	public void setTipoMensaje(String tipo) {
+		this.tipo_msj = tipo;
 	}
 	
-	
+	public void setResultado(boolean resultado) {
+		this.resultado = resultado;
+	}
+
+	public boolean isResultado() {
+		return resultado;
+	}
 	
 }

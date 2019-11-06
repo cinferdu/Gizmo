@@ -8,7 +8,6 @@ public class PaqueteLogin extends Paquete {
 	private static final long serialVersionUID = 1L;
 	private String nombre;
 	private TreeMap<Integer, Sala> salas;
-	private boolean resultado;
 	
 	public PaqueteLogin(String nombre) {
 		super("Login");

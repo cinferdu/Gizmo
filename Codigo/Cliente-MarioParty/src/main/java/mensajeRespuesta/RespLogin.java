@@ -12,17 +12,13 @@ import entornoGrafico.LobbyVentana;
 import mensaje.Mensaje;
 import paquete.PaqueteLogin;
 
-public class RespLogin extends Mensaje { // cambiarlo por Paquete de Informacion?
+public class RespLogin extends Mensaje {
 
+	private static final long serialVersionUID = 1L;
 	private String nombre;
 	private boolean resultado;
 	// si resultado=false lo siguiente sera NULL
 	private TreeMap<Integer, Sala> salas;
-	
-	public RespLogin(boolean resultado, TreeMap<Integer, Sala> salas) {
-		this.resultado = resultado;
-		this.salas = salas;
-	}
 	
 	public RespLogin(String cadenaLeida) {
 		PaqueteLogin paq = new Gson().fromJson(cadenaLeida, PaqueteLogin.class);
@@ -37,10 +33,14 @@ public class RespLogin extends Mensaje { // cambiarlo por Paquete de Informacion
 	public void ejecutar() { // aca no hace nada, pero del lado Cliente si
 		if (resultado) {
 			Frame ventana = listener.getCliente().getVentanaActual();
+			
 			ventana.dispose();
-			ventana = new LobbyVentana();
+			ventana = new LobbyVentana(listener.getCliente());
 			ventana.setVisible(true);
 			ventana.setTitle("Bienvenido/a " + nombre);
+			((LobbyVentana) ventana).mostrarSala(salas);
+			
+			listener.getCliente().setNombreCliente(nombre);
 		}else {
 			JOptionPane.showMessageDialog(null, "Ya existe una sesión iniciada con ese usuario.");
 		}

@@ -55,9 +55,9 @@ public class Cliente {
 
 	}
 
-	public void enviarMensaje(Object msjClienteLogin) {
+	public void enviarMensaje(Object mensaje) {
 		try {
-			salida.writeUTF(gson.toJson(msjClienteLogin));
+			salida.writeUTF(gson.toJson(mensaje));
 		} catch (IOException e) {
 
 			System.err.println("Error al enviar el mensaje al servidor");

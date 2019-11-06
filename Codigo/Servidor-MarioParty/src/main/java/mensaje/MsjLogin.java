@@ -9,7 +9,7 @@ import paquete.PaqueteLogin;
 
 public class MsjLogin extends Mensaje {
 
-	private static final long serialVersionUID = -3357984417586718588L;
+	private static final long serialVersionUID = 1L;
 	private String nombre;
 
 	public MsjLogin(String cadenaLeida) {
@@ -24,13 +24,16 @@ public class MsjLogin extends Mensaje {
 
 		PaqueteLogin aEnviar = new PaqueteLogin(nombre);
 		aEnviar.setResultado(resultado);
+		aEnviar.setSalas(lc.getSalas());
+		
 		if (resultado) {
 			clientes.put(nombre, lc.getSalida());
 			lc.setNombreCliente(nombre);
+			lc.getLobby().addCliente(nombre);
 			aEnviar.setSalas(lc.getSalas());
-			lc.enviarMensaje(aEnviar);
+			lc.enviarPaquete(aEnviar);
 		} else {
-			lc.enviarMensaje(aEnviar);
+			lc.enviarPaquete(aEnviar);
 		}
 	}
 

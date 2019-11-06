@@ -13,8 +13,6 @@ import javax.swing.SwingConstants;
 import javax.swing.border.EmptyBorder;
 
 import cliente.Cliente;
-import mensaje.MsjLogin;
-import paquete.Paquete;
 import paquete.PaqueteLogin;
 
 public class Login extends JFrame {
@@ -26,7 +24,6 @@ public class Login extends JFrame {
 
 	public static void main(String[] args) {
 		new Login(null).setVisible(true);
-		
 	}
 	/**
 	 * Create the frame.
