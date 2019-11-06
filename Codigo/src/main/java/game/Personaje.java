@@ -1,20 +1,17 @@
 package game;
 
-import java.applet.AudioClip;
 import java.awt.Graphics;
-import java.awt.Graphics2D;
 import java.awt.Image;
 import java.awt.Rectangle;
 import java.awt.Toolkit;
-import java.util.Map;
 
 import entornoGrafico.PanelJuego;
 import entornoGrafico.VentanaJuego;
-import miniTenis.Sound;
 
 public class Personaje {
 	//private String image;
 	private String name;
+	@SuppressWarnings("unused")
 	private VentanaJuego game;
 	private int x;
 	private int y;
@@ -25,7 +22,7 @@ public class Personaje {
 	
 	public Personaje(String name, VentanaJuego game) {
 		this.name=name;
-		this.game = game;
+		this.game = game; //TODO para que se le envia la ventana de juego ?
 	}
 	
 	public String getName() {
