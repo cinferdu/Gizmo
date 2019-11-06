@@ -2,13 +2,15 @@ package servidor;
 
 import java.util.ArrayList;
 
+import utils.Estado;
+
 public class Sala implements Comparable<Sala> {
 	
 	private int id_sala;
 	private String nombreSala;
 	private ArrayList<String> nombreJugadores;
 	private String nombreDuenio;
-	private String estado; // cambiar por una Clase
+	private Estado estado; // cambiar por una Clase
 	private int limiteJugadores;
 	private static int salasCreadas = 0;
 	
@@ -16,7 +18,7 @@ public class Sala implements Comparable<Sala> {
 		this.id_sala = 0;
 		nombreSala = "Lobby";
 		nombreDuenio = "";
-		estado = "";
+		estado = Estado.ABIERTA;
 		limiteJugadores = Integer.MAX_VALUE;
 		nombreJugadores = new ArrayList<String>();
 	}
@@ -25,7 +27,7 @@ public class Sala implements Comparable<Sala> {
 		this.id_sala = ++salasCreadas;
 		nombreSala = nombre;
 		nombreDuenio = duenio;
-		estado = "Abierta";
+		estado = Estado.ABIERTA;
 		limiteJugadores = limite;
 	}
 
@@ -45,7 +47,7 @@ public class Sala implements Comparable<Sala> {
 		return nombreDuenio;
 	}
 
-	public String getEstado() {
+	public Estado getEstado() {
 		return estado;
 	}
 
@@ -69,7 +71,7 @@ public class Sala implements Comparable<Sala> {
 		this.nombreDuenio = nombreDuenio;
 	}
 
-	public void setEstado(String estado) {
+	public void setEstado(Estado estado) {
 		this.estado = estado;
 	}
 
