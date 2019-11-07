@@ -19,11 +19,12 @@ public class MsjCrearSala extends Mensaje {
 	@Override
 	public void ejecutar() {
 		Sala nuevaSala = new Sala(nombreSala,duenio,capMax);
-		serverListener.agregarSala(nuevaSala);
+		nuevaSala.addCliente(duenio);
+		listenerServer.agregarSala(nuevaSala);
 		
 		MsjIngresarSala aEnviar = new MsjIngresarSala(nuevaSala);
 		aEnviar.setResultado(true);
-		serverListener.enviarPaquete(aEnviar);
+		listenerServer.enviarMensaje(aEnviar);
 	}
 
 }

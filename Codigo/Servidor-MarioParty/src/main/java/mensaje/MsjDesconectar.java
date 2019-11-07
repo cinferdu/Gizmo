@@ -16,15 +16,15 @@ public class MsjDesconectar extends Mensaje {
 
 	@Override
 	public void ejecutar() {
-		String nombre = serverListener.getNombreCliente();
-		HashMap<String, DataOutputStream> clientes = serverListener.getClientesConectados();
+		String nombre = listenerServer.getNombreCliente();
+		HashMap<String, DataOutputStream> clientes = listenerServer.getClientesConectados();
 
 		synchronized (clientes) {
 			clientes.remove(nombre);
 		}
-		int idsala = serverListener.getSalaActiva();
+		int idsala = listenerServer.getSalaActiva();
 		if (idsala < 0) {
-			Sala sala = serverListener.getSalas().get(idsala);
+			Sala sala = listenerServer.getSalas().get(idsala);
 			sala.removeCliente(nombre);
 			for (String nombreJugador : sala.getNombreJugadores()) {
 				try {

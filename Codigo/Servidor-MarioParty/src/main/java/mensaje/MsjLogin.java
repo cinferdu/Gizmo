@@ -22,20 +22,20 @@ public class MsjLogin extends Mensaje {
 	}
 	@Override
 	public void ejecutar() {
-		HashMap<String, DataOutputStream> clientes = serverListener.getClientesConectados(); // Modif
+		HashMap<String, DataOutputStream> clientes = listenerServer.getClientesConectados(); // Modif
 		resultado = !clientes.containsKey(nombre);
 		
 		if (resultado) {
-			salas = serverListener.getSalas();
+			salas = listenerServer.getSalas();
 			
-			clientes.put(nombre, serverListener.getSalida());
+			clientes.put(nombre, listenerServer.getSalida());
 			//void AgregarCliente(nombre){
-			serverListener.setNombreCliente(nombre);
-			serverListener.getLobby().addCliente(nombre);
-			serverListener.enviarPaquete(this);
+			listenerServer.setNombreCliente(nombre);
+			listenerServer.getLobby().addCliente(nombre);
+			listenerServer.enviarMensaje(this);
 			//}
 		} else {
-			serverListener.enviarPaquete(this);
+			listenerServer.enviarMensaje(this);
 		}
 	}
 	

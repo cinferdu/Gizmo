@@ -19,7 +19,7 @@ public class MsjIngresarSala extends Mensaje {
 	}
 	
 	public MsjIngresarSala(int id_sala) {
-		this.setId_sala(id_sala);
+		this.id_sala = id_sala;
 		this.clase = this.getClass().getSimpleName();
 	}
 
@@ -27,11 +27,15 @@ public class MsjIngresarSala extends Mensaje {
 	public void ejecutar() {
 		
 		if (resultado) {
-			JFrame ventanaActual = this.clientListener.getCliente().getVentanaActual();
-			ventanaActual.dispose();
-			ventanaActual = new JSala(clientListener.getCliente());
+			//CambiarVentana(Jframe ...){
+			JFrame ventanaActual = this.listenerClient.getCliente().getVentanaActual();
+			this.listenerClient.getCliente().getVentanaActual().dispose();
+			ventanaActual.setVisible(false);
+			ventanaActual = new JSala(listenerClient.getCliente());
 			ventanaActual.setVisible(true);
 			((JSala) ventanaActual).inicializarSala(this.sala);
+			listenerClient.getCliente().setVentanaActual(ventanaActual);
+			//}
 			
 		} else {
 			JOptionPane.showMessageDialog(null, "La sala no fue creada");

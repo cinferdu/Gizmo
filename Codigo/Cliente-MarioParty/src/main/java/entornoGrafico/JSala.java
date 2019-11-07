@@ -79,7 +79,14 @@ public class JSala extends JFrame {
 	
 	public void inicializarSala(Sala sala) {
 		this.labelDuenio.setText(sala.getNombreDuenio());
-		this.listModel.addElement(cliente.getNombreCliente());
+		for (String nombre : sala.getNombreJugadores()) {
+			this.listModel.addElement(nombre);
+		}
+	}
+
+	public void agregarAlaSala(String userNuevo) {
+		this.listModel.addElement(userNuevo);
+		
 	}
 
 }

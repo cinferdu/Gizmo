@@ -6,6 +6,7 @@ import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
 import java.net.Socket;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.TreeMap;
 
@@ -135,10 +136,22 @@ public class ListenerThread extends Thread {
 		this.id_salaActiva = salaActiva;
 	}
 
-	public void enviarPaquete(Object mensaje) {
+	public void enviarMensaje(Object mensaje) {
 		try {
 			salida.writeUTF(gson.toJson(mensaje));
 			salida.flush();
+		} catch (IOException e) {
+			System.err.println("No se pudo enviar el mensaje");
+			e.printStackTrace();
+		}
+	}
+	
+	public void enviarMensajeGrupoDeClientes(Object mensaje, ArrayList<String> nombres) {
+		try {
+			for (String string : nombres) {
+				this.clientesConectados.get(string).writeUTF(gson.toJson(mensaje));
+				this.clientesConectados.get(string).flush();
+			}
 		} catch (IOException e) {
 			System.err.println("No se pudo enviar el mensaje");
 			e.printStackTrace();

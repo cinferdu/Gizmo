@@ -6,7 +6,7 @@ public class Sala implements Comparable<Sala> {
 	
 	private int id_sala;
 	private String nombreSala;
-	private ArrayList<String> nombreJugadores;
+	private ArrayList<String> nombreJugadores = new ArrayList<String>();
 	private String nombreDuenio;
 	private String estado; // cambiar por una Clase
 	private int limiteJugadores;
@@ -27,6 +27,10 @@ public class Sala implements Comparable<Sala> {
 		nombreDuenio = duenio;
 		estado = "Abierta";
 		limiteJugadores = limite;
+	}
+	
+	public Sala(int id) { // Solo para comparar
+		this.id_sala = id;
 	}
 
 	public int getId_sala() {

@@ -1,8 +1,8 @@
 package mensaje;
 
-import java.awt.Frame;
 import java.util.TreeMap;
 
+import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 
 import cliente.Sala;
@@ -42,15 +42,17 @@ public class MsjLogin extends Mensaje {
 	@Override
 	public void ejecutar() {
 		if (resultado) {
-			Frame ventana = clientListener.getCliente().getVentanaActual();
+			JFrame ventana = listenerClient.getCliente().getVentanaActual();
 			
 			ventana.dispose();
-			ventana = new LobbyVentana(clientListener.getCliente());
+			//ventana.setVisible(false);
+			ventana = new LobbyVentana(listenerClient.getCliente());
 			ventana.setVisible(true);
 			ventana.setTitle("Bienvenido/a " + nombre);
 			((LobbyVentana) ventana).mostrarSala(salas);
 			
-			clientListener.getCliente().setNombreCliente(nombre);
+			listenerClient.getCliente().setVentanaActual(ventana);
+			listenerClient.getCliente().setNombreCliente(nombre);
 		}else {
 			JOptionPane.showMessageDialog(null, "Ya existe una sesión iniciada con ese usuario.");
 		}

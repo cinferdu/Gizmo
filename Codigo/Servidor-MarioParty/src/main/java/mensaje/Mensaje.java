@@ -13,14 +13,14 @@ import servidor.ListenerThread;
 public abstract class Mensaje implements Serializable{
 
 	private static final long serialVersionUID = 1L;
-	protected transient ListenerThread serverListener;
+	protected transient ListenerThread listenerServer;
 	protected String clase;
 	protected boolean resultado;
 	
 	public abstract void ejecutar();
 	
 	public void setListener(ListenerThread lc) {
-		this.serverListener = lc;
+		this.listenerServer = lc;
 	}
 
 	public String getClase() {

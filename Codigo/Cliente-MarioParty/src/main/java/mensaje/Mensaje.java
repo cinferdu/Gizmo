@@ -13,14 +13,14 @@ import cliente.Listener;
 public abstract class Mensaje implements Serializable {
 	
 	private static final long serialVersionUID = -6544865381140109432L;
-	protected transient Listener clientListener;
+	protected transient Listener listenerClient;
 	protected String clase;
 	protected boolean resultado;
 	
 	public abstract void ejecutar();
 	
 	public void setListener(Listener lc) {
-		this.clientListener = lc;
+		this.listenerClient = lc;
 	}
 
 	public String getClase() {
