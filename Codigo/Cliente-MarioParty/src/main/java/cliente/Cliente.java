@@ -71,7 +71,7 @@ public class Cliente {
 	}
 
 	public static void main(String[] args) {
-		new Cliente("localhost", 10200);
+		new Cliente("127.0.0.1", 10200);
 	}
 
 	public String recibirMsg() {

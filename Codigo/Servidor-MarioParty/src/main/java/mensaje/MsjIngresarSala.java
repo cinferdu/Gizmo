@@ -1,20 +1,29 @@
 package mensaje;
 
-import com.google.gson.Gson;
-
-import paquete.PaqueteCreacionSala;
+import servidor.Sala;
 
 public class MsjIngresarSala extends Mensaje {
 
 	private static final long serialVersionUID = 1L;
+	
+	private Sala sala;
 
-	public MsjIngresarSala(String cadenaLeida) {
-		PaqueteCreacionSala paq = new Gson().fromJson(cadenaLeida, PaqueteCreacionSala.class);
+	public MsjIngresarSala(Sala sala) {
+		this.setSala(sala);
+		this.clase = this.getClass().getSimpleName();
 	}
 	
 	@Override
 	public void ejecutar() {
+		// si alguien pide entrar en una sala
+	}
 
+	public Sala getSala() {
+		return sala;
+	}
+
+	public void setSala(Sala sala) {
+		this.sala = sala;
 	}
 
 }

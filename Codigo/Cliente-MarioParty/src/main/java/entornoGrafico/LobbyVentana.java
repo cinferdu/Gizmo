@@ -14,6 +14,7 @@ import javax.swing.border.EmptyBorder;
 
 import cliente.Cliente;
 import cliente.Sala;
+import mensaje.MsjIngresarSala;
 
 import javax.swing.ListSelectionModel;
 import javax.swing.border.BevelBorder;
@@ -28,7 +29,8 @@ public class LobbyVentana extends JFrame {
 
 	private static final long serialVersionUID = 1L;
 	private JPanel contentPane;
-	DefaultListModel<String> listModel; // donde se agregan las salas
+	private DefaultListModel<String> listModel; // donde se agregan las salas
+	private JList<String> list;
 	private Cliente cliente;
 
 	/**
@@ -62,7 +64,7 @@ public class LobbyVentana extends JFrame {
 
 		listModel = new DefaultListModel<String>();
 		
-		JList<String> list = new JList<String>(listModel);
+		list = new JList<String>(listModel);
 		list.setSelectedIndex(0);
 		list.setVisibleRowCount(10);
 		list.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
@@ -76,11 +78,14 @@ public class LobbyVentana extends JFrame {
 		JButton btnIngresar = new JButton("Entrar");
 		btnIngresar.addActionListener(new ActionListener() {//TODO fijarse la conexion a la sala!
 			public void actionPerformed(ActionEvent arg0) {
-//				client.enviarMensaje(""); //TODO enviar mjs al server para recuperar sala de x cliente
-				CrearSalaVentana ventana = new CrearSalaVentana(cliente);
-				ventana.setVisible(true);
-				cliente.setVentanaActual(ventana);
-				dispose();
+				String salaCompleta = list.getSelectedValue();
+				int idSala = Integer.valueOf(salaCompleta.substring(0, salaCompleta.indexOf(".")));
+				
+				client.enviarMensaje(new MsjIngresarSala(idSala)); //TODO enviar mjs al server para recuperar sala de x cliente
+//				CrearSalaVentana ventana = new CrearSalaVentana(cliente);
+//				ventana.setVisible(true);
+//				cliente.setVentanaActual(ventana);
+//				dispose();
 			}
 		});
 		btnIngresar.setBounds(41, 54, 142, 63);

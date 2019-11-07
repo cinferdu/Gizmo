@@ -1,24 +1,26 @@
 package paquete;
 
+import org.json.simple.JSONObject;
+import org.json.simple.parser.JSONParser;
+import org.json.simple.parser.ParseException;
+
+import com.google.gson.Gson;
+
 import mensaje.Mensaje;
-import mensajeRespuesta.RespLogin;
-import mensajeRespuesta.RespSala;
 
 public class PaqueteToMensaje {
 	// se encargar de crear el mensaje correspondiente (con el getComando) y cargarlo con la infomacion (transformando cadenaLeida al paquete que necesite)
-	public static Mensaje getMensaje(Paquete paquete, String cadenaLeida) {
-		
+	public static Mensaje getMensaje(String cadenaLeida) {
 		Mensaje msj = null;
-		switch (paquete.getTipoMensaje()) {
-		case "Login":
-			msj = new RespLogin(cadenaLeida);
-			break;
-		case "CrearSala":
-		case "IngresarSala":
-			msj = new RespSala(cadenaLeida);
-			break;
-		default:
-			break;
+		JSONParser parser = new JSONParser();
+		try {
+			JSONObject json = (JSONObject) parser.parse(cadenaLeida);
+			Gson gson = new Gson();
+			msj = (Mensaje) gson.fromJson(cadenaLeida, Class.forName("mensaje." + json.get("clase")));
+		} catch (ParseException e) {
+			e.printStackTrace();
+		} catch (ClassNotFoundException e) {
+			e.printStackTrace();
 		}
 		return msj;
 	}

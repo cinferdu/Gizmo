@@ -13,7 +13,7 @@ import javax.swing.JTextField;
 import javax.swing.border.EmptyBorder;
 
 import cliente.Cliente;
-import paquete.PaqueteCreacionSala;
+import mensaje.MsjCrearSala;
 
 public class CrearSalaVentana extends JFrame {
 
@@ -71,8 +71,8 @@ public class CrearSalaVentana extends JFrame {
 		contentPane.add(textFieldNombre);
 		textFieldNombre.setColumns(10);
 		
-		JLabel lblCantidadMaximaDe = new JLabel("Cantidad Max de Jugadores");
-		lblCantidadMaximaDe.setBounds(10, 113, 145, 20);
+		JLabel lblCantidadMaximaDe = new JLabel("<html>Cantidad Max <br>de Jugadores</html>");
+		lblCantidadMaximaDe.setBounds(10, 113, 145, 30);
 		contentPane.add(lblCantidadMaximaDe);
 		
 		textField_MaxJug = new JTextField();
@@ -92,7 +92,7 @@ public class CrearSalaVentana extends JFrame {
 				
 				if ((nombreSala = textFieldNombre.getText().trim()).length() > 0 &&
 						(limite == 2 || limite == 3 || limite == 4) ){
-//					cliente.enviarMensaje(new PaqueteCreacionSala(nombreSala, limite, cliente.getNombreCliente()));
+					cliente.enviarMensaje(new MsjCrearSala(nombreSala, limite, cliente.getNombreCliente()));
 				} else {
 					JOptionPane.showMessageDialog(null, "El nombre de la sala debe contener al menos 1 caracter y "
 							+ "el limite de jugadores solo puede ser 2, 3 o 4.");

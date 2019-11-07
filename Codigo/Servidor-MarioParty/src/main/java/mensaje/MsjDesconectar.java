@@ -12,22 +12,19 @@ import servidor.Sala;
 												// 	Rehacer //
 public class MsjDesconectar extends Mensaje {
 
-	/**
-	 * 
-	 */
 	private static final long serialVersionUID = -7264591593086243786L;
 
 	@Override
 	public void ejecutar() {
-		String nombre = lc.getNombreCliente();
-		HashMap<String, DataOutputStream> clientes = lc.getClientesConectados();
+		String nombre = serverListener.getNombreCliente();
+		HashMap<String, DataOutputStream> clientes = serverListener.getClientesConectados();
 
 		synchronized (clientes) {
 			clientes.remove(nombre);
 		}
-		int idsala = lc.getSalaActiva();
+		int idsala = serverListener.getSalaActiva();
 		if (idsala < 0) {
-			Sala sala = lc.getSalas().get(idsala);
+			Sala sala = serverListener.getSalas().get(idsala);
 			sala.removeCliente(nombre);
 			for (String nombreJugador : sala.getNombreJugadores()) {
 				try {

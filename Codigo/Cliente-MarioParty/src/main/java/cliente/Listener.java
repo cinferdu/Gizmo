@@ -2,10 +2,7 @@ package cliente;
 
 import java.io.DataInputStream;
 
-import com.google.gson.Gson;
-
 import mensaje.Mensaje;
-import paquete.Paquete;
 import paquete.PaqueteToMensaje;
 
 public class Listener extends Thread {
@@ -20,19 +17,19 @@ public class Listener extends Thread {
 	
 	@Override
 	public void run() {
-		
+		boolean escuchando = true;
 		Mensaje msj = null;
 		
-		while (true) {
+		while (escuchando) {
 			try {
 				String cadenaLeida = leer.readUTF();
-				Paquete paquete = new Gson().fromJson(cadenaLeida, Paquete.class);
-				msj = PaqueteToMensaje.getMensaje(paquete, cadenaLeida);
+				msj = PaqueteToMensaje.getMensaje(cadenaLeida);
 				
 				msj.setListener(this);
 				msj.ejecutar();
 			}
 			catch (Exception ex) {
+				escuchando = false;
 				ex.printStackTrace();
 			}
 		}

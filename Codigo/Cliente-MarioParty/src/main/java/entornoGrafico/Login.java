@@ -12,13 +12,8 @@ import javax.swing.JTextField;
 import javax.swing.SwingConstants;
 import javax.swing.border.EmptyBorder;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
-
 import cliente.Cliente;
-import game.Jugador;
-import mensaje.MsjDesconectar;
 import mensaje.MsjLogin;
-import paquete.PaqueteLogin;
 
 public class Login extends JFrame {
 
@@ -33,8 +28,8 @@ public class Login extends JFrame {
 	/**
 	 * Create the frame.
 	 */
-	public Login(Cliente cliente) {
-		this.cliente = cliente;
+	public Login(Cliente client) {
+		this.cliente = client;
 		setResizable(false);
 		setTitle("Ingreso");
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -61,7 +56,7 @@ public class Login extends JFrame {
 				String nombre = textField.getText().trim();
 				
 				if (nombre.length() > 0) {
-					cliente.enviarMensaje(new MsjLogin(nombre, nombre, nombre, nombre));
+					cliente.enviarMensaje(new MsjLogin(nombre));
 				}
 			}
 		});

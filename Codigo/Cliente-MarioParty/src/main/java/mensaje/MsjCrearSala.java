@@ -1,19 +1,25 @@
-package paquete;
+package mensaje;
 
-public class PaqueteCreacionSala extends Paquete {
+public class MsjCrearSala extends Mensaje {
 
 	private static final long serialVersionUID = 1L;
+
 	private String duenio;
 	private int capMax;
 	private String nombreSala;
 
-	public PaqueteCreacionSala(String nombreSala, int capMax, String duenio) {
-		super("CrearSala");
+	public MsjCrearSala(String nombreSala, int capMax, String duenio) {
+		super();
 		this.nombreSala = nombreSala;
 		this.capMax = capMax;
 		this.duenio = duenio;
+		this.clase = this.getClass().getSimpleName();
 	}
 
+	@Override
+	public void ejecutar() {
+		
+	}
 	public String getDuenio() {
 		return duenio;
 	}
@@ -37,7 +43,6 @@ public class PaqueteCreacionSala extends Paquete {
 	public void setNombreSala(String nombreSala) {
 		this.nombreSala = nombreSala;
 	}
-	
 	
 
 }

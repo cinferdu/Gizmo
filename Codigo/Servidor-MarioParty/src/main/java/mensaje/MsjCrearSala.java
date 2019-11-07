@@ -1,9 +1,5 @@
 package mensaje;
 
-import com.google.gson.Gson;
-
-import paquete.PaqueteCreacionSala;
-import paquete.PaqueteSala;
 import servidor.Sala;
 
 public class MsjCrearSala extends Mensaje {
@@ -13,22 +9,21 @@ public class MsjCrearSala extends Mensaje {
 	private String duenio;
 	private int capMax;
 
-	public MsjCrearSala(String cadenaLeida) {
-		PaqueteCreacionSala paq = new Gson().fromJson(cadenaLeida, PaqueteCreacionSala.class);
-		this.nombreSala = paq.getNombreSala();
-		this.capMax = paq.getCapMax();
-		this.duenio = paq.getDuenio();
+	public MsjCrearSala(String nombreSala, String duenio, int capacidadMaxima) {
+		this.nombreSala = nombreSala;
+		this.duenio = duenio;
+		this.capMax = capacidadMaxima;
+		this.clase = this.getClass().getSimpleName();
 	}
 	
 	@Override
 	public void ejecutar() {
 		Sala nuevaSala = new Sala(nombreSala,duenio,capMax);
-		lc.agregarSala(nuevaSala);
+		serverListener.agregarSala(nuevaSala);
 		
-		PaqueteSala paquete = new PaqueteSala(nuevaSala);
-		paquete.setResultado(true);
-		
-		lc.enviarPaquete(paquete);
+		MsjIngresarSala aEnviar = new MsjIngresarSala(nuevaSala);
+		aEnviar.setResultado(true);
+		serverListener.enviarPaquete(aEnviar);
 	}
 
 }

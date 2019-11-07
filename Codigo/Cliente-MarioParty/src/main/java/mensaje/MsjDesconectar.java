@@ -1,8 +1,5 @@
 package mensaje;
 
-import java.net.Socket;
-import java.util.HashMap;
-
 // 	Rehacer //
 public class MsjDesconectar extends Mensaje {
 

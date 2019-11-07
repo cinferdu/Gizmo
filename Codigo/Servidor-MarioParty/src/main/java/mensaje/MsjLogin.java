@@ -2,57 +2,43 @@ package mensaje;
 
 import java.io.DataOutputStream;
 import java.util.HashMap;
+import java.util.TreeMap;
 
-import com.google.gson.Gson;
-
-import paquete.PaqueteLogin;
+import servidor.Sala;
 
 public class MsjLogin extends Mensaje {
 
 	private static final long serialVersionUID = 1L;
 	private String nombre;
-	private String apellido;
-	private String dni;
-	private String domicilio;
-	
-	public MsjLogin() {}
+	// si resultado=false lo siguiente sera NULL
+	private TreeMap<Integer, Sala> salas;
 
-	public MsjLogin(String cadenaLeida) {
-		PaqueteLogin paq = new Gson().fromJson(cadenaLeida, PaqueteLogin.class);
-		nombre = paq.getNombre();
-		apellido = paq.getNombre();
-		dni = paq.getNombre();
-		domicilio = paq.getNombre();
-	}
-	
-	public MsjLogin(String nombre, String apellido, String dni, String domicilio) {
+	public MsjLogin(String nombre) {
 		super();
 		this.nombre = nombre;
-		this.apellido = apellido;
-		this.dni = dni;
-		this.domicilio = domicilio;
+		this.resultado = false;
+		this.salas = null;
+		this.clase = this.getClass().getSimpleName();
 	}
-
 	@Override
 	public void ejecutar() {
-		HashMap<String, DataOutputStream> clientes = lc.getClientesConectados(); // Modif
-		boolean resultado = !clientes.containsKey(nombre);
-
-		PaqueteLogin aEnviar = new PaqueteLogin(nombre);
-		aEnviar.setResultado(resultado);
-		aEnviar.setSalas(lc.getSalas());
+		HashMap<String, DataOutputStream> clientes = serverListener.getClientesConectados(); // Modif
+		resultado = !clientes.containsKey(nombre);
 		
 		if (resultado) {
-			clientes.put(nombre, lc.getSalida());
-			lc.setNombreCliente(nombre);
-			lc.getLobby().addCliente(nombre);
-			aEnviar.setSalas(lc.getSalas());
-			lc.enviarPaquete(aEnviar);
+			salas = serverListener.getSalas();
+			
+			clientes.put(nombre, serverListener.getSalida());
+			//void AgregarCliente(nombre){
+			serverListener.setNombreCliente(nombre);
+			serverListener.getLobby().addCliente(nombre);
+			serverListener.enviarPaquete(this);
+			//}
 		} else {
-			lc.enviarPaquete(aEnviar);
+			serverListener.enviarPaquete(this);
 		}
 	}
-
+	
 	public String getNombre() {
 		return nombre;
 	}
@@ -61,27 +47,20 @@ public class MsjLogin extends Mensaje {
 		this.nombre = nombre;
 	}
 
-	public String getApellido() {
-		return apellido;
+	public boolean isResultado() {
+		return resultado;
 	}
 
-	public void setApellido(String apellido) {
-		this.apellido = apellido;
+	public TreeMap<Integer, Sala> getSalas() {
+		return salas;
 	}
 
-	public String getDni() {
-		return dni;
+	public void setResultado(boolean resultado) {
+		this.resultado = resultado;
 	}
 
-	public void setDni(String dni) {
-		this.dni = dni;
+	public void setSalas(TreeMap<Integer, Sala> salas) {
+		this.salas = salas;
 	}
 
-	public String getDomicilio() {
-		return domicilio;
-	}
-
-	public void setDomicilio(String domicilio) {
-		this.domicilio = domicilio;
-	}
 }

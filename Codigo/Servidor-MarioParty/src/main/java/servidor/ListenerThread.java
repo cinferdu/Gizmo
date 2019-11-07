@@ -46,7 +46,7 @@ public class ListenerThread extends Thread {
 	public void run() {
 		try {
 			String cadenaLeida = entrada.readUTF();
-			//System.out.println(cadenaLeida);
+			
 			while (true) {//preguntar si es Desconectar
 				Mensaje msj = PaqueteToMensaje.getMensaje(cadenaLeida);
 				msj.setListener(this);

@@ -32,7 +32,7 @@ public class Servidor {
 				clienteread = serverSocket.accept();
 				System.out.println(clientewrite.getLocalAddress().getHostAddress());
 				ListenerThread hilo = new ListenerThread(clienteread, clientewrite, clientesConectados, lobby, salas);
-				System.out.println("...");
+				System.out.println("Se ha conectado un cliente");
 				hilo.start();
 				
 			}
@@ -47,7 +47,4 @@ public class Servidor {
 		new Servidor();
 	}
 
-	public static void test(String msj) {
-		System.out.println("...." + msj);
-	}
 }
