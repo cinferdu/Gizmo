@@ -10,7 +10,7 @@ public class PaqueteLogin extends Paquete {
 	private TreeMap<Integer, Sala> salas;
 	
 	public PaqueteLogin(String nombre) {
-		super("Login");
+		super("MsjLogin");
 		this.nombre = nombre;
 	}
 	

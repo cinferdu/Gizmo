@@ -71,7 +71,7 @@ public class Cliente {
 	
 
 	public static void main(String[] args) {
-		new Cliente("192.168.1.33",15000);
+		new Cliente("localhost",15000);
 	}
 
 }

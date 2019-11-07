@@ -10,7 +10,7 @@ public class Sala implements Comparable<Sala> {
 	private String nombreSala;
 	private ArrayList<String> nombreJugadores;
 	private String nombreDuenio;
-	private Estado estado; // cambiar por una Clase
+	private Estado estado;
 	private int limiteJugadores;
 	private static int salasCreadas = 0;
 	

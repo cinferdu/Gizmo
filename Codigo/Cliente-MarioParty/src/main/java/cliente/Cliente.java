@@ -12,6 +12,7 @@ import com.google.gson.Gson;
 import entornoGrafico.Login;
 import game.Jugador;
 import game.Partida;
+import mensaje.Mensaje;
 
 public class Cliente {
 
@@ -55,7 +56,7 @@ public class Cliente {
 
 	}
 
-	public void enviarMensaje(Object mensaje) {
+	public void enviarMensaje(Mensaje mensaje) {
 		try {
 			salida.writeUTF(gson.toJson(mensaje));
 		} catch (IOException e) {
@@ -70,7 +71,7 @@ public class Cliente {
 	}
 
 	public static void main(String[] args) {
-		new Cliente("192.168.1.33", 10200);
+		new Cliente("localhost", 10200);
 	}
 
 	public String recibirMsg() {

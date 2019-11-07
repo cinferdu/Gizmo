@@ -7,7 +7,7 @@ import cliente.Listener;
 public abstract class Mensaje implements Serializable {
 	
 	private static final long serialVersionUID = -6544865381140109432L;
-	protected Listener listener;
+	protected transient Listener listener;
 	
 	public abstract void ejecutar();
 	

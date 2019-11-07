@@ -74,6 +74,15 @@ public class LobbyVentana extends JFrame {
 		contentPane.add(scrollPane);
 		
 		JButton btnIngresar = new JButton("Entrar");
+		btnIngresar.addActionListener(new ActionListener() {//TODO fijarse la conexion a la sala!
+			public void actionPerformed(ActionEvent arg0) {
+//				client.enviarMensaje(""); //TODO enviar mjs al server para recuperar sala de x cliente
+				CrearSalaVentana ventana = new CrearSalaVentana(cliente);
+				ventana.setVisible(true);
+				cliente.setVentanaActual(ventana);
+				dispose();
+			}
+		});
 		btnIngresar.setBounds(41, 54, 142, 63);
 		contentPane.add(btnIngresar);
 		

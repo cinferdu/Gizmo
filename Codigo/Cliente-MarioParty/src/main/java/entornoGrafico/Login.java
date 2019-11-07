@@ -12,7 +12,12 @@ import javax.swing.JTextField;
 import javax.swing.SwingConstants;
 import javax.swing.border.EmptyBorder;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+
 import cliente.Cliente;
+import game.Jugador;
+import mensaje.MsjDesconectar;
+import mensaje.MsjLogin;
 import paquete.PaqueteLogin;
 
 public class Login extends JFrame {
@@ -56,7 +61,7 @@ public class Login extends JFrame {
 				String nombre = textField.getText().trim();
 				
 				if (nombre.length() > 0) {
-					cliente.enviarMensaje(new PaqueteLogin(nombre));
+					cliente.enviarMensaje(new MsjLogin(nombre, nombre, nombre, nombre));
 				}
 			}
 		});

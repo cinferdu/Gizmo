@@ -7,7 +7,7 @@ import servidor.ListenerThread;
 public abstract class Mensaje implements Serializable{
 
 	private static final long serialVersionUID = 1L;
-	protected ListenerThread lc;
+	protected transient ListenerThread lc;
 	
 	public abstract void ejecutar();
 	
