@@ -44,13 +44,11 @@ public class ListenerThread extends Thread {
 	
 	@Override
 	public void run() {
-		Paquete paquete = null;
-		
 		try {
 			String cadenaLeida = entrada.readUTF();
 			//System.out.println(cadenaLeida);
-			while ( (paquete = gson.fromJson(cadenaLeida, Paquete.class)) != null) {//preguntar si es Desconectar
-				Mensaje msj = PaqueteToMensaje.getMensaje(paquete,cadenaLeida);
+			while (true) {//preguntar si es Desconectar
+				Mensaje msj = PaqueteToMensaje.getMensaje(cadenaLeida);
 				msj.setListener(this);
 				msj.ejecutar();
 

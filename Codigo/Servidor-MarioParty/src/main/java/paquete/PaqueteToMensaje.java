@@ -10,7 +10,7 @@ import mensaje.Mensaje;
 
 public class PaqueteToMensaje {
 	// se encargar de crear el mensaje correspondiente (con el getComando) y cargarlo con la infomacion (transformando cadenaLeida al paquete que necesite)
-	public static Mensaje getMensaje(Paquete paquete, String cadenaLeida) {
+	public static Mensaje getMensaje(String cadenaLeida) {
 		Mensaje msj = null;
 		JSONParser parser = new JSONParser();
 		try {
@@ -20,7 +20,6 @@ public class PaqueteToMensaje {
 		} catch (ParseException e) {
 			e.printStackTrace();
 		} catch (ClassNotFoundException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		return msj;
