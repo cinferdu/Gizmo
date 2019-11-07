@@ -3,7 +3,6 @@ package cliente;
 import java.io.DataInputStream;
 
 import mensaje.Mensaje;
-import paquete.PaqueteToMensaje;
 
 public class Listener extends Thread {
 	
@@ -23,7 +22,7 @@ public class Listener extends Thread {
 		while (escuchando) {
 			try {
 				String cadenaLeida = leer.readUTF();
-				msj = PaqueteToMensaje.getMensaje(cadenaLeida);
+				msj = Mensaje.getMensaje(cadenaLeida);
 				
 				msj.setListener(this);
 				msj.ejecutar();

@@ -2,6 +2,12 @@ package mensaje;
 
 import java.io.Serializable;
 
+import org.json.simple.JSONObject;
+import org.json.simple.parser.JSONParser;
+import org.json.simple.parser.ParseException;
+
+import com.google.gson.Gson;
+
 import servidor.ListenerThread;
 
 public abstract class Mensaje implements Serializable{
@@ -33,5 +39,19 @@ public abstract class Mensaje implements Serializable{
 		this.resultado = resultado;
 	}
 	
-	
+	// se encargar de crear el mensaje correspondiente (con el getComando) y cargarlo con la infomacion (transformando cadenaLeida al paquete que necesite)
+	public static Mensaje getMensaje(String cadenaLeida) {
+		Mensaje msj = null;
+		JSONParser parser = new JSONParser();
+		try {
+			JSONObject json = (JSONObject) parser.parse(cadenaLeida);
+			Gson gson = new Gson();
+			msj = (Mensaje) gson.fromJson(cadenaLeida, Class.forName("mensaje." + json.get("clase")));
+		} catch (ParseException e) {
+			e.printStackTrace();
+		} catch (ClassNotFoundException e) {
+			e.printStackTrace();
+		}
+		return msj;
+	}
 }

@@ -12,8 +12,6 @@ import java.util.TreeMap;
 import com.google.gson.Gson;
 
 import mensaje.Mensaje;
-import paquete.Paquete;
-import paquete.PaqueteToMensaje;
 
 public class ListenerThread extends Thread {
 	private String nombreCliente;
@@ -48,7 +46,7 @@ public class ListenerThread extends Thread {
 			String cadenaLeida = entrada.readUTF();
 			
 			while (true) {//preguntar si es Desconectar
-				Mensaje msj = PaqueteToMensaje.getMensaje(cadenaLeida);
+				Mensaje msj = Mensaje.getMensaje(cadenaLeida);
 				msj.setListener(this);
 				msj.ejecutar();
 
