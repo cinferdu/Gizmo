@@ -43,7 +43,6 @@ public class PartidaThread extends Thread {
 			partida.aumentarRonda();
 			iteradorJugador = partida.getJugadores().iterator();
 
-			//avisar(Operacion.NUEVA_RONDA, partida.getRondaActual());
 			avisar(new MsjPartidaIniRonda(partida.getRondaActual()));
 			
 			while (iteradorJugador.hasNext() && partida.isHayGanador() == false) {
@@ -137,27 +136,36 @@ public class PartidaThread extends Thread {
 				//jugador.setPosicionActual((Casilla) respuestaDePanel);
 			}
 
-			//avisar(Operacion.MOVIMIENTO, jugador);
+			avisar(new MsjPartidaMovimiento(jugador));
 
 			jugador.decrementarPasos();
 		}
 	}
 	
+	/**
+	 * Envia un mensaje a todos los jugadores
+	 * @param msjPartida
+	 */
 	private void avisar(Mensaje msjPartida) {
 		listener.enviarMensajeBroadcast(msjPartida, this.nombresJugadores); 
 		try {
-			Thread.sleep(500);
+			Thread.sleep(1000);
 		} catch (InterruptedException e) {
 			e.printStackTrace();
 		}
 	}
 
-	
+	/**
+	 * Envia un mensaje a un solo jugador
+	 * 
+	 * @param msjPartida
+	 * @param jugadorActual
+	 */
 	private void avisar(Mensaje msjPartida, Jugador jugadorActual) {
 		listener.enviarMensaje(msjPartida, jugadorActual.getNombre());
 
 		try {
-			Thread.sleep(500);
+			Thread.sleep(1000);
 		} catch (InterruptedException e) {
 			e.printStackTrace();
 		}

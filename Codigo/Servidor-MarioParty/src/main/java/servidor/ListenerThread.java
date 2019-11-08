@@ -56,7 +56,6 @@ public class ListenerThread extends Thread {
 				msj.setListener(this);
 				msj.ejecutar();
 
-				//Servidor.test("Ejecutado");
 				cadenaLeida = entrada.readUTF();
 			}
 			

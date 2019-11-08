@@ -32,7 +32,6 @@ import game.Dado;
 import game.Jugador;
 import game.Partida;
 import mensaje.MsjPartidaBotonAccion;
-import mensaje.MsjPartidaBotonInformar;
 import objeto.Objeto;
 
 public class PanelJuego extends JPanel {
@@ -154,11 +153,13 @@ public class PanelJuego extends JPanel {
 	}
 
 	public void lanzamiento_dado(String nombre, int dadoValor) {
-		dado = Dado.getImgCara(dadoValor).getScaledInstance(50, 50, Image.SCALE_SMOOTH);
+		mostrarBoton = false;
+		dado = Dado.getImgCara(dadoValor);
 		this.textArea.append(nombre + " avanza " + dadoValor + " casillas" + "\n");
 		Graphics2D g = (Graphics2D) this.getGraphics();
 		g.drawImage(dado, 302, 50, null);
 		repaint();
+		revalidate();
 	}
 
 	public void casilla_activada(Jugador jugadorActual) {
@@ -239,8 +240,6 @@ public class PanelJuego extends JPanel {
 		dado = null;
 		mostrarBoton = true;
 		repaint();
-		// modificadorDelCursor.setVisible(true);
-		// mostrarBotonDado();
 	}
 
 	public void esperarLanzamientoDelDado() {
@@ -265,6 +264,11 @@ public class PanelJuego extends JPanel {
 		botonPresionado = false;
 		modificadorDelCursor.setVisible(false);
 		cliente.enviarMensaje(new MsjPartidaBotonAccion(null));
+		repaint();
+	}
+	
+	public void movimiento() {
+		repaint();
 	}
 
 	private int mostrarOpcionesObjetos(Jugador jugadorActual) {
