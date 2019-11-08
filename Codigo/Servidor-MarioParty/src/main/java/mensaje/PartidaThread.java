@@ -4,11 +4,10 @@ import java.util.ArrayList;
 import java.util.Iterator;
 
 import casilla.Casilla;
-import comunicacionObserver.Operacion;
 import game.Dado;
 import game.Jugador;
 import game.Partida;
-import miniTenis.MiniTenis;
+import objeto.Objeto;
 import servidor.ListenerThread;
 
 public class PartidaThread extends Thread {
@@ -16,7 +15,10 @@ public class PartidaThread extends Thread {
 	private Partida partida;
 	private ListenerThread listener;
 	private ArrayList<String> nombresJugadores;
-
+	private Casilla caminoSeleccionado;
+	private Objeto objetoSelecionado;
+	
+	
 	public PartidaThread(Partida juego, ArrayList<String> nombres, ListenerThread listener) {
 		partida = juego;
 		this.listener = listener;
@@ -53,13 +55,7 @@ public class PartidaThread extends Thread {
 					avisar(new MsjPartidaBotonInformar(jugadorActual));
 					avisar(new MsjPartidaBotonAccion(jugadorActual),jugadorActual);
 
-					synchronized (this) {
-						try {
-							this.wait();
-						} catch (InterruptedException e) {
-							e.printStackTrace();
-						}
-					}
+					esperarNofify();
 					
 					jugadorActual.setNroPasos(Dado.lanzarDado());
 					
@@ -132,8 +128,12 @@ public class PartidaThread extends Thread {
 				jugador.setPosicionActual(sigcamino);
 			else {
 				//avisar(Operacion.SELECCIONAR_CAMINO, jugador);
+				avisar(new MsjPartidaElegirCaminoInformar(jugador));
+				avisar(new MsjPartidaElegirCaminoAccion(jugador, jugador.getPosicionActual().getSiguientesCasillas()));
+				esperarNofify();
 				
 				//jugador.setPosicionActual((Casilla) respuestaDePanel);
+				jugador.setPosicionActual(caminoSeleccionado);
 			}
 
 			avisar(new MsjPartidaMovimiento(jugador));
@@ -170,9 +170,8 @@ public class PartidaThread extends Thread {
 			e.printStackTrace();
 		}
 	}
-	/*
-	private void avisarEsperarRespuesta(Operacion operacion, Jugador jugadorActual) {
-		listener.enviarMensaje(new MsjPartida(operacion, jugadorActual));
+
+	private void esperarNofify() {
 		synchronized (this) {
 			try {
 				this.wait();
@@ -180,5 +179,15 @@ public class PartidaThread extends Thread {
 				e.printStackTrace();
 			}
 		}
-	}*/
+	}
+	
+	public void setCaminoSeleccionado(Casilla caminoSeleccionado) {
+		this.caminoSeleccionado = caminoSeleccionado;
+	}
+
+	public void setObjetoSelecionado(Objeto objetoSelecionado) {
+		this.objetoSelecionado = objetoSelecionado;
+	}
+	
+	
 }

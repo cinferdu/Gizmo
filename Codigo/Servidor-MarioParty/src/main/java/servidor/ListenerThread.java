@@ -12,6 +12,7 @@ import java.util.TreeMap;
 
 import com.google.gson.Gson;
 
+import casilla.Casilla;
 import game.Partida;
 import mensaje.Mensaje;
 import mensaje.PartidaThread;
@@ -211,6 +212,16 @@ public class ListenerThread extends Thread {
 		synchronized (Servidor.partidas) {
 			PartidaThread thread = Servidor.partidas.get(this.getId_partidaActiva());
 			synchronized (thread) {
+				thread.notify();
+			}
+		}
+	}
+	
+	public void notificarCasillaElegina(Casilla casilla) {
+		synchronized (Servidor.partidas) {
+			PartidaThread thread = Servidor.partidas.get(this.getId_partidaActiva());
+			synchronized (thread) {
+				thread.setCaminoSeleccionado(casilla);
 				thread.notify();
 			}
 		}

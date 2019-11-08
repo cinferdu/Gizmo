@@ -166,6 +166,11 @@ public class PanelJuego extends JPanel {
 		this.textArea.append(jugadorActual.getNombre() + " activo una " + jugadorActual.getPosicionActual() + "\n");
 	}
 	
+	public void seleccionar_camino(Jugador jugadorActual) {
+		textArea.append(jugadorActual.getNombre() + " te quedan " + jugadorActual.getNroPasos() + " pasos\n");
+		textArea.append(jugadorActual.getNombre() + " seleccione un camino\n");
+	}
+	
 	public void actualizar(Operacion operacion, Jugador jugadorActual) {
 
 		switch (operacion) {
@@ -189,7 +194,7 @@ public class PanelJuego extends JPanel {
 		case SELECCIONAR_CAMINO:
 			textArea.append(jugadorActual.getNombre() + " te quedan " + jugadorActual.getNroPasos() + " pasos\n");
 			textArea.append(jugadorActual.getNombre() + " seleccione un camino\n");
-			mostrarOpcionesCamino(jugadorActual.getPosicionActual());
+			//mostrarOpcionesCamino(jugadorActual.getPosicionActual());
 
 			partida.setRespuestaDePanel(caminoElegido);
 			break;
@@ -271,7 +276,7 @@ public class PanelJuego extends JPanel {
 		repaint();
 	}
 
-	private int mostrarOpcionesObjetos(Jugador jugadorActual) {
+	public int mostrarOpcionesObjetos(Jugador jugadorActual) {
 		ArrayList<Objeto> aListar = jugadorActual.getMochila_objetos();
 		ArrayList<JRadioButton> botonesUsados = new ArrayList<JRadioButton>();
 
@@ -425,7 +430,7 @@ public class PanelJuego extends JPanel {
 		mensaje.setVisible(false);
 	}
 
-	private void mostrarOpcionesCamino(final Casilla aListar) {
+	public void mostrarOpcionesCamino(final ArrayList<Casilla> aListar) {
 
 		// creo los componentes
 		JLabel mensaje = new JLabel(
@@ -437,7 +442,7 @@ public class PanelJuego extends JPanel {
 		// Para elegir camino
 		addMouseListener(new MouseAdapter() {
 			public void mouseClicked(MouseEvent e) {
-				for (Casilla camino : aListar.getSiguientesCasillas()) {
+				for (Casilla camino : aListar) {
 
 					if (e.getX() > camino.getPosX() && e.getX() < (camino.getPosX() + TAMANIO_CASILLA)
 							&& e.getY() > camino.getPosY() && e.getY() < (camino.getPosY() + TAMANIO_CASILLA)) {
@@ -469,9 +474,10 @@ public class PanelJuego extends JPanel {
 		if (botonPresionado) {
 			botonPresionado = false;
 		} else {
-			caminoElegido = aListar.getSiguientesCasillas().get(0);
+			caminoElegido = aListar.get((int) (Math.random()*aListar.size()));
 		}
-
+		
+		
 	}
 
 	private void imprimirPuntajes(Graphics g) {

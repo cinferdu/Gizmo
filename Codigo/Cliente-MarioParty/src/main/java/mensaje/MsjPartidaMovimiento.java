@@ -23,12 +23,8 @@ public class MsjPartidaMovimiento extends Mensaje {
 			if (jugador.getNombre().equals(jugadorActual.getNombre())) {
 				jugador.setPosicionActual(jugadorActual.getPosicionActual());
 			}
-		}/*
-		for (int i = 0; i < game.getJugadores().size(); i++) {
-			if (game.getJugadores().get(i).getNombre() == jugadorActual.getNombre()) {
-				game.getJugadores().get(i).setPosicionActual(jugador.getPosicionActual());
-			}
-		}*/
+		}
+
 		((VentanaJuego) listenerClient.getCliente().getVentanaActual()).getPanel().movimiento();
 	}
 
