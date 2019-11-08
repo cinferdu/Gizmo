@@ -12,7 +12,6 @@ import java.util.TreeMap;
 
 import com.google.gson.Gson;
 
-import game.Jugador;
 import game.Partida;
 import mensaje.Mensaje;
 import mensaje.PartidaThread;
@@ -26,12 +25,12 @@ public class ListenerThread extends Thread {
 	private DataOutputStream salida;
 	private Sala lobby;
 	private TreeMap<Integer, Sala> salas;
-	private TreeMap<Integer, PartidaThread> partidas;
+	//private TreeMap<Integer, PartidaThread> partidas;
 	
 	private Gson gson = new Gson();
 
 	public ListenerThread(Socket clienteRead, Socket clienteWrite, HashMap<String, ListenerThread> clientesConectados, Sala lobby, TreeMap<Integer, Sala> salas, TreeMap<Integer, PartidaThread> partidas) {
-		this.partidas = new TreeMap<Integer, PartidaThread>();
+		//this.partidas = new TreeMap<Integer, PartidaThread>();
 		try {
 			salida = new DataOutputStream(new BufferedOutputStream(clienteWrite.getOutputStream()));
 			salida.flush();
@@ -141,14 +140,14 @@ public class ListenerThread extends Thread {
 	public void setSalaActiva(int salaActiva) {
 		this.id_salaActiva = salaActiva;
 	}
-
+/*
 	public TreeMap<Integer, PartidaThread> getPartidas() {
 		return partidas;
 	}
 
 	public void setPartidas(TreeMap<Integer, PartidaThread> partidas) {
 		this.partidas = partidas;
-	}
+	}*/
 
 	public int getId_partidaActiva() {
 		return id_partidaActiva;
@@ -210,9 +209,22 @@ public class ListenerThread extends Thread {
 	}
 	
 	public void notificarPartida() {
-		PartidaThread thread = this.getPartidas().get(this.getId_partidaActiva());
-		synchronized (thread) {
-			thread.notify();
+		synchronized (Servidor.partidas) {
+			PartidaThread thread = Servidor.partidas.get(this.getId_partidaActiva());
+			synchronized (thread) {
+				thread.notify();
+			}
+		}
+	}
+
+	public void enviarMensaje(Mensaje msjPartida, String nombre) {
+		
+		try {
+			clientesConectados.get(nombre).getSalida().writeUTF(gson.toJson(msjPartida));
+			clientesConectados.get(nombre).getSalida().flush();
+		} catch (IOException e) {
+			System.err.println("No se pudo enviar el mensaje");
+			e.printStackTrace();
 		}
 	}
 }

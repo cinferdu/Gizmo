@@ -1,21 +1,23 @@
 package mensaje;
 
-import game.Jugador;
+import entornoGrafico.VentanaJuego;
 
 public class MsjPartidaLanzamientoDado extends Mensaje {
 
 	private static final long serialVersionUID = 1L;
 	private int dado;
+	private String jugadorAct;
 	
-	public MsjPartidaLanzamientoDado(Jugador jugAct, int dadoValor) {
+	public MsjPartidaLanzamientoDado(String jugAct, int dadoValor) {
 		super();
 		setDado(dadoValor);
+		jugadorAct = jugAct;
 		this.clase = this.getClass().getSimpleName();
 	}
 
 	@Override
 	public void ejecutar() {
-		// TODO Auto-generated method stub
+		((VentanaJuego) listenerClient.getCliente().getVentanaActual()).getPanel().lanzamiento_dado(jugadorAct, dado);
 		
 	}
 	
@@ -25,6 +27,14 @@ public class MsjPartidaLanzamientoDado extends Mensaje {
 
 	public void setDado(int dado) {
 		this.dado = dado;
+	}
+
+	public String getJugadorAct() {
+		return jugadorAct;
+	}
+
+	public void setJugadorAct(String jugadorAct) {
+		this.jugadorAct = jugadorAct;
 	}
 
 	

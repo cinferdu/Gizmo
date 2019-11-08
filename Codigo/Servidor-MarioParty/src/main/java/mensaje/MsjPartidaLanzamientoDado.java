@@ -1,15 +1,15 @@
 package mensaje;
 
-import game.Jugador;
-
 public class MsjPartidaLanzamientoDado extends Mensaje {
 
 	private static final long serialVersionUID = 1L;
 	private int dado;
+	private String jugadorAct;
 	
-	public MsjPartidaLanzamientoDado(Jugador jugAct, int dadoValor) {
+	public MsjPartidaLanzamientoDado(String jugAct, int dadoValor) {
 		super();
 		setDado(dadoValor);
+		jugadorAct = jugAct;
 		this.clase = this.getClass().getSimpleName();
 	}
 
@@ -27,5 +27,12 @@ public class MsjPartidaLanzamientoDado extends Mensaje {
 		this.dado = dado;
 	}
 
-	
+	public String getJugadorAct() {
+		return jugadorAct;
+	}
+
+	public void setJugadorAct(String jugadorAct) {
+		this.jugadorAct = jugadorAct;
+	}
+
 }

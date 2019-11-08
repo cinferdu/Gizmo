@@ -31,6 +31,7 @@ import comunicacionObserver.Operacion;
 import game.Dado;
 import game.Jugador;
 import game.Partida;
+import mensaje.MsjPartidaBotonAccion;
 import mensaje.MsjPartidaBotonInformar;
 import objeto.Objeto;
 
@@ -57,12 +58,13 @@ public class PanelJuego extends JPanel {
 	private Partida partida;
 	private VentanaJuego ventanaJuego;
 	private Cliente cliente;
+	private boolean mostrarBoton = true;
 
 	public PanelJuego(Cliente client, VentanaJuego ventanaJuego) {
 		this.cliente = client;
 		this.ventanaJuego = ventanaJuego;
 		this.partida = cliente.getPartidaActual();
-		
+
 		setLayout(null);
 		textArea = new JTextArea("");
 		textArea.setBounds(10, 202, 154, 85);
@@ -90,7 +92,7 @@ public class PanelJuego extends JPanel {
 		modificadorDelCursor.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
 		modificadorDelCursor.setVisible(false);
 		add(modificadorDelCursor);
-		
+
 		repaint();
 	}
 
@@ -98,6 +100,18 @@ public class PanelJuego extends JPanel {
 	public void paint(Graphics g) {
 		super.paint(g);
 		g.drawImage(fondo, 0, 0, null);
+
+		if (dado != null) {
+			g.drawImage(dado, 302, 50, null);
+			modificadorDelCursor.setVisible(false);
+		}
+		if (mostrarBoton) {
+			g.drawImage(ImgExtra.CUADR_TEXTO, 25, 25, null);
+			g.drawString("Haga clic sobre los dados", 50, 50);
+			g.drawString("para iniciar su turno", 50, 65);
+			g.drawImage(dado_boton, 280, 30, null);
+			// modificadorDelCursor.setVisible(true);
+		}
 
 		// Dibujo las casillas
 		for (Casilla casilla : partida.getTablero().getCasilleros()) {
@@ -109,11 +123,12 @@ public class PanelJuego extends JPanel {
 		for (Jugador jugador : partida.getJugadores()) {
 			Toolkit t = Toolkit.getDefaultToolkit();
 			Image imagen = t.getImage("Personajes/" + jugador.getPersonaje().getName() + "-body.png");
-			g.drawImage(imagen, jugador.getPosicionActual().getPosX(), jugador.getPosicionActual().getPosY() - 12, 30, 40, null);
+			g.drawImage(imagen, jugador.getPosicionActual().getPosX(), jugador.getPosicionActual().getPosY() - 12, 30,
+					40, null);
 		}
 
 		imprimirPuntajes(g);
-		
+
 	}
 
 	private void mostrarBotonDado() {
@@ -123,17 +138,31 @@ public class PanelJuego extends JPanel {
 		g.drawString("Haga clic sobre los dados", 50, 50);
 		g.drawString("para iniciar su turno", 50, 65);
 		g.drawImage(dado_boton, 280, 30, null);
-		//repaint();
+		// repaint();
 	}
-	
-	private void mostrarDado() {
+
+	private void mostrarDado(Jugador jugadorActual) {
+		dado = Dado.getImgCara(jugadorActual.getNroPasos()).getScaledInstance(50, 50, Image.SCALE_SMOOTH);
+		this.textArea.append(jugadorActual.getNombre() + " avanza " + jugadorActual.getNroPasos() + " casillas" + "\n");
 		Graphics g = getGraphics();
 		g.drawImage(dado, 302, 50, null);
 		modificadorDelCursor.setVisible(false);
 	}
-	
+
 	public void nuevaRonda() {
 		this.textArea.append("*** INICIANDO RONDA " + partida.getRondaActual() + " ***\n");
+	}
+
+	public void lanzamiento_dado(String nombre, int dadoValor) {
+		dado = Dado.getImgCara(dadoValor).getScaledInstance(50, 50, Image.SCALE_SMOOTH);
+		this.textArea.append(nombre + " avanza " + dadoValor + " casillas" + "\n");
+		Graphics2D g = (Graphics2D) this.getGraphics();
+		g.drawImage(dado, 302, 50, null);
+		repaint();
+	}
+
+	public void casilla_activada(Jugador jugadorActual) {
+		this.textArea.append(jugadorActual.getNombre() + " activo una " + jugadorActual.getPosicionActual() + "\n");
 	}
 	
 	public void actualizar(Operacion operacion, Jugador jugadorActual) {
@@ -167,16 +196,16 @@ public class PanelJuego extends JPanel {
 		case SELECCIONAR_ACCION:
 			this.textArea.append(jugadorActual.getNombre() + " seleccione un objeto\n");
 			int objetoElegido = mostrarOpcionesObjetos(jugadorActual);
-			
-			if (objetoElegido != -1) { 
+
+			if (objetoElegido != -1) {
 				if (jugadorActual.getMochila_objetos(objetoElegido).isConObjetivo() == true)
 					jugadorActual.getMochila_objetos(objetoElegido).setVictima(jugadorSeleccionado);
-				
+
 				partida.setRespuestaDePanel(objetoElegido);
-			}else {
-				partida.setRespuestaDePanel(null); 
+			} else {
+				partida.setRespuestaDePanel(null);
 			}
-			
+
 			break;
 
 		case SIN_ACCION:
@@ -200,19 +229,22 @@ public class PanelJuego extends JPanel {
 		}
 		repaint();
 	}
-	
+
 	public void nuevaRonda(int rondaActual) {
 		partida.setRondaActual(rondaActual);
 		this.textArea.append("*** INICIANDO RONDA " + partida.getRondaActual() + " ***\n");
 	}
 
 	public void botonDelDado() {
-		modificadorDelCursor.setVisible(true);
-		mostrarBotonDado();
-		esperarLanzamientoDelDado();
+		dado = null;
+		mostrarBoton = true;
+		repaint();
+		// modificadorDelCursor.setVisible(true);
+		// mostrarBotonDado();
 	}
-	
-	private void esperarLanzamientoDelDado() {
+
+	public void esperarLanzamientoDelDado() {
+		modificadorDelCursor.setVisible(true);
 		dado = null;
 		addMouseListener(new MouseAdapter() {
 			public void mouseClicked(MouseEvent e) {
@@ -229,11 +261,11 @@ public class PanelJuego extends JPanel {
 				e1.printStackTrace();
 			}
 		}
+		mostrarBoton = false;
 		botonPresionado = false;
-		cliente.enviarMensaje(new MsjPartidaBotonInformar(null));
 		modificadorDelCursor.setVisible(false);
+		cliente.enviarMensaje(new MsjPartidaBotonAccion(null));
 	}
-
 
 	private int mostrarOpcionesObjetos(Jugador jugadorActual) {
 		ArrayList<Objeto> aListar = jugadorActual.getMochila_objetos();
@@ -250,8 +282,8 @@ public class PanelJuego extends JPanel {
 		add(mensajeObj);
 
 		// Lo clono para que el remove no borre ese jugador en la partida
-		ArrayList<Jugador> posiblesObjetivos =  new ArrayList<Jugador>(partida.getJugadores());
-		
+		ArrayList<Jugador> posiblesObjetivos = new ArrayList<Jugador>(partida.getJugadores());
+
 		posiblesObjetivos.remove(jugadorActual);
 
 		// Si es necesario elegir un objetivo
@@ -261,7 +293,7 @@ public class PanelJuego extends JPanel {
 			JRadioButton jrPlayer = new JRadioButton(jugador.getNombre());
 			jrPlayer.setBounds(350 + elementosCargados * 150, 625, 150, 20);
 			jrPlayer.setActionCommand(elementosCargados + "");
-			
+
 			grupoJugadores.add(jrPlayer);
 			add(jrPlayer);
 
@@ -275,10 +307,10 @@ public class PanelJuego extends JPanel {
 		ButtonGroup grupoObjeto = new ButtonGroup();
 		elementosCargados = 0;
 		int objetoNumero = 0; // posicion en la mochila
-		
+
 		// cargo los objetos
 		for (Objeto elemento : aListar) {
-			
+
 			// si es distinto de null lo agrego
 			if (elemento != null) {
 				JRadioButton jrButton = new JRadioButton(elemento.toString());
@@ -304,8 +336,8 @@ public class PanelJuego extends JPanel {
 
 				if (elementosCargados == 0) {
 					jrButton.setSelected(true);
-					
-					if (elemento.isConObjetivo()) 
+
+					if (elemento.isConObjetivo())
 						mostrarObjetivos(grupoJugadores, mensajeObj);
 					else
 						ocultarObjetivos(grupoJugadores, mensajeObj);
@@ -317,14 +349,14 @@ public class PanelJuego extends JPanel {
 
 				botonesUsados.add(jrButton);
 			}
-			
+
 			objetoNumero++;
 		}
 
 		JButton aceptar = new JButton("Seleccionar");
 		aceptar.setBounds(440, 645, 125, 25);
 		add(aceptar);
-		
+
 		// para saber cuando apreto el boton
 		aceptar.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
@@ -353,7 +385,7 @@ public class PanelJuego extends JPanel {
 		remove(aceptar);
 		remove(mensaje);
 		remove(mensajeObj);
-		
+
 		revalidate();
 		repaint();
 		botonPresionado = false;
@@ -362,7 +394,7 @@ public class PanelJuego extends JPanel {
 		jugadorSeleccionado = posiblesObjetivos.get(jg_selec);
 
 		limpiarGrupo(botonesUsados);
-		
+
 		return objetoElegido;
 
 	}

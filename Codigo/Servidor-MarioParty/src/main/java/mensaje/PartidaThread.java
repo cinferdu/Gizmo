@@ -3,6 +3,7 @@ package mensaje;
 import java.util.ArrayList;
 import java.util.Iterator;
 
+import casilla.Casilla;
 import comunicacionObserver.Operacion;
 import game.Dado;
 import game.Jugador;
@@ -43,20 +44,30 @@ public class PartidaThread extends Thread {
 			iteradorJugador = partida.getJugadores().iterator();
 
 			//avisar(Operacion.NUEVA_RONDA, partida.getRondaActual());
-			this.listener.enviarMensajeBroadcast(new MsjPartidaIniRonda(partida.getRondaActual()), nombresJugadores);
-
+			avisar(new MsjPartidaIniRonda(partida.getRondaActual()));
+			
 			while (iteradorJugador.hasNext() && partida.isHayGanador() == false) {
 				jugadorActual = iteradorJugador.next();
 
 				if (!jugadorActual.isPierdeTurno()) {
 
-					//avisarEsperarRespuesta(Operacion.BOTON_DADO, jugadorActual); // espera a que aprete
-					this.listener.enviarMensajeBroadcast(new MsjPartidaBotonInformar(jugadorActual), nombresJugadores);
+					avisar(new MsjPartidaBotonInformar(jugadorActual));
+					avisar(new MsjPartidaBotonAccion(jugadorActual),jugadorActual);
+
+					synchronized (this) {
+						try {
+							this.wait();
+						} catch (InterruptedException e) {
+							e.printStackTrace();
+						}
+					}
+					
 					jugadorActual.setNroPasos(Dado.lanzarDado());
-					//avisar(Operacion.LANZAMIENTO_DADO, jugadorActual);
+					
+					avisar(new MsjPartidaLanzamientoDado(jugadorActual.getNombre(), jugadorActual.getNroPasos()));
 
 					// El jugador avanza los pasos
-					partida.avanzar(jugadorActual); // loop de movimientos
+					avanzar(jugadorActual); // loop de movimientos
 
 					jugadorActual.activarCasilla();
 					//avisar(Operacion.CASILLA_ACTIVADA, jugadorActual); 
@@ -112,19 +123,38 @@ public class PartidaThread extends Thread {
 		//avisar(Operacion.PUNTAJES_FINALES, partida.getJugadorGanador());
 
 	}
-/*
-	private void avisar(Operacion operacion, Jugador jugadorActual) {
-		//listener.enviarMensaje(new MsjPartida(operacion, jugadorActual));
-		listener.enviarMensajeBroadcast(new MsjPartida(operacion, jugadorActual), this.nombresJugadores); // si no es el jugadorActual solo mostrara mensajes y actualizara
+	
+	public void avanzar(Jugador jugador) {
+		Casilla sigcamino = null;
+
+		while (jugador.getNroPasos() > 0) {
+
+			if ((sigcamino = jugador.getPosicionActual().caminoUnico()) != null)
+				jugador.setPosicionActual(sigcamino);
+			else {
+				//avisar(Operacion.SELECCIONAR_CAMINO, jugador);
+				
+				//jugador.setPosicionActual((Casilla) respuestaDePanel);
+			}
+
+			//avisar(Operacion.MOVIMIENTO, jugador);
+
+			jugador.decrementarPasos();
+		}
+	}
+	
+	private void avisar(Mensaje msjPartida) {
+		listener.enviarMensajeBroadcast(msjPartida, this.nombresJugadores); 
 		try {
 			Thread.sleep(500);
 		} catch (InterruptedException e) {
 			e.printStackTrace();
 		}
 	}
+
 	
-	private void avisar(Operacion operacion, int ronda) {
-		listener.enviarMensajeBroadcast(new MsjPartidaIniRonda(operacion, ronda), this.nombresJugadores);
+	private void avisar(Mensaje msjPartida, Jugador jugadorActual) {
+		listener.enviarMensaje(msjPartida, jugadorActual.getNombre());
 
 		try {
 			Thread.sleep(500);
@@ -132,7 +162,7 @@ public class PartidaThread extends Thread {
 			e.printStackTrace();
 		}
 	}
-	
+	/*
 	private void avisarEsperarRespuesta(Operacion operacion, Jugador jugadorActual) {
 		listener.enviarMensaje(new MsjPartida(operacion, jugadorActual));
 		synchronized (this) {

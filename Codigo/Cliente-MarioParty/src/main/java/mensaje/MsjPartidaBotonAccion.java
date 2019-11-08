@@ -1,5 +1,6 @@
 package mensaje;
 
+import entornoGrafico.VentanaJuego;
 import game.Jugador;
 
 public class MsjPartidaBotonAccion extends Mensaje {
@@ -13,7 +14,7 @@ public class MsjPartidaBotonAccion extends Mensaje {
 
 	@Override
 	public void ejecutar() {
-		//listenerClient.notificarPartida();
+		((VentanaJuego) listenerClient.getCliente().getVentanaActual()).getPanel().esperarLanzamientoDelDado();
 	}
 
 }

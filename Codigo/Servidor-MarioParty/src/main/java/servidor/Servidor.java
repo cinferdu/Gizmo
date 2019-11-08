@@ -15,7 +15,7 @@ public class Servidor {
 	private HashMap<String, ListenerThread> clientesConectados; // nombre + socket
 	private Sala lobby; // Sala "especial" no tiene duenio ni limite
 	private TreeMap<Integer, Sala> salas; // agregar el lobby aca -> .get(0)==lobby
-	private TreeMap<Integer, PartidaThread> partidas = new TreeMap<Integer, PartidaThread>();
+	public static TreeMap<Integer, PartidaThread> partidas = new TreeMap<Integer, PartidaThread>();
 	private ServerSocket serverSocket;
 	
 	public Servidor() {

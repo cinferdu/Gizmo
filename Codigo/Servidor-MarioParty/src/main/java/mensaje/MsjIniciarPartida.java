@@ -1,11 +1,11 @@
 package mensaje;
 
 import java.util.ArrayList;
-import java.util.TreeMap;
 
 import game.Jugador;
 import game.Partida;
 import game.Personaje;
+import servidor.Servidor;
 
 public class MsjIniciarPartida extends Mensaje {
 
@@ -25,15 +25,15 @@ public class MsjIniciarPartida extends Mensaje {
 			jug.setPersonaje(new Personaje("peach")); //Cambiar nombre
 			participantes.add(jug);
 		}
-		this.game = new Partida(participantes, 50); // EN LA VENTANA DE CREAR SALA AGREGAR "OBJETIVO" o "LIMITE DE MONEDAS"
-		TreeMap<Integer, PartidaThread> listaPartida = listenerServer.getPartidas();
-		PartidaThread hiloPartida = listenerServer.crearHiloPartida(game, nombresJugadores);
 		
-		synchronized (listaPartida) {
-			listaPartida.put(game.getIdpartida(), hiloPartida);
+		this.game = new Partida(participantes, 50); // EN LA VENTANA DE CREAR SALA AGREGAR "OBJETIVO" o "LIMITE DE MONEDAS"
+		PartidaThread hiloPartida = listenerServer.crearHiloPartida(game, nombresJugadores);
+		listenerServer.asignarThread(game.getIdpartida(), nombresJugadores);
+		
+		synchronized (Servidor.partidas) {
+			Servidor.partidas.put(game.getIdpartida(), hiloPartida);
 		}
 		listenerServer.enviarMensajeBroadcast(this, nombresJugadores);
-		listenerServer.asignarThread(game.getIdpartida(), nombresJugadores);
 	}
 
 	public ArrayList<String> getNombresJugadores() {
