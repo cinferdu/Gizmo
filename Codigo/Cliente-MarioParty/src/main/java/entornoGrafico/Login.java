@@ -38,6 +38,7 @@ public class Login extends JFrame {
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 		setContentPane(contentPane);
 		contentPane.setLayout(null);
+		setResizable(false);
 		
 		textField = new JTextField();
 		textField.setBounds(29, 112, 100, 20);

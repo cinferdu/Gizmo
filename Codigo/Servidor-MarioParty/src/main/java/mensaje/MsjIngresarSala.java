@@ -20,7 +20,7 @@ public class MsjIngresarSala extends Mensaje {
 		if (resultado = listenerServer.getSalas().containsKey(id_sala)) {
 			this.sala = listenerServer.getSalas().get(id_sala);
 			
-			listenerServer.enviarMensajeGrupoDeClientes(new MsjAvisarNuevoEnSala(listenerServer.getNombreCliente()),
+			listenerServer.enviarMensajeBroadcast(new MsjAvisarNuevoClienteEnSala(listenerServer.getNombreCliente()),
 					sala.getNombreJugadores());
 			
 			this.sala.addCliente(listenerServer.getNombreCliente());

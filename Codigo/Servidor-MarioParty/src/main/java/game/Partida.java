@@ -17,12 +17,14 @@ public class Partida implements Publicador {
 	private Tablero tablero;
 	private Jugador jugadorGanador;
 	private int rondaActual;
-	private List<Suscriptor> clientes;
-
-	private Object respuestaDePanel = null;
-
+	private transient List<Suscriptor> clientes;
+	private int idpartida; 
+	
+	private transient Object respuestaDePanel = null;
+	private transient static int partidasCreadas = 0;
+	
 	public Partida(ArrayList<Jugador> participantes, int objetivo) {
-
+		setIdpartida(++partidasCreadas);
 		jugadores = participantes;
 		rondaActual = 0;
 		this.objetivo = objetivo;
@@ -257,6 +259,14 @@ public class Partida implements Publicador {
 			Jugador jugador = iterator.next();
 			jugador.setMiniJuegoPuntos(0);
 		}
+	}
+
+	public int getIdpartida() {
+		return idpartida;
+	}
+
+	public void setIdpartida(int idpartida) {
+		this.idpartida = idpartida;
 	}
 
 }

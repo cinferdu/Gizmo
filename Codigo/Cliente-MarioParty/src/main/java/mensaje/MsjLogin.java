@@ -22,6 +22,24 @@ public class MsjLogin extends Mensaje {
 		this.salas = null;
 		this.clase = this.getClass().getSimpleName();
 	}
+	
+	@Override
+	public void ejecutar() {
+		if (resultado) {
+			JFrame ventana = listenerClient.getCliente().getVentanaActual();
+			
+			ventana.dispose();
+			ventana = new LobbyVentana(listenerClient.getCliente());
+			ventana.setVisible(true);
+			ventana.setTitle("Bienvenido/a " + nombre);
+			((LobbyVentana) ventana).mostrarSala(salas);
+			
+			listenerClient.getCliente().setVentanaActual(ventana);
+			listenerClient.getCliente().setNombreCliente(nombre);
+		}else {
+			JOptionPane.showMessageDialog(null, "Ya existe una sesión iniciada con ese usuario.");
+		}
+	}
 
 	public String getNombre() {
 		return nombre;
@@ -37,24 +55,5 @@ public class MsjLogin extends Mensaje {
 
 	public void setSalas(TreeMap<Integer, Sala> salas) {
 		this.salas = salas;
-	}
-
-	@Override
-	public void ejecutar() {
-		if (resultado) {
-			JFrame ventana = listenerClient.getCliente().getVentanaActual();
-			
-			ventana.dispose();
-			//ventana.setVisible(false);
-			ventana = new LobbyVentana(listenerClient.getCliente());
-			ventana.setVisible(true);
-			ventana.setTitle("Bienvenido/a " + nombre);
-			((LobbyVentana) ventana).mostrarSala(salas);
-			
-			listenerClient.getCliente().setVentanaActual(ventana);
-			listenerClient.getCliente().setNombreCliente(nombre);
-		}else {
-			JOptionPane.showMessageDialog(null, "Ya existe una sesión iniciada con ese usuario.");
-		}
 	}
 }

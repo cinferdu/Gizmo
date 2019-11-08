@@ -57,6 +57,7 @@ public class LobbyVentana extends JFrame {
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 		setContentPane(contentPane);
 		contentPane.setLayout(null);
+		setResizable(false);
 		
 
 		listModel = new DefaultListModel<String>();

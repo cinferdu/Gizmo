@@ -12,6 +12,7 @@ import java.util.TreeMap;
 
 import com.google.gson.Gson;
 
+import game.Partida;
 import mensaje.Mensaje;
 
 public class ListenerThread extends Thread {
@@ -21,12 +22,13 @@ public class ListenerThread extends Thread {
 	private DataInputStream entrada;
 	private DataOutputStream salida;
 	private Sala lobby;
-	private TreeMap<Integer, Sala> salas = new TreeMap<Integer, Sala>(); // <- cambiar
+	private TreeMap<Integer, Sala> salas;
+	private TreeMap<Integer, Partida> partidas;
 	
 	private Gson gson = new Gson();
 
-	public ListenerThread(Socket clienteRead, Socket clienteWrite, HashMap<String, DataOutputStream> clientesConectados, Sala lobby, TreeMap<Integer, Sala> salas) {
-		
+	public ListenerThread(Socket clienteRead, Socket clienteWrite, HashMap<String, DataOutputStream> clientesConectados, Sala lobby, TreeMap<Integer, Sala> salas, TreeMap<Integer, Partida> partidas) {
+		this.partidas = new TreeMap<Integer, Partida>();
 		try {
 			salida = new DataOutputStream(new BufferedOutputStream(clienteWrite.getOutputStream()));
 			salida.flush();
@@ -136,6 +138,14 @@ public class ListenerThread extends Thread {
 		this.id_salaActiva = salaActiva;
 	}
 
+	public TreeMap<Integer, Partida> getPartidas() {
+		return partidas;
+	}
+
+	public void setPartidas(TreeMap<Integer, Partida> partidas) {
+		this.partidas = partidas;
+	}
+
 	public void enviarMensaje(Object mensaje) {
 		try {
 			salida.writeUTF(gson.toJson(mensaje));
@@ -146,7 +156,7 @@ public class ListenerThread extends Thread {
 		}
 	}
 	
-	public void enviarMensajeGrupoDeClientes(Object mensaje, ArrayList<String> nombres) {
+	public void enviarMensajeBroadcast(Object mensaje, ArrayList<String> nombres) {
 		try {
 			for (String string : nombres) {
 				this.clientesConectados.get(string).writeUTF(gson.toJson(mensaje));

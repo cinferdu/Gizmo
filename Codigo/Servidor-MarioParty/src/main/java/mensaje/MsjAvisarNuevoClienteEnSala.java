@@ -1,12 +1,12 @@
 package mensaje;
 
-public class MsjAvisarNuevoEnSala extends Mensaje {
+public class MsjAvisarNuevoClienteEnSala extends Mensaje {
 
 	private static final long serialVersionUID = 1L;
 
 	private String userNuevo; //nuevo en la sala
 
-	public MsjAvisarNuevoEnSala(String userNuevo) {
+	public MsjAvisarNuevoClienteEnSala(String userNuevo) {
 		this.setUserNuevo(userNuevo);
 		this.clase = this.getClass().getSimpleName();
 	}

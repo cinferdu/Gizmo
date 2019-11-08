@@ -7,6 +7,8 @@ import java.net.Socket;
 import java.util.HashMap;
 import java.util.TreeMap;
 
+import game.Partida;
+
 public class Servidor {
 
 	private static final int PUERTO = 10200;
@@ -14,6 +16,7 @@ public class Servidor {
 	private HashMap<String, DataOutputStream> clientesConectados; // nombre + socket
 	private Sala lobby; // Sala "especial" no tiene duenio ni limite
 	private TreeMap<Integer, Sala> salas; // agregar el lobby aca -> .get(0)==lobby
+	private TreeMap<Integer, Partida> partidas = new TreeMap<Integer, Partida>();
 	private ServerSocket serverSocket;
 	
 	public Servidor() {
@@ -31,7 +34,7 @@ public class Servidor {
 				clientewrite = serverSocket.accept();
 				clienteread = serverSocket.accept();
 				System.out.println(clientewrite.getLocalAddress().getHostAddress());
-				ListenerThread hilo = new ListenerThread(clienteread, clientewrite, clientesConectados, lobby, salas);
+				ListenerThread hilo = new ListenerThread(clienteread, clientewrite, clientesConectados, lobby, salas, partidas);
 				System.out.println("Se ha conectado un cliente");
 				hilo.start();
 				
@@ -46,5 +49,4 @@ public class Servidor {
 	public static void main(String[] args) {
 		new Servidor();
 	}
-
 }

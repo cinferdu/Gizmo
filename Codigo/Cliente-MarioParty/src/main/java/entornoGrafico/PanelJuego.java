@@ -25,6 +25,7 @@ import javax.swing.JTextArea;
 import javax.swing.text.DefaultCaret;
 
 import casilla.Casilla;
+import cliente.Cliente;
 import comunicacionObserver.Operacion;
 import comunicacionObserver.Suscriptor;
 import game.Dado;
@@ -54,9 +55,13 @@ public class PanelJuego extends JPanel implements Suscriptor {
 
 	private Partida partida;
 	private VentanaJuego ventanaJuego;
+	private Cliente cliente;
 
-	public PanelJuego(Partida prod, VentanaJuego ventanaJuego) {
+	public PanelJuego(Cliente client, VentanaJuego ventanaJuego) {
+		this.cliente = client;
 		this.ventanaJuego = ventanaJuego;
+		this.partida = cliente.getPartidaActual();
+		
 		setLayout(null);
 		textArea = new JTextArea("");
 		textArea.setBounds(10, 202, 154, 85);
@@ -75,7 +80,7 @@ public class PanelJuego extends JPanel implements Suscriptor {
 		separator.setBounds(0, 560, 900, 50);
 		add(separator);
 
-		partida = prod;
+		partida = cliente.getPartidaActual();
 
 		fondo = ImgExtra.FONDO;
 		dado_boton = ImgExtra.BOTON_DADO;

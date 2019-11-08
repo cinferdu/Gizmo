@@ -20,7 +20,7 @@ public class Cliente {
 	Socket readSocket;
 	Socket writeSocket;
 
-	JFrame ventanaActual;
+	private JFrame ventanaActual;
 	private Sala salaActual;
 	private Partida partidaActual;
 	private Jugador jugador; // jugador en la partida???
