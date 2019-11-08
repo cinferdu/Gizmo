@@ -19,6 +19,8 @@ public abstract class Mensaje implements Serializable {
 	protected String clase;
 	protected boolean resultado;
 	
+	private final static Gson gson = new GsonBuilder().registerTypeAdapter(TipoDeCasilla.class, new TipoDeCasillaJsonDeserializer()).create();
+	
 	public abstract void ejecutar();
 	
 	public void setListener(Listener lc) {
@@ -47,7 +49,7 @@ public abstract class Mensaje implements Serializable {
 		JSONParser parser = new JSONParser();
 		try {
 			JSONObject json = (JSONObject) parser.parse(cadenaLeida);
-			Gson gson = new GsonBuilder().registerTypeAdapter(TipoDeCasilla.class, new TipoDeCasillaJsonDeserializer()).create();
+			//Gson gson = new GsonBuilder().registerTypeAdapter(TipoDeCasilla.class, new TipoDeCasillaJsonDeserializer()).create();
 //			Gson gson = new Gson();
 			msj = (Mensaje) gson.fromJson(cadenaLeida, Class.forName("mensaje." + json.get("clase")));
 		} catch (ParseException e) {

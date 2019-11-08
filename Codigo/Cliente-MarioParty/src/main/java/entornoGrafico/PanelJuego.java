@@ -4,6 +4,7 @@ import java.awt.Color;
 import java.awt.Cursor;
 import java.awt.Font;
 import java.awt.Graphics;
+import java.awt.Graphics2D;
 import java.awt.Image;
 import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
@@ -27,13 +28,13 @@ import javax.swing.text.DefaultCaret;
 import casilla.Casilla;
 import cliente.Cliente;
 import comunicacionObserver.Operacion;
-import comunicacionObserver.Suscriptor;
 import game.Dado;
 import game.Jugador;
 import game.Partida;
+import mensaje.MsjPartidaBotonInformar;
 import objeto.Objeto;
 
-public class PanelJuego extends JPanel implements Suscriptor {
+public class PanelJuego extends JPanel {
 	private static final int INICIO_PUNTAJES = 730;
 	private static final int SEPARACION_PUNTAJES = 50;
 	private static final int TAMANIO_CASILLA = 30;
@@ -87,7 +88,7 @@ public class PanelJuego extends JPanel implements Suscriptor {
 		modificadorDelCursor = new JLabel();
 		modificadorDelCursor.setBounds(280, 30, 100, 100);
 		modificadorDelCursor.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
-		modificadorDelCursor.setVisible(true);
+		modificadorDelCursor.setVisible(false);
 		add(modificadorDelCursor);
 		
 		repaint();
@@ -98,16 +99,6 @@ public class PanelJuego extends JPanel implements Suscriptor {
 		super.paint(g);
 		g.drawImage(fondo, 0, 0, null);
 
-		if (dado != null) {
-			g.drawImage(dado, 302, 50, null);
-			modificadorDelCursor.setVisible(false);
-		} else {
-			g.drawImage(ImgExtra.CUADR_TEXTO, 25, 25, null);
-			g.drawString("Haga clic sobre los dados", 50, 50);
-			g.drawString("para iniciar su turno", 50, 65);
-			g.drawImage(dado_boton, 280, 30, null);
-			modificadorDelCursor.setVisible(true);
-		}
 		// Dibujo las casillas
 		for (Casilla casilla : partida.getTablero().getCasilleros()) {
 			g.setColor(casilla.getTipo().getColor());
@@ -125,6 +116,26 @@ public class PanelJuego extends JPanel implements Suscriptor {
 		
 	}
 
+	private void mostrarBotonDado() {
+		Graphics2D g = (Graphics2D) this.getGraphics();
+
+		g.drawImage(ImgExtra.CUADR_TEXTO, 25, 25, null);
+		g.drawString("Haga clic sobre los dados", 50, 50);
+		g.drawString("para iniciar su turno", 50, 65);
+		g.drawImage(dado_boton, 280, 30, null);
+		//repaint();
+	}
+	
+	private void mostrarDado() {
+		Graphics g = getGraphics();
+		g.drawImage(dado, 302, 50, null);
+		modificadorDelCursor.setVisible(false);
+	}
+	
+	public void nuevaRonda() {
+		this.textArea.append("*** INICIANDO RONDA " + partida.getRondaActual() + " ***\n");
+	}
+	
 	public void actualizar(Operacion operacion, Jugador jugadorActual) {
 
 		switch (operacion) {
@@ -136,7 +147,7 @@ public class PanelJuego extends JPanel implements Suscriptor {
 
 			break;
 		case LANZAMIENTO_DADO:
-			dado = Dado.getImgCara(jugadorActual.getNroPasos());
+			dado = Dado.getImgCara(jugadorActual.getNroPasos()).getScaledInstance(50, 50, Image.SCALE_SMOOTH);
 			this.textArea
 					.append(jugadorActual.getNombre() + " avanza " + jugadorActual.getNroPasos() + " casillas" + "\n");
 			break;
@@ -189,7 +200,18 @@ public class PanelJuego extends JPanel implements Suscriptor {
 		}
 		repaint();
 	}
+	
+	public void nuevaRonda(int rondaActual) {
+		partida.setRondaActual(rondaActual);
+		this.textArea.append("*** INICIANDO RONDA " + partida.getRondaActual() + " ***\n");
+	}
 
+	public void botonDelDado() {
+		modificadorDelCursor.setVisible(true);
+		mostrarBotonDado();
+		esperarLanzamientoDelDado();
+	}
+	
 	private void esperarLanzamientoDelDado() {
 		dado = null;
 		addMouseListener(new MouseAdapter() {
@@ -208,7 +230,8 @@ public class PanelJuego extends JPanel implements Suscriptor {
 			}
 		}
 		botonPresionado = false;
-
+		cliente.enviarMensaje(new MsjPartidaBotonInformar(null));
+		modificadorDelCursor.setVisible(false);
 	}
 
 

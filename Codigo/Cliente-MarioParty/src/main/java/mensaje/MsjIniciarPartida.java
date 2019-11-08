@@ -25,6 +25,7 @@ public class MsjIniciarPartida extends Mensaje {
 		ventana.dispose();
 		listenerClient.getCliente().setPartidaActual(game);
 		ventana = new VentanaJuego(listenerClient.getCliente());
+		listenerClient.getCliente().setVentanaActual(ventana);
 		ventana.setVisible(true);
 	}
 

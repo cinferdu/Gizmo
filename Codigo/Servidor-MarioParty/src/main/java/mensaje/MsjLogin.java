@@ -25,7 +25,7 @@ public class MsjLogin extends Mensaje {
 		if (resultado) {
 			salas = listenerServer.getSalas();
 			
-			listenerServer.getClientesConectados().put(nombre, listenerServer.getSalida());
+			listenerServer.getClientesConectados().put(nombre, listenerServer);
 			listenerServer.setNombreCliente(nombre);
 			listenerServer.agregarClienteAlLobby(nombre);
 		}

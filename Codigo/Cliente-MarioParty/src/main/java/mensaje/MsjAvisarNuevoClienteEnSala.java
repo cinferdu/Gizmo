@@ -11,7 +11,7 @@ public class MsjAvisarNuevoClienteEnSala extends Mensaje {
 	private String userNuevo; // nuevo en la sala
 
 	public MsjAvisarNuevoClienteEnSala(String userNuevo) {
-		this.setUserNuevo(userNuevo);
+		this.userNuevo = userNuevo;
 		this.clase = this.getClass().getSimpleName();
 	}
 

@@ -77,6 +77,9 @@ public class LobbyVentana extends JFrame {
 		btnIngresar.addActionListener(new ActionListener() {//TODO fijarse la conexion a la sala!
 			public void actionPerformed(ActionEvent arg0) {
 				String salaCompleta = list.getSelectedValue();
+				if (salaCompleta == null) {
+					return;
+				}
 				int idSala = Integer.valueOf(salaCompleta.substring(0, salaCompleta.indexOf(".")));
 				
 				client.enviarMensaje(new MsjIngresarSala(idSala)); //TODO enviar mjs al server para recuperar sala de x cliente

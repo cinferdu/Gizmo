@@ -1,26 +1,25 @@
 package servidor;
 
-import java.io.DataOutputStream;
 import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.HashMap;
 import java.util.TreeMap;
 
-import game.Partida;
+import mensaje.PartidaThread;
 
 public class Servidor {
 
 	private static final int PUERTO = 10200;
 	
-	private HashMap<String, DataOutputStream> clientesConectados; // nombre + socket
+	private HashMap<String, ListenerThread> clientesConectados; // nombre + socket
 	private Sala lobby; // Sala "especial" no tiene duenio ni limite
 	private TreeMap<Integer, Sala> salas; // agregar el lobby aca -> .get(0)==lobby
-	private TreeMap<Integer, Partida> partidas = new TreeMap<Integer, Partida>();
+	private TreeMap<Integer, PartidaThread> partidas = new TreeMap<Integer, PartidaThread>();
 	private ServerSocket serverSocket;
 	
 	public Servidor() {
-		clientesConectados = new HashMap<String, DataOutputStream>();
+		clientesConectados = new HashMap<String, ListenerThread>();
 		lobby = new Sala();
 		salas = new TreeMap<Integer, Sala>();
 		
@@ -37,7 +36,6 @@ public class Servidor {
 				ListenerThread hilo = new ListenerThread(clienteread, clientewrite, clientesConectados, lobby, salas, partidas);
 				System.out.println("Se ha conectado un cliente");
 				hilo.start();
-				
 			}
 			
 		} catch (IOException e) {

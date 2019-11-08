@@ -13,6 +13,7 @@ import entornoGrafico.Login;
 import game.Jugador;
 import game.Partida;
 import mensaje.Mensaje;
+import mensaje.MsjPartida;
 
 public class Cliente {
 
@@ -57,6 +58,16 @@ public class Cliente {
 	}
 
 	public void enviarMensaje(Mensaje mensaje) {
+		try {
+			salida.writeUTF(gson.toJson(mensaje));
+		} catch (IOException e) {
+
+			System.err.println("Error al enviar el mensaje al servidor");
+			e.printStackTrace();
+		}
+	}
+	
+	public void enviarMensaje(MsjPartida mensaje) {
 		try {
 			salida.writeUTF(gson.toJson(mensaje));
 		} catch (IOException e) {

@@ -7,9 +7,7 @@ import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
 
 import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
 
-import casilla.TipoDeCasilla;
 import servidor.ListenerThread;
 
 public abstract class Mensaje implements Serializable {
@@ -18,6 +16,8 @@ public abstract class Mensaje implements Serializable {
 	protected transient ListenerThread listenerServer;
 	protected String clase;
 	protected boolean resultado;
+	
+	private final static Gson gson = new Gson();
 
 	public abstract void ejecutar();
 
@@ -49,7 +49,6 @@ public abstract class Mensaje implements Serializable {
 		JSONParser parser = new JSONParser();
 		try {
 			JSONObject json = (JSONObject) parser.parse(cadenaLeida);
-			Gson gson = new Gson();
 			msj = (Mensaje) gson.fromJson(cadenaLeida, Class.forName("mensaje." + json.get("clase")));
 		} catch (ParseException e) {
 			e.printStackTrace();

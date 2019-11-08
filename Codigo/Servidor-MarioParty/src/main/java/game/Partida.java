@@ -127,7 +127,7 @@ public class Partida implements Publicador {
 
 	}
 
-	private void avanzar(Jugador jugador) {
+	public void avanzar(Jugador jugador) {
 		Casilla sigcamino = null;
 
 		while (jugador.getNroPasos() > 0) {
@@ -267,6 +267,10 @@ public class Partida implements Publicador {
 
 	public void setIdpartida(int idpartida) {
 		this.idpartida = idpartida;
+	}
+	
+	public void aumentarRonda() {
+		rondaActual++;
 	}
 
 }

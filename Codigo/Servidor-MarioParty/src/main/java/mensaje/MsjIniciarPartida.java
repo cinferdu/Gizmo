@@ -22,18 +22,18 @@ public class MsjIniciarPartida extends Mensaje {
 		ArrayList<Jugador> participantes = new ArrayList<Jugador>();
 		for (String name : nombresJugadores) {
 			Jugador jug = new Jugador(name);
-			jug.setPersonaje(new Personaje("peach"));
+			jug.setPersonaje(new Personaje("peach")); //Cambiar nombre
 			participantes.add(jug);
 		}
 		this.game = new Partida(participantes, 50); // EN LA VENTANA DE CREAR SALA AGREGAR "OBJETIVO" o "LIMITE DE MONEDAS"
-		TreeMap<Integer, Partida> listaPartida = listenerServer.getPartidas();
+		TreeMap<Integer, PartidaThread> listaPartida = listenerServer.getPartidas();
+		PartidaThread hiloPartida = listenerServer.crearHiloPartida(game, nombresJugadores);
 		
 		synchronized (listaPartida) {
-			listaPartida.put(game.getIdpartida(), game);
+			listaPartida.put(game.getIdpartida(), hiloPartida);
 		}
-		
 		listenerServer.enviarMensajeBroadcast(this, nombresJugadores);
-		
+		listenerServer.asignarThread(game.getIdpartida(), nombresJugadores);
 	}
 
 	public ArrayList<String> getNombresJugadores() {

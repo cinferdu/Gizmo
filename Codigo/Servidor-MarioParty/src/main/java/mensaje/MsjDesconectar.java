@@ -7,6 +7,7 @@ import java.util.HashMap;
 
 import com.google.gson.Gson;
 
+import servidor.ListenerThread;
 import servidor.Sala;
 
 												// 	Rehacer //
@@ -17,7 +18,7 @@ public class MsjDesconectar extends Mensaje {
 	@Override
 	public void ejecutar() {
 		String nombre = listenerServer.getNombreCliente();
-		HashMap<String, DataOutputStream> clientes = listenerServer.getClientesConectados();
+		HashMap<String, ListenerThread> clientes = listenerServer.getClientesConectados();
 
 		synchronized (clientes) {
 			clientes.remove(nombre);
@@ -28,7 +29,7 @@ public class MsjDesconectar extends Mensaje {
 			sala.removeCliente(nombre);
 			for (String nombreJugador : sala.getNombreJugadores()) {
 				try {
-					new DataOutputStream(clientes.get(nombreJugador)).writeUTF(new Gson().toJson("se desconecto " + nombre));
+					new DataOutputStream(clientes.get(nombreJugador).getSalida()).writeUTF(new Gson().toJson("se desconecto " + nombre));
 				} catch (IOException e) {
 					System.err.println("No se pudo enviar el mensaje");
 					e.printStackTrace();

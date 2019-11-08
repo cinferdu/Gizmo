@@ -12,23 +12,26 @@ import java.util.TreeMap;
 
 import com.google.gson.Gson;
 
+import game.Jugador;
 import game.Partida;
 import mensaje.Mensaje;
+import mensaje.PartidaThread;
 
 public class ListenerThread extends Thread {
 	private String nombreCliente;
 	private int id_salaActiva; // sala en la que se encuetra el cliente
-	private HashMap<String, DataOutputStream> clientesConectados;
+	private int id_partidaActiva; // partida en la que se encuetra el cliente
+	private HashMap<String, ListenerThread> clientesConectados;
 	private DataInputStream entrada;
 	private DataOutputStream salida;
 	private Sala lobby;
 	private TreeMap<Integer, Sala> salas;
-	private TreeMap<Integer, Partida> partidas;
+	private TreeMap<Integer, PartidaThread> partidas;
 	
 	private Gson gson = new Gson();
 
-	public ListenerThread(Socket clienteRead, Socket clienteWrite, HashMap<String, DataOutputStream> clientesConectados, Sala lobby, TreeMap<Integer, Sala> salas, TreeMap<Integer, Partida> partidas) {
-		this.partidas = new TreeMap<Integer, Partida>();
+	public ListenerThread(Socket clienteRead, Socket clienteWrite, HashMap<String, ListenerThread> clientesConectados, Sala lobby, TreeMap<Integer, Sala> salas, TreeMap<Integer, PartidaThread> partidas) {
+		this.partidas = new TreeMap<Integer, PartidaThread>();
 		try {
 			salida = new DataOutputStream(new BufferedOutputStream(clienteWrite.getOutputStream()));
 			salida.flush();
@@ -41,6 +44,7 @@ public class ListenerThread extends Thread {
 		this.lobby = lobby;
 		this.salas = salas;
 		id_salaActiva = -1;
+		setId_partidaActiva(-1);
 	}
 	
 	@Override
@@ -90,7 +94,7 @@ public class ListenerThread extends Thread {
 		return gson;
 	}
 
-	public HashMap<String, DataOutputStream> getClientesConectados() {
+	public HashMap<String, ListenerThread> getClientesConectados() {
 		return clientesConectados;
 	}
 
@@ -118,7 +122,7 @@ public class ListenerThread extends Thread {
 		this.gson = gson;
 	}
 
-	public void setClientesConectados(HashMap<String, DataOutputStream> clientesConectados) {
+	public void setClientesConectados(HashMap<String, ListenerThread> clientesConectados) {
 		this.clientesConectados = clientesConectados;
 	}
 
@@ -138,12 +142,20 @@ public class ListenerThread extends Thread {
 		this.id_salaActiva = salaActiva;
 	}
 
-	public TreeMap<Integer, Partida> getPartidas() {
+	public TreeMap<Integer, PartidaThread> getPartidas() {
 		return partidas;
 	}
 
-	public void setPartidas(TreeMap<Integer, Partida> partidas) {
+	public void setPartidas(TreeMap<Integer, PartidaThread> partidas) {
 		this.partidas = partidas;
+	}
+
+	public int getId_partidaActiva() {
+		return id_partidaActiva;
+	}
+
+	public void setId_partidaActiva(int id_partidaActiva) {
+		this.id_partidaActiva = id_partidaActiva;
 	}
 
 	public void enviarMensaje(Object mensaje) {
@@ -157,14 +169,8 @@ public class ListenerThread extends Thread {
 	}
 	
 	public void enviarMensajeBroadcast(Object mensaje, ArrayList<String> nombres) {
-		try {
-			for (String string : nombres) {
-				this.clientesConectados.get(string).writeUTF(gson.toJson(mensaje));
-				this.clientesConectados.get(string).flush();
-			}
-		} catch (IOException e) {
-			System.err.println("No se pudo enviar el mensaje");
-			e.printStackTrace();
+		for (String string : nombres) {
+			this.clientesConectados.get(string).enviarMensaje(mensaje);
 		}
 	}
 
@@ -185,5 +191,28 @@ public class ListenerThread extends Thread {
 			lobby.removeCliente(nombre);
 		}
 	}
+
+	public PartidaThread crearHiloPartida(Partida game, ArrayList<String> nombresJugadores) {
+		PartidaThread hilo = new PartidaThread(game,nombresJugadores, this);
+		hilo.start();
+		return hilo;
+	}
+
+	public void asignarThread(int id, ArrayList<String> nombresJugadores) {
+		for (String name : nombresJugadores) {
+			this.clientesConectados.get(name).asignarPartida(id);
+		}
+		
+	}
 	
+	public void asignarPartida(int id) {
+		this.setId_partidaActiva(id);
+	}
+	
+	public void notificarPartida() {
+		PartidaThread thread = this.getPartidas().get(this.getId_partidaActiva());
+		synchronized (thread) {
+			thread.notify();
+		}
+	}
 }
