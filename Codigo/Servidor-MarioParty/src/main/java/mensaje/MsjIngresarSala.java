@@ -18,6 +18,7 @@ public class MsjIngresarSala extends Mensaje {
 	public void ejecutar() {
 		// si alguien pide entrar en una sala
 		if (resultado = listenerServer.getSalas().containsKey(id_sala)) {
+			listenerServer.sacarClienteAlLobby(listenerServer.getNombreCliente());
 			this.sala = listenerServer.getSalas().get(id_sala);
 			
 			listenerServer.enviarMensajeBroadcast(new MsjAvisarNuevoClienteEnSala(listenerServer.getNombreCliente()),
@@ -26,7 +27,7 @@ public class MsjIngresarSala extends Mensaje {
 			this.sala.addCliente(listenerServer.getNombreCliente());
 		}
 		listenerServer.enviarMensaje(this);
-
+		//listenerServer.enviarMensajeBroadcast(new avisaNuevasala/ActualizarSala, a los del lobby);
 	}
 
 	public Sala getSala() {

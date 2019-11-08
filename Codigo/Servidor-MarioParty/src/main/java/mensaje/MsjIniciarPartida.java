@@ -23,7 +23,7 @@ public class MsjIniciarPartida extends Mensaje {
 		for (String name : nombresJugadores) {
 			Jugador jug = new Jugador(name);
 			jug.setPersonaje(new Personaje("peach"));
-			participantes.add(new Jugador(name));
+			participantes.add(jug);
 		}
 		this.game = new Partida(participantes, 50); // EN LA VENTANA DE CREAR SALA AGREGAR "OBJETIVO" o "LIMITE DE MONEDAS"
 		TreeMap<Integer, Partida> listaPartida = listenerServer.getPartidas();
@@ -32,7 +32,8 @@ public class MsjIniciarPartida extends Mensaje {
 			listaPartida.put(game.getIdpartida(), game);
 		}
 		
-		listenerServer.enviarMensaje(this);
+		listenerServer.enviarMensajeBroadcast(this, nombresJugadores);
+		
 	}
 
 	public ArrayList<String> getNombresJugadores() {

@@ -89,6 +89,8 @@ public class PanelJuego extends JPanel implements Suscriptor {
 		modificadorDelCursor.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
 		modificadorDelCursor.setVisible(true);
 		add(modificadorDelCursor);
+		
+		repaint();
 	}
 
 	@Override
@@ -120,7 +122,7 @@ public class PanelJuego extends JPanel implements Suscriptor {
 		}
 
 		imprimirPuntajes(g);
-
+		
 	}
 
 	public void actualizar(Operacion operacion, Jugador jugadorActual) {
@@ -134,7 +136,7 @@ public class PanelJuego extends JPanel implements Suscriptor {
 
 			break;
 		case LANZAMIENTO_DADO:
-			dado = Dado.getImgCara(jugadorActual.getNroPasos()).getScaledInstance(50, 50, Image.SCALE_SMOOTH);
+			dado = Dado.getImgCara(jugadorActual.getNroPasos());
 			this.textArea
 					.append(jugadorActual.getNombre() + " avanza " + jugadorActual.getNroPasos() + " casillas" + "\n");
 			break;

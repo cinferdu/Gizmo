@@ -7,18 +7,20 @@ import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
 
 import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 
+import casilla.TipoDeCasilla;
 import servidor.ListenerThread;
 
-public abstract class Mensaje implements Serializable{
+public abstract class Mensaje implements Serializable {
 
 	private static final long serialVersionUID = 1L;
 	protected transient ListenerThread listenerServer;
 	protected String clase;
 	protected boolean resultado;
-	
+
 	public abstract void ejecutar();
-	
+
 	public void setListener(ListenerThread lc) {
 		this.listenerServer = lc;
 	}
@@ -38,8 +40,10 @@ public abstract class Mensaje implements Serializable{
 	public void setResultado(boolean resultado) {
 		this.resultado = resultado;
 	}
-	
-	// se encargar de crear el mensaje correspondiente (con el getComando) y cargarlo con la infomacion (transformando cadenaLeida al paquete que necesite)
+
+	// se encargar de crear el mensaje correspondiente (con el getComando) y
+	// cargarlo con la infomacion (transformando cadenaLeida al paquete que
+	// necesite)
 	public static Mensaje getMensaje(String cadenaLeida) {
 		Mensaje msj = null;
 		JSONParser parser = new JSONParser();

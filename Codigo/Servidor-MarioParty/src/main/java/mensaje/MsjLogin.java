@@ -1,7 +1,5 @@
 package mensaje;
 
-import java.io.DataOutputStream;
-import java.util.HashMap;
 import java.util.TreeMap;
 
 import servidor.Sala;
@@ -22,21 +20,17 @@ public class MsjLogin extends Mensaje {
 	}
 	@Override
 	public void ejecutar() {
-		HashMap<String, DataOutputStream> clientes = listenerServer.getClientesConectados(); // Modif
-		resultado = !clientes.containsKey(nombre);
+		resultado = !listenerServer.getClientesConectados().containsKey(nombre);
 		
 		if (resultado) {
 			salas = listenerServer.getSalas();
 			
-			clientes.put(nombre, listenerServer.getSalida());
-			//void AgregarCliente(nombre){
+			listenerServer.getClientesConectados().put(nombre, listenerServer.getSalida());
 			listenerServer.setNombreCliente(nombre);
-			listenerServer.getLobby().addCliente(nombre);
-			listenerServer.enviarMensaje(this);
-			//}
-		} else {
-			listenerServer.enviarMensaje(this);
+			listenerServer.agregarClienteAlLobby(nombre);
 		}
+		
+		listenerServer.enviarMensaje(this);
 	}
 	
 	public String getNombre() {

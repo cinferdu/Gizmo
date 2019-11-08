@@ -169,7 +169,21 @@ public class ListenerThread extends Thread {
 	}
 
 	public void agregarSala(Sala nuevaSala) {
-		this.salas.put(nuevaSala.getId_sala(), nuevaSala);
+		synchronized (salas) {
+			this.salas.put(nuevaSala.getId_sala(), nuevaSala);
+		}
+	}
+	
+	public void agregarClienteAlLobby(String nombre){
+		synchronized (lobby) {
+			lobby.addCliente(nombre);
+		}
+	}
+	
+	public void sacarClienteAlLobby(String nombre){
+		synchronized (lobby) {
+			lobby.removeCliente(nombre);
+		}
 	}
 	
 }

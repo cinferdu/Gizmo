@@ -9,12 +9,16 @@ import javax.swing.ImageIcon;
 // Imagenes Adicionales y funciones
 public class ImgExtra {
 	
-	public final static Image FONDO = modificarTamanio(new ImageIcon("img//background.png").getImage(), 730, 550);
-	public final static Image BOTON_DADO = modificarTamanio(new ImageIcon("img//boton_dado_t.png").getImage(),100, 100);
+	public final static Image FONDO = new ImageIcon("img//background.png").getImage();
+	public final static Image BOTON_DADO = new ImageIcon("img//boton_dado.png").getImage();
 	public final static Image CUADR_TEXTO = modificarTamanio(new ImageIcon("img//tabla_puntajes.png").getImage(),200, 60);
 	
 	public static Image modificarTamanio( Image imagen, int ancho, int alto) {
 		return imagen.getScaledInstance(ancho, alto, Image.SCALE_SMOOTH);
+	}
+	
+	public static Image modificarTamanioRapido( Image imagen, int ancho, int alto) {
+		return imagen.getScaledInstance(ancho, alto, Image.SCALE_FAST);
 	}
 	 
 	public static Image recortarImagen(Image img, Rectangle rect) {
