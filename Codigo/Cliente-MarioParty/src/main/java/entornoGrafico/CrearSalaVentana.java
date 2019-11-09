@@ -88,15 +88,20 @@ public class CrearSalaVentana extends JFrame {
 		btnCrear.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
 				String nombreSala;
-				int limite = Integer.valueOf(textField_MaxJug.getText());
-				
-				if ((nombreSala = textFieldNombre.getText().trim()).length() > 0 &&
-						(limite == 2 || limite == 3 || limite == 4) ){
-					cliente.enviarMensaje(new MsjCrearSala(nombreSala, limite, cliente.getNombreCliente()));
-				} else {
-					JOptionPane.showMessageDialog(null, "El nombre de la sala debe contener al menos 1 caracter y "
-							+ "el limite de jugadores solo puede ser 2, 3 o 4.");
+				int limite;
+				try {
+					 limite = Integer.valueOf(textField_MaxJug.getText());
+					 if ((nombreSala = textFieldNombre.getText().trim()).length() > 0 &&
+							 (limite == 2 || limite == 3 || limite == 4) ){
+						 cliente.enviarMensaje(new MsjCrearSala(nombreSala, limite, cliente.getNombreCliente()));
+					 } else {
+						 JOptionPane.showMessageDialog(null, "El nombre de la sala debe contener al menos 1 caracter y "
+								 + "el limite de jugadores solo puede ser 2, 3 o 4.");
+					 }
+				} catch (Exception e) {
+					 JOptionPane.showMessageDialog(null, "Ingrese un número válido.");
 				}
+				
 			}
 		});
 	}
