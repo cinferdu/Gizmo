@@ -352,6 +352,7 @@ public class PanelJuego extends JPanel {
 		});
 
 		revalidate();
+		repaint();
 
 		// espero a que aprete el boton o pasen los segundos
 		long tiempo_limite_ini = System.currentTimeMillis();

@@ -70,7 +70,7 @@ public class PartidaThread extends Thread {
 					if (!jugadorActual.isMochilaVacia()) {
 						// El jugador elije su proxima accion
 						avisar(new MsjPartidaSelecObjInf(jugadorActual));
-						avisar(new MsjPartidaSelecObjAccion(),jugadorActual);
+						avisar(new MsjPartidaSelecObjAccion(jugadorActual),jugadorActual);
 						
 						// if (respuestaDePanel != null)
 						// jugadorActual.usarObjeto((Integer) respuestaDePanel);
