@@ -1,26 +1,16 @@
 package game;
 
 import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.List;
 
-import casilla.Casilla;
-import comunicacionObserver.Suscriptor;
-import comunicacionObserver.Operacion;
-import comunicacionObserver.Publicador;
-import miniTenis.MiniTenis;
-
-public class Partida implements Publicador {
+public class Partida {
 	private ArrayList<Jugador> jugadores;
 	private int objetivo;
 	private boolean hayGanador;
 	private Tablero tablero;
 	private Jugador jugadorGanador;
 	private int rondaActual;
-	private transient List<Suscriptor> clientes;
 	private int idpartida; 
 	
-	private transient Object respuestaDePanel = null;
 	private transient static int partidasCreadas = 0;
 	
 	public Partida(ArrayList<Jugador> participantes, int objetivo) {
@@ -31,119 +21,13 @@ public class Partida implements Publicador {
 		hayGanador = false;
 		jugadorGanador = null;
 		tablero = new Tablero("dataCasilla.txt");
-		clientes = new ArrayList<Suscriptor>();
 		posicionarJugadoresEnElInicio();
-	}
-
-	public void iniciarPartida() {
-
-		if (jugadores.size() < 2)
-			return;
-		
-		
-		Jugador jugadorActual;
-		Iterator<Jugador> iteradorJugador;
-
-		// TODO observer Actualizar
-
-		while (!hayGanador) {
-
-			// Incremento la ronda
-			rondaActual++;
-			iteradorJugador = jugadores.iterator();
-
-			avisar(Operacion.NUEVA_RONDA, null);
-
-			while (iteradorJugador.hasNext() && this.hayGanador == false) {
-				jugadorActual = iteradorJugador.next();
-
-				if (!jugadorActual.isPierdeTurno()) {
-
-					avisar(Operacion.BOTON_DADO, jugadorActual); // Lanza el dado
-					jugadorActual.setNroPasos(Dado.lanzarDado());
-					avisar(Operacion.LANZAMIENTO_DADO, jugadorActual);
-
-					// El jugador avanza los pasos
-					avanzar(jugadorActual);
-
-					jugadorActual.activarCasilla();
-					avisar(Operacion.CASILLA_ACTIVADA, jugadorActual);
-
-					// Si tiene objetos entra en la etapa de SELECCIONAR_ACCION, sino solo mostrara
-					// un mensaje
-					if (!jugadorActual.isMochilaVacia()) {
-						// El jugador elije su proxima accion
-						avisar(Operacion.SELECCIONAR_ACCION, jugadorActual);
-
-						if (respuestaDePanel != null)
-							jugadorActual.usarObjeto((Integer) respuestaDePanel);
-
-					} else {
-						avisar(Operacion.SIN_ACCION, jugadorActual);
-					}
-
-					// Verifico si el jugador cumplio con el objetivo
-					if (verificarObjetivo(jugadorActual))
-						setJugadorGanador(jugadorActual);// El jugador gano la partida
-				} else {
-					// Activo el turno del jugador
-					jugadorActual.setPierdeTurno(false);
-					avisar(Operacion.PERDIO_TURNO, jugadorActual); // Perdio su turno
-				}
-
-				avisar(Operacion.ACTUALIZAR_TABLERO, jugadorActual); // Mostrar monedas y estrellas??
-
-				// Fin del turno del jugador.
-				// Turno del siguiente jugador.
-			}
-
-			if (!hayGanador) {
-				for (Iterator<Jugador> iterator = jugadores.iterator(); iterator.hasNext();) {
-					Jugador jugador = iterator.next();
-					// MINIJUEGO
-					MiniTenis miniGame = new MiniTenis();
-					try {
-						miniGame.setGamerName(jugador.getNombre());
-						int score = miniGame.iniciarMiniTenis(jugador.getNombre());
-						jugador.setMiniJuegoPuntos(score);
-					} catch (InterruptedException e) {
-						e.printStackTrace();
-					}
-				}
-				Jugador mejor = getMejorPuntajeEnMiniJuego();
-				mejor.aumentarMonedas(mejor.getMiniJuegoPuntos() / 3);
-				this.limpiarMiniPuntajes();
-
-			}
-
-		}
-		avisar(Operacion.PUNTAJES_FINALES, jugadorGanador);
-
 	}
 
 	private void posicionarJugadoresEnElInicio() {
 		for (Jugador jugador : jugadores)
 			jugador.setPosicionActual(this.tablero.getCasillaInicial());
 
-	}
-
-	public void avanzar(Jugador jugador) {
-		Casilla sigcamino = null;
-
-		while (jugador.getNroPasos() > 0) {
-
-			if ((sigcamino = jugador.getPosicionActual().caminoUnico()) != null)
-				jugador.setPosicionActual(sigcamino);
-			else {
-				avisar(Operacion.SELECCIONAR_CAMINO, jugador);
-
-				jugador.setPosicionActual((Casilla) respuestaDePanel);
-			}
-
-			avisar(Operacion.MOVIMIENTO, jugador);
-
-			jugador.decrementarPasos();
-		}
 	}
 
 	public boolean definirTablero(Tablero tablero) {
@@ -159,10 +43,6 @@ public class Partida implements Publicador {
 
 		return false;
 	}
-	// TODO
-	/*
-	 * public void iniciarMiniJuego(MiniJuego miniJuego) { // minijuego pendiente }
-	 */
 
 	public ArrayList<Jugador> getJugadores() {
 		return jugadores;
@@ -210,55 +90,6 @@ public class Partida implements Publicador {
 
 	public void setHayGanador(boolean hayGanador) {
 		this.hayGanador = hayGanador;
-	}
-
-	public Object getRespuestaDePanel() {
-		return respuestaDePanel;
-	}
-
-	public void setRespuestaDePanel(Object respuestaDePanel) {
-		this.respuestaDePanel = respuestaDePanel;
-	}
-
-	public void registrar(Suscriptor obs) {
-		clientes.add(obs);
-	}
-
-	public void desregistrar(Suscriptor obs) {
-		clientes.remove(obs);
-	}
-
-	public void avisar(Operacion operacion, Jugador jugadorActual) {
-		for (Suscriptor consumidor : clientes) {
-			consumidor.actualizar(operacion, jugadorActual);
-		}
-
-		// Para que espere un poco antes de volver a continuar y
-		// no hacer todo en muy poco tiempo
-		// Tal vez habria que modificarlo
-		try {
-			Thread.sleep(500);
-		} catch (InterruptedException e1) {
-			e1.printStackTrace();
-		}
-
-	}
-
-	private Jugador getMejorPuntajeEnMiniJuego() {
-		Jugador mejorPuntaje = this.jugadores.get(0);
-		for (int i = 1; i < jugadores.size(); i++) {
-			if (this.jugadores.get(i).getMiniJuegoPuntos() > mejorPuntaje.getMiniJuegoPuntos())
-				mejorPuntaje = this.jugadores.get(i);
-		}
-		return mejorPuntaje;
-	}
-
-	private void limpiarMiniPuntajes() {
-
-		for (Iterator<Jugador> iterator = jugadores.iterator(); iterator.hasNext();) {
-			Jugador jugador = iterator.next();
-			jugador.setMiniJuegoPuntos(0);
-		}
 	}
 
 	public int getIdpartida() {

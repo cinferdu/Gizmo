@@ -1,6 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <projectDescription>
+<<<<<<< HEAD
 	<name>Server</name>
+=======
+	<name>Servidor-MarioParty</name>
+>>>>>>> servidor-v2
 	<comment></comment>
 	<projects>
 	</projects>

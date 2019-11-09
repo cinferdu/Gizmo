@@ -1,6 +1,5 @@
 package game;
 
-import java.awt.Color;
 import java.util.ArrayList;
 
 import casilla.Casilla;
@@ -10,12 +9,9 @@ public class Jugador {
 	private int nroPasos;
 	private String nombre;
 	private int monedas;
-	private int puntos;
 	private boolean pierdeTurno;
 	private Casilla posicionActual;
 	private ArrayList<Objeto> mochila_objetos;
-	private Objeto poder;
-	private Color color;
 	private int miniJuegoPuntos;
 	private Personaje personaje;
 
@@ -26,7 +22,6 @@ public class Jugador {
 		posicionActual = null;
 
 		monedas = 0;
-		puntos = 0;
 		miniJuegoPuntos = 0;
 
 		mochila_objetos = new ArrayList<Objeto>(3);
@@ -52,21 +47,6 @@ public class Jugador {
 		// this.getPoder().efecto(this);
 	}
 
-	public Objeto activarPoder() {
-		return this.poder;
-	}
-	/*
-	 * public boolean accion() { // TODO int opcion = 0; switch (opcion) { case 1:
-	 * this.usarObjeto(); break; case 2: this.usarPoder(); break;
-	 * 
-	 * 
-	 * default: break; }
-	 * 
-	 * //Finaliza el turno
-	 * 
-	 * return true; }
-	 */
-
 	public void aumentarMonedas(int cantidad) {
 		this.monedas += cantidad;
 	}
@@ -91,28 +71,12 @@ public class Jugador {
 		this.monedas = monedas;
 	}
 
-	public int getPuntos() {
-		return puntos;
-	}
-
-	public void setPuntos(int puntos) {
-		this.puntos = puntos;
-	}
-
 	public Casilla getPosicionActual() {
 		return posicionActual;
 	}
 
 	public void setPosicionActual(Casilla posicionActual) {
 		this.posicionActual = posicionActual;
-	}
-
-	public Objeto getPoder() {
-		return poder;
-	}
-
-	public void setPoder(Objeto poder) {
-		this.poder = poder;
 	}
 
 	public int getNroPasos() {
@@ -137,20 +101,6 @@ public class Jugador {
 
 	public void activarCasilla() {
 		this.posicionActual.activarCasilla(this);
-	}
-	/*
-	 * public Casilla getCaminoElegido() { return caminoElegido; }
-	 * 
-	 * public void setCaminoElegido(Casilla caminoElegido) { this.caminoElegido =
-	 * caminoElegido; }
-	 */
-
-	public Color getColor() {
-		return color;
-	}
-
-	public void setColor(Color color) {
-		this.color = color;
 	}
 
 	public ArrayList<Objeto> getMochila_objetos() {

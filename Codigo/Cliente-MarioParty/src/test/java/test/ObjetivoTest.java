@@ -1,12 +1,7 @@
 package test;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import org.junit.jupiter.api.Test;
-
-import game.Objetivo;
-
 public class ObjetivoTest {
-
+/*
 	@Test
 	public void Descripciontest1()
 	{
@@ -61,5 +56,5 @@ public class ObjetivoTest {
 	{
 		Objetivo obj = new Objetivo(2,300);
 		assertEquals(2, obj.getTipo());
-	}
+	}*/
 }

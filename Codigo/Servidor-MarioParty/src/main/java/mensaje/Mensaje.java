@@ -2,22 +2,33 @@ package mensaje;
 
 import java.io.Serializable;
 
+import org.apache.log4j.Logger;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
 
 import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 
+import casilla.TipoDeCasilla;
+import deserializer.ObjetoDeserializer;
+import deserializer.TipoDeCasillaJsonDeserializer;
+import objeto.Objeto;
 import servidor.ListenerThread;
 
 public abstract class Mensaje implements Serializable {
+	
+	private final static Logger LOGGER = Logger.getLogger(Mensaje.class);
 
 	private static final long serialVersionUID = 1L;
 	protected transient ListenerThread listenerServer;
 	protected String clase;
 	protected boolean resultado;
 	
-	private final static Gson gson = new Gson();
+	private final static Gson gson = new GsonBuilder()
+			.registerTypeAdapter(TipoDeCasilla.class, new TipoDeCasillaJsonDeserializer())
+			.registerTypeAdapter(Objeto.class, new ObjetoDeserializer())
+			.create();
 
 	public abstract void ejecutar();
 
@@ -45,6 +56,7 @@ public abstract class Mensaje implements Serializable {
 	// cargarlo con la infomacion (transformando cadenaLeida al paquete que
 	// necesite)
 	public static Mensaje getMensaje(String cadenaLeida) {
+		LOGGER.info(cadenaLeida);
 		Mensaje msj = null;
 		JSONParser parser = new JSONParser();
 		try {

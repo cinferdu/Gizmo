@@ -17,6 +17,7 @@ import java.util.Enumeration;
 import javax.swing.AbstractButton;
 import javax.swing.ButtonGroup;
 import javax.swing.JButton;
+import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JRadioButton;
@@ -27,11 +28,12 @@ import javax.swing.text.DefaultCaret;
 
 import casilla.Casilla;
 import cliente.Cliente;
-import comunicacionObserver.Operacion;
 import game.Dado;
 import game.Jugador;
 import game.Partida;
 import mensaje.MsjPartidaBotonAccion;
+import mensaje.MsjPartidaElegirCaminoAccion;
+import mensaje.MsjPartidaSelecObjAccion;
 import objeto.Objeto;
 
 public class PanelJuego extends JPanel {
@@ -130,24 +132,6 @@ public class PanelJuego extends JPanel {
 
 	}
 
-	private void mostrarBotonDado() {
-		Graphics2D g = (Graphics2D) this.getGraphics();
-
-		g.drawImage(ImgExtra.CUADR_TEXTO, 25, 25, null);
-		g.drawString("Haga clic sobre los dados", 50, 50);
-		g.drawString("para iniciar su turno", 50, 65);
-		g.drawImage(dado_boton, 280, 30, null);
-		// repaint();
-	}
-
-	private void mostrarDado(Jugador jugadorActual) {
-		dado = Dado.getImgCara(jugadorActual.getNroPasos()).getScaledInstance(50, 50, Image.SCALE_SMOOTH);
-		this.textArea.append(jugadorActual.getNombre() + " avanza " + jugadorActual.getNroPasos() + " casillas" + "\n");
-		Graphics g = getGraphics();
-		g.drawImage(dado, 302, 50, null);
-		modificadorDelCursor.setVisible(false);
-	}
-
 	public void nuevaRonda() {
 		this.textArea.append("*** INICIANDO RONDA " + partida.getRondaActual() + " ***\n");
 	}
@@ -164,77 +148,62 @@ public class PanelJuego extends JPanel {
 
 	public void casilla_activada(Jugador jugadorActual) {
 		this.textArea.append(jugadorActual.getNombre() + " activo una " + jugadorActual.getPosicionActual() + "\n");
-	}
-	
-	public void seleccionar_camino(Jugador jugadorActual) {
-		textArea.append(jugadorActual.getNombre() + " te quedan " + jugadorActual.getNroPasos() + " pasos\n");
-		textArea.append(jugadorActual.getNombre() + " seleccione un camino\n");
-	}
-	
-	public void actualizar(Operacion operacion, Jugador jugadorActual) {
-
-		switch (operacion) {
-		case NUEVA_RONDA:
-			this.textArea.append("*** INICIANDO RONDA " + partida.getRondaActual() + " ***\n");
-			break;
-		case BOTON_DADO:
-			esperarLanzamientoDelDado();
-
-			break;
-		case LANZAMIENTO_DADO:
-			dado = Dado.getImgCara(jugadorActual.getNroPasos()).getScaledInstance(50, 50, Image.SCALE_SMOOTH);
-			this.textArea
-					.append(jugadorActual.getNombre() + " avanza " + jugadorActual.getNroPasos() + " casillas" + "\n");
-			break;
-
-		case CASILLA_ACTIVADA:
-			this.textArea.append(jugadorActual.getNombre() + " activo una " + jugadorActual.getPosicionActual() + "\n");
-			break;
-
-		case SELECCIONAR_CAMINO:
-			textArea.append(jugadorActual.getNombre() + " te quedan " + jugadorActual.getNroPasos() + " pasos\n");
-			textArea.append(jugadorActual.getNombre() + " seleccione un camino\n");
-			//mostrarOpcionesCamino(jugadorActual.getPosicionActual());
-
-			partida.setRespuestaDePanel(caminoElegido);
-			break;
-
-		case SELECCIONAR_ACCION:
-			this.textArea.append(jugadorActual.getNombre() + " seleccione un objeto\n");
-			int objetoElegido = mostrarOpcionesObjetos(jugadorActual);
-
-			if (objetoElegido != -1) {
-				if (jugadorActual.getMochila_objetos(objetoElegido).isConObjetivo() == true)
-					jugadorActual.getMochila_objetos(objetoElegido).setVictima(jugadorSeleccionado);
-
-				partida.setRespuestaDePanel(objetoElegido);
-			} else {
-				partida.setRespuestaDePanel(null);
+		for (Jugador jugador : partida.getJugadores()) {
+			if (jugador.getNombre().equals(jugadorActual.getNombre())) {
+				jugador.setPierdeTurno(jugadorActual.isPierdeTurno());
+				jugador.setMonedas(jugadorActual.getMonedas());
 			}
-
-			break;
-
-		case SIN_ACCION:
-			textArea.append(jugadorActual.getNombre() + " no puede realizar ninguna accion.\n");
-			break;
-
-		case PERDIO_TURNO:
-			textArea.append(jugadorActual.getNombre() + ", perdiste tu turno.\n");
-			break;
-
-		case PUNTAJES_FINALES:
-			PuntajesVentana ventanaPuntos = new PuntajesVentana((ArrayList<Jugador>) partida.getJugadores(),
-					partida.getJugadorGanador());
-			ventanaPuntos.setVisible(true);
-			ventanaPuntos.setFocusable(true);
-			ventanaJuego.dispose();
-			break;
-
-		default:
-			break;
 		}
 		repaint();
 	}
+
+	public void seleccionar_camino(Jugador jugadorActual) {
+		textArea.append(jugadorActual.getNombre() + " te quedan " + jugadorActual.getNroPasos() + " pasos\n");
+		textArea.append(jugadorActual.getNombre() + " seleccione un camino\n");
+		repaint();
+	}
+
+	public void seleccionarAccionMensaje(Jugador jugadorActual) {
+		this.textArea.append(jugadorActual.getNombre() + " se encuentra seleccionando un objeto...\n");
+	}
+
+	public void informar_SinAccion(Jugador jugadorActual) {
+		textArea.append(jugadorActual.getNombre() + " no puede realizar ninguna accion.\n");
+	}
+
+	public void informar_PerdioTurno(Jugador jugadorActual) {
+		textArea.append(jugadorActual.getNombre() + ", perdiste tu turno.\n");
+	}
+
+	public void mostrarVentanaPuntajesFinales(Jugador ganador) {
+		JFrame ventanaActual = cliente.getVentanaActual();
+		PuntajesVentana ventanaPuntos = new PuntajesVentana((ArrayList<Jugador>) partida.getJugadores(),
+				ganador);
+		ventanaPuntos.setVisible(true);
+		ventanaPuntos.setFocusable(true);
+		
+		ventanaActual.dispose();
+		cliente.setVentanaActual(ventanaPuntos);
+		
+	}
+
+//	public void actualizar(Operacion operacion, Jugador jugadorActual) {
+//
+//		switch (operacion) {
+//
+//		case PERDIO_TURNO:
+//			
+//			break;
+//
+//		case PUNTAJES_FINALES:
+
+//			break;
+//
+//		default:
+//			break;
+//		}
+//		repaint();
+//	}
 
 	public void nuevaRonda(int rondaActual) {
 		partida.setRondaActual(rondaActual);
@@ -252,15 +221,14 @@ public class PanelJuego extends JPanel {
 		dado = null;
 		addMouseListener(new MouseAdapter() {
 			public void mouseClicked(MouseEvent e) {
-				if (e.getX() > 280 && e.getX() < (280 + dado_boton.getHeight(null)) && e.getY() > 30
-						&& e.getY() < (280 + dado_boton.getWidth(null))) {
+				if (e.getX() > 280 && e.getX() < 380 && e.getY() > 30 && e.getY() < 380) {
 					botonPresionado = true;
 				}
 			}
 		});
 		while (!botonPresionado) {
 			try {
-				Thread.sleep(100);
+				Thread.sleep(20);
 			} catch (InterruptedException e1) {
 				e1.printStackTrace();
 			}
@@ -271,14 +239,16 @@ public class PanelJuego extends JPanel {
 		cliente.enviarMensaje(new MsjPartidaBotonAccion(null));
 		repaint();
 	}
-	
+
 	public void movimiento() {
 		repaint();
 	}
 
-	public int mostrarOpcionesObjetos(Jugador jugadorActual) {
+	public void mostrarOpcionesObjetos(Jugador jugadorActual) {
 		ArrayList<Objeto> aListar = jugadorActual.getMochila_objetos();
 		ArrayList<JRadioButton> botonesUsados = new ArrayList<JRadioButton>();
+
+		this.textArea.append(jugadorActual.getNombre() + " seleccione un objeto\n");
 
 		// creo los componentes
 		JLabel mensaje = new JLabel(
@@ -291,9 +261,13 @@ public class PanelJuego extends JPanel {
 		add(mensajeObj);
 
 		// Lo clono para que el remove no borre ese jugador en la partida
-		ArrayList<Jugador> posiblesObjetivos = new ArrayList<Jugador>(partida.getJugadores());
-
-		posiblesObjetivos.remove(jugadorActual);
+		ArrayList<Jugador> posiblesObjetivos = new ArrayList<Jugador>();
+		//partida.getJugadores()
+		for (Jugador jugador : partida.getJugadores()) {
+			if (!jugadorActual.getNombre().equals(jugador.getNombre())) {
+				posiblesObjetivos.add(jugador);
+			}
+		}
 
 		// Si es necesario elegir un objetivo
 		ButtonGroup grupoJugadores = new ButtonGroup();
@@ -374,13 +348,14 @@ public class PanelJuego extends JPanel {
 		});
 
 		revalidate();
+		repaint();
 
 		// espero a que aprete el boton o pasen los segundos
 		long tiempo_limite_ini = System.currentTimeMillis();
 		long tiempo_limite_fin = System.currentTimeMillis();
 		while (botonPresionado == false && (tiempo_limite_fin - tiempo_limite_ini) < (TIEMPO_ELEGIR_OPCION * 1000)) {
 			try {
-				Thread.sleep(100);
+				Thread.sleep(20);
 				tiempo_limite_fin = System.currentTimeMillis();
 			} catch (InterruptedException e) {
 				e.printStackTrace();
@@ -395,16 +370,18 @@ public class PanelJuego extends JPanel {
 		remove(mensaje);
 		remove(mensajeObj);
 
-		revalidate();
-		repaint();
 		botonPresionado = false;
 
 		int jg_selec = Integer.valueOf(grupoJugadores.getSelection().getActionCommand());
 		jugadorSeleccionado = posiblesObjetivos.get(jg_selec);
 
 		limpiarGrupo(botonesUsados);
+		revalidate();
+		repaint();
 
-		return objetoElegido;
+		MsjPartidaSelecObjAccion msj = new MsjPartidaSelecObjAccion(objetoElegido, jugadorSeleccionado);
+		msj.setJugadorAct(jugadorActual);
+		cliente.enviarMensaje(msj);
 
 	}
 
@@ -462,7 +439,7 @@ public class PanelJuego extends JPanel {
 		long tiempo_limite_fin = System.currentTimeMillis();
 		while (botonPresionado == false && (tiempo_limite_fin - tiempo_limite_ini) < (TIEMPO_ELEGIR_OPCION * 1000)) {
 			try {
-				Thread.sleep(100);
+				Thread.sleep(20);
 				tiempo_limite_fin = System.currentTimeMillis();
 			} catch (InterruptedException e) {
 				e.printStackTrace();
@@ -474,10 +451,10 @@ public class PanelJuego extends JPanel {
 		if (botonPresionado) {
 			botonPresionado = false;
 		} else {
-			caminoElegido = aListar.get((int) (Math.random()*aListar.size()));
+			caminoElegido = aListar.get((int) (Math.random() * aListar.size()));
 		}
-		
-		
+
+		cliente.enviarMensaje(new MsjPartidaElegirCaminoAccion(null, caminoElegido));
 	}
 
 	private void imprimirPuntajes(Graphics g) {
@@ -509,6 +486,10 @@ public class PanelJuego extends JPanel {
 			g.setFont(new Font(Font.SANS_SERIF, Font.BOLD, 15));
 			jugador_nro++;
 		}
+	}
+
+	public void agregarTextoAlTextArea(String cadena) {
+		this.textArea.append(cadena);
 	}
 
 }

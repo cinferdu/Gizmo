@@ -7,6 +7,8 @@ import java.net.Socket;
 
 import javax.swing.JFrame;
 
+import org.apache.log4j.Logger;
+
 import com.google.gson.Gson;
 
 import entornoGrafico.Login;
@@ -16,6 +18,11 @@ import mensaje.Mensaje;
 
 public class Cliente {
 
+	private final static String IPSERVIDOR = "127.0.0.1";
+	private final static int PUERTO = 10200;
+	
+	private final static Logger LOGGER = Logger.getLogger(Cliente.class);
+	
 	private String nombreCliente;
 	Socket readSocket;
 	Socket writeSocket;
@@ -40,7 +47,7 @@ public class Cliente {
 			entrada = new DataInputStream(readSocket.getInputStream());
 
 		} catch (IOException e) {
-			System.err.println("Error al iniciar , chequee la conexión al Server");
+			LOGGER.error("Error al iniciar , chequee la conexión al Server");
 			System.exit(1);
 		}
 
@@ -49,7 +56,6 @@ public class Cliente {
 		jugador = null;
 
 		new Listener(this).start();
-		// System.out.println("escuchando");
 
 		ventanaActual = new Login(this);
 		ventanaActual.setVisible(true);
@@ -60,18 +66,13 @@ public class Cliente {
 		try {
 			salida.writeUTF(gson.toJson(mensaje));
 		} catch (IOException e) {
-
-			System.err.println("Error al enviar el mensaje al servidor");
+			LOGGER.error("Error al enviar el mensaje al servidor");
 			e.printStackTrace();
 		}
 	}
 	
-	public static void test(String msj) {
-		System.out.println("****" + msj);
-	}
-
-	public static void main(String[] args) {
-		new Cliente("localhost", 10200);
+	public static void main(String[] args) throws SecurityException, IOException {
+		new Cliente(IPSERVIDOR, PUERTO);
 	}
 
 	public String recibirMsg() {
@@ -79,7 +80,7 @@ public class Cliente {
 		try {
 			obj = entrada.readUTF();
 		} catch (IOException e) {
-			System.err.println("Error al recibir el mensaje");
+			LOGGER.error("Error al recibir el mensaje");
 		}
 		return obj;
 	}

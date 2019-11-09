@@ -10,7 +10,7 @@ public class Casilla {
 	private int posX;
 	private int posY;
 	private TipoDeCasilla tipo;
-	private List<Casilla> siguientesCasillas;
+	private transient List<Casilla> siguientesCasillas;
 	private Objeto poder;
 
 	public Casilla(int posX, int posY, TipoDeCasilla tipo) {

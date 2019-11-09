@@ -2,9 +2,13 @@ package cliente;
 
 import java.io.DataInputStream;
 
+import org.apache.log4j.Logger;
+
 import mensaje.Mensaje;
 
 public class Listener extends Thread {
+	
+	private final static Logger LOGGER = Logger.getLogger(Listener.class);
 	
 	private Cliente cliente;
 	private DataInputStream leer;
@@ -21,6 +25,7 @@ public class Listener extends Thread {
 		
 		while (escuchando) {
 			try {
+				LOGGER.info(cliente);
 				String cadenaLeida = leer.readUTF();
 				msj = Mensaje.getMensaje(cadenaLeida);
 				
@@ -29,7 +34,7 @@ public class Listener extends Thread {
 			}
 			catch (Exception ex) {
 				escuchando = false;
-				ex.printStackTrace();
+				LOGGER.error(ex.getStackTrace());
 			}
 		}
 	}

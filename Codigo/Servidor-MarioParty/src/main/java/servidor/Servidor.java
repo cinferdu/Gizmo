@@ -6,10 +6,10 @@ import java.net.Socket;
 import java.util.HashMap;
 import java.util.TreeMap;
 
-import mensaje.PartidaThread;
+import org.apache.log4j.Logger;
 
 public class Servidor {
-
+	
 	private static final int PUERTO = 10200;
 	
 	private HashMap<String, ListenerThread> clientesConectados; // nombre + socket
@@ -17,6 +17,8 @@ public class Servidor {
 	private TreeMap<Integer, Sala> salas; // agregar el lobby aca -> .get(0)==lobby
 	public static TreeMap<Integer, PartidaThread> partidas = new TreeMap<Integer, PartidaThread>();
 	private ServerSocket serverSocket;
+	
+	private final static Logger LOGGER = Logger.getLogger(Servidor.class);
 	
 	public Servidor() {
 		clientesConectados = new HashMap<String, ListenerThread>();
@@ -27,24 +29,24 @@ public class Servidor {
 			serverSocket = new ServerSocket(PUERTO);
 			Socket clientewrite;
 			Socket clienteread;
-			System.out.println("Servidor Online");
+			LOGGER.info("Servidor Online");
 			while (true) {
-				System.out.println("Esperando clientes...");
+				LOGGER.info("Esperando clientes...");
 				clientewrite = serverSocket.accept();
 				clienteread = serverSocket.accept();
-				System.out.println(clientewrite.getLocalAddress().getHostAddress());
+				LOGGER.info(clientewrite.getLocalAddress().getHostAddress());
 				ListenerThread hilo = new ListenerThread(clienteread, clientewrite, clientesConectados, lobby, salas, partidas);
-				System.out.println("Se ha conectado un cliente");
+				LOGGER.info("Se ha conectado un cliente");
 				hilo.start();
 			}
 			
 		} catch (IOException e) {
-			System.err.println("Ocurrio un problema en el servidor");
-			e.printStackTrace();
+			LOGGER.error("Ocurrio un problema en el servidor");
+			LOGGER.error(e.getStackTrace());
 		}
 	}
 	
-	public static void main(String[] args) {
+	public static void main(String[] args) throws SecurityException, IOException {
 		new Servidor();
 	}
 }

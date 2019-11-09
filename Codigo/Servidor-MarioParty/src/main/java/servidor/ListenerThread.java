@@ -10,12 +10,16 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.TreeMap;
 
+import org.apache.log4j.Logger;
+
 import com.google.gson.Gson;
 
 import casilla.Casilla;
+import game.Jugador;
 import game.Partida;
 import mensaje.Mensaje;
-import mensaje.PartidaThread;
+import mensaje.MsjPartidaBotonAccion;
+import mensaje.MsjPartidaIniRonda;
 
 public class ListenerThread extends Thread {
 	private String nombreCliente;
@@ -27,6 +31,8 @@ public class ListenerThread extends Thread {
 	private Sala lobby;
 	private TreeMap<Integer, Sala> salas;
 	//private TreeMap<Integer, PartidaThread> partidas;
+	
+	private final static Logger LOGGER = Logger.getLogger(ListenerThread.class);
 	
 	private Gson gson = new Gson();
 
@@ -49,22 +55,37 @@ public class ListenerThread extends Thread {
 	
 	@Override
 	public void run() {
+		Mensaje msj = null;
 		try {
 			String cadenaLeida = entrada.readUTF();
-			
 			while (true) {//preguntar si es Desconectar
-				Mensaje msj = Mensaje.getMensaje(cadenaLeida);
+				LOGGER.info(this.nombreCliente);
+				msj = Mensaje.getMensaje(cadenaLeida);
 				msj.setListener(this);
 				msj.ejecutar();
 
 				cadenaLeida = entrada.readUTF();
 			}
 			
-			
-			
 		} catch (IOException e ) {
-			System.err.println("Error de conexion con el cliente " + nombreCliente);
-			e.printStackTrace();
+			clientesConectados.remove(nombreCliente);
+			PartidaThread partidaThread = Servidor.partidas.get(id_partidaActiva);
+			Partida partida = partidaThread.getPartida();
+			ArrayList<String> jugadores = partidaThread.getNombreJugadores();
+			jugadores.remove(nombreCliente);
+			partidaThread.setNombreJugadores(jugadores);
+			ArrayList<Jugador> jugadoresX = partida.getJugadores();
+			jugadoresX.remove(new Jugador(nombreCliente));
+			partida.setJugadores(jugadoresX);
+			if(jugadores.size() == 1) {
+				partida.setJugadorGanador(partidaThread.getJugadores().get(0));
+				partida.setHayGanador(true);
+			}
+			
+			//TODO : mjs de desconexion a otros jugadores!
+			
+			LOGGER.error("Error de conexion con el cliente " + nombreCliente);
+			LOGGER.error(e.getStackTrace());
 		}
 		/*
 		comando.setListener(this);
@@ -157,7 +178,7 @@ public class ListenerThread extends Thread {
 		this.id_partidaActiva = id_partidaActiva;
 	}
 
-	public void enviarMensaje(Object mensaje) {
+	public synchronized void enviarMensaje(Object mensaje) {
 		try {
 			salida.writeUTF(gson.toJson(mensaje));
 			salida.flush();
@@ -167,7 +188,7 @@ public class ListenerThread extends Thread {
 		}
 	}
 	
-	public void enviarMensajeBroadcast(Object mensaje, ArrayList<String> nombres) {
+	public synchronized void enviarMensajeBroadcast(Object mensaje, ArrayList<String> nombres) {
 		for (String string : nombres) {
 			this.clientesConectados.get(string).enviarMensaje(mensaje);
 		}
@@ -226,8 +247,19 @@ public class ListenerThread extends Thread {
 			}
 		}
 	}
+	
+	public void notificarCasillaElegina(int indexObjeto, Jugador jugObjetivo) {
+		synchronized (Servidor.partidas) {
+			PartidaThread thread = Servidor.partidas.get(this.getId_partidaActiva());
+			synchronized (thread) {
+				thread.setObjetoSelecionado(indexObjeto);
+				thread.setJugadorSelecionado(jugObjetivo);
+				thread.notify();
+			}
+		}
+	}
 
-	public void enviarMensaje(Mensaje msjPartida, String nombre) {
+	public synchronized void enviarMensaje(Mensaje msjPartida, String nombre) {
 		
 		try {
 			clientesConectados.get(nombre).getSalida().writeUTF(gson.toJson(msjPartida));
@@ -236,5 +268,15 @@ public class ListenerThread extends Thread {
 			System.err.println("No se pudo enviar el mensaje");
 			e.printStackTrace();
 		}
+	}
+
+	public void enviarMensajeBroadcast(Mensaje msj) {
+		ArrayList<Jugador> jugadores = Servidor.partidas.get(this.id_partidaActiva).getJugadores();
+		ArrayList<String> nombres = new ArrayList<String>();
+		for (Jugador jugador : jugadores) {
+			nombres.add(jugador.getNombre());
+		}
+		enviarMensajeBroadcast(msj, nombres);
+		
 	}
 }
