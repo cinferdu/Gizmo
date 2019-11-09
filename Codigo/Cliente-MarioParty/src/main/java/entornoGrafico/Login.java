@@ -7,6 +7,7 @@ import java.awt.event.ActionListener;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 import javax.swing.SwingConstants;
@@ -25,6 +26,7 @@ public class Login extends JFrame {
 	public static void main(String[] args) {
 		new Login(null).setVisible(true);
 	}
+
 	/**
 	 * Create the frame.
 	 */
@@ -39,31 +41,33 @@ public class Login extends JFrame {
 		setContentPane(contentPane);
 		contentPane.setLayout(null);
 		setResizable(false);
-		
+
 		textField = new JTextField();
 		textField.setBounds(29, 112, 100, 20);
 		contentPane.add(textField);
 		textField.setColumns(10);
-		
+
 		JLabel lblLogin = new JLabel("Login");
 		lblLogin.setHorizontalAlignment(SwingConstants.CENTER);
 		lblLogin.setFont(new Font("Times New Roman", Font.BOLD, 15));
 		lblLogin.setBounds(0, 11, 158, 37);
 		contentPane.add(lblLogin);
-		
+
 		JButton btnNewButton = new JButton("Ingresar");
 		btnNewButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				String nombre = textField.getText().trim();
-				
+
 				if (nombre.length() > 0) {
 					cliente.enviarMensaje(new MsjLogin(nombre));
+				} else {
+					JOptionPane.showMessageDialog(contentPane, "Usa 1 caracter o mas para tu usuario");
 				}
 			}
 		});
 		btnNewButton.setBounds(29, 163, 100, 23);
 		contentPane.add(btnNewButton);
-		
+
 		JLabel lblNombre = new JLabel("Nombre");
 		lblNombre.setBounds(29, 87, 46, 14);
 		contentPane.add(lblNombre);
