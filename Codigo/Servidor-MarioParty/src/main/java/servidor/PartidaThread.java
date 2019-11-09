@@ -17,8 +17,10 @@ import mensaje.MsjPartidaIniRonda;
 import mensaje.MsjPartidaLanzamientoDado;
 import mensaje.MsjPartidaMovimiento;
 import mensaje.MsjPartidaObjetoUsado;
+import mensaje.MsjPartidaPierdeTurno;
 import mensaje.MsjPartidaSelecObjAccion;
 import mensaje.MsjPartidaSelecObjInf;
+import mensaje.MsjPartidaSinAccion;
 
 public class PartidaThread extends Thread {
 
@@ -91,7 +93,7 @@ public class PartidaThread extends Thread {
 								jugadorActual.getNombre() + " utilizo " + nombreobj + "\n", jugadorActual));
 
 					} else {
-						// avisar(Operacion.SIN_ACCION, jugadorActual);
+						avisar(new MsjPartidaSinAccion(jugadorActual));
 					}
 
 					// Verifico si el jugador cumplio con el objetivo
@@ -101,6 +103,7 @@ public class PartidaThread extends Thread {
 					// Activo el turno del jugador
 					jugadorActual.setPierdeTurno(false);
 					// avisar(Operacion.PERDIO_TURNO, jugadorActual); // Perdio su turno
+					avisar(new MsjPartidaPierdeTurno(jugadorActual));
 				}
 
 				// avisar(Operacion.ACTUALIZAR_TABLERO, jugadorActual); // Mostrar monedas y
@@ -169,7 +172,7 @@ public class PartidaThread extends Thread {
 	private void avisar(Mensaje msjPartida) {
 		listener.enviarMensajeBroadcast(msjPartida, this.nombresJugadores);
 		try {
-			Thread.sleep(1000);
+			Thread.sleep(500);
 		} catch (InterruptedException e) {
 			e.printStackTrace();
 		}
@@ -185,7 +188,7 @@ public class PartidaThread extends Thread {
 		listener.enviarMensaje(msjPartida, jugadorActual.getNombre());
 
 		try {
-			Thread.sleep(1000);
+			Thread.sleep(500);
 		} catch (InterruptedException e) {
 			e.printStackTrace();
 		}

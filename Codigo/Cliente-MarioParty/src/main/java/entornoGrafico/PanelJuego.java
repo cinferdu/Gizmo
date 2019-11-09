@@ -17,6 +17,7 @@ import java.util.Enumeration;
 import javax.swing.AbstractButton;
 import javax.swing.ButtonGroup;
 import javax.swing.JButton;
+import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JRadioButton;
@@ -165,26 +166,37 @@ public class PanelJuego extends JPanel {
 	public void seleccionarAccionMensaje(Jugador jugadorActual) {
 		this.textArea.append(jugadorActual.getNombre() + " se encuentra seleccionando un objeto...\n");
 	}
-	
+
+	public void informar_SinAccion(Jugador jugadorActual) {
+		textArea.append(jugadorActual.getNombre() + " no puede realizar ninguna accion.\n");
+	}
+
+	public void informar_PerdioTurno(Jugador jugadorActual) {
+		textArea.append(jugadorActual.getNombre() + ", perdiste tu turno.\n");
+	}
+
+	public void mostrarVentanaPuntajesFinales() {
+		JFrame ventanaActual = cliente.getVentanaActual();
+		PuntajesVentana ventanaPuntos = new PuntajesVentana((ArrayList<Jugador>) partida.getJugadores(),
+				partida.getJugadorGanador());
+		ventanaPuntos.setVisible(true);
+		ventanaPuntos.setFocusable(true);
 		
+		ventanaActual.dispose();
+		cliente.setVentanaActual(ventanaPuntos);
+		
+	}
+
 //	public void actualizar(Operacion operacion, Jugador jugadorActual) {
 //
 //		switch (operacion) {
 //
-//		case SIN_ACCION:
-//			textArea.append(jugadorActual.getNombre() + " no puede realizar ninguna accion.\n");
-//			break;
-//
 //		case PERDIO_TURNO:
-//			textArea.append(jugadorActual.getNombre() + ", perdiste tu turno.\n");
+//			
 //			break;
 //
 //		case PUNTAJES_FINALES:
-//			PuntajesVentana ventanaPuntos = new PuntajesVentana((ArrayList<Jugador>) partida.getJugadores(),
-//					partida.getJugadorGanador());
-//			ventanaPuntos.setVisible(true);
-//			ventanaPuntos.setFocusable(true);
-//			ventanaJuego.dispose();
+
 //			break;
 //
 //		default:
@@ -216,7 +228,7 @@ public class PanelJuego extends JPanel {
 		});
 		while (!botonPresionado) {
 			try {
-				Thread.sleep(100);
+				Thread.sleep(20);
 			} catch (InterruptedException e1) {
 				e1.printStackTrace();
 			}
@@ -237,7 +249,7 @@ public class PanelJuego extends JPanel {
 		ArrayList<JRadioButton> botonesUsados = new ArrayList<JRadioButton>();
 
 		this.textArea.append(jugadorActual.getNombre() + " seleccione un objeto\n");
-		
+
 		// creo los componentes
 		JLabel mensaje = new JLabel(
 				"Seleccione un objeto para utilizarlo (tiene " + TIEMPO_ELEGIR_OPCION + " segundos)");
@@ -339,7 +351,7 @@ public class PanelJuego extends JPanel {
 		long tiempo_limite_fin = System.currentTimeMillis();
 		while (botonPresionado == false && (tiempo_limite_fin - tiempo_limite_ini) < (TIEMPO_ELEGIR_OPCION * 1000)) {
 			try {
-				Thread.sleep(100);
+				Thread.sleep(20);
 				tiempo_limite_fin = System.currentTimeMillis();
 			} catch (InterruptedException e) {
 				e.printStackTrace();
@@ -423,7 +435,7 @@ public class PanelJuego extends JPanel {
 		long tiempo_limite_fin = System.currentTimeMillis();
 		while (botonPresionado == false && (tiempo_limite_fin - tiempo_limite_ini) < (TIEMPO_ELEGIR_OPCION * 1000)) {
 			try {
-				Thread.sleep(100);
+				Thread.sleep(20);
 				tiempo_limite_fin = System.currentTimeMillis();
 			} catch (InterruptedException e) {
 				e.printStackTrace();
@@ -471,7 +483,7 @@ public class PanelJuego extends JPanel {
 			jugador_nro++;
 		}
 	}
-	
+
 	public void agregarTextoAlTextArea(String cadena) {
 		this.textArea.append(cadena);
 	}
