@@ -41,10 +41,10 @@ public class Jugador {
 		return this.personaje;
 	}
 
-	public void usarObjeto(int indice) {
+	public Objeto usarObjeto(int indice) {
 		// Activa el efecto del objeto
 		mochila_objetos.get(indice).activarEfecto(this);
-		mochila_objetos.remove(indice);
+		return mochila_objetos.remove(indice);
 	}
 
 	public void usarPoder() {
@@ -55,17 +55,6 @@ public class Jugador {
 	public Objeto activarPoder() {
 		return this.poder;
 	}
-	/*
-	 * public boolean accion() { // TODO int opcion = 0; switch (opcion) { case 1:
-	 * this.usarObjeto(); break; case 2: this.usarPoder(); break;
-	 * 
-	 * 
-	 * default: break; }
-	 * 
-	 * //Finaliza el turno
-	 * 
-	 * return true; }
-	 */
 
 	public void aumentarMonedas(int cantidad) {
 		this.monedas += cantidad;
@@ -138,12 +127,6 @@ public class Jugador {
 	public void activarCasilla() {
 		this.posicionActual.activarCasilla(this);
 	}
-	/*
-	 * public Casilla getCaminoElegido() { return caminoElegido; }
-	 * 
-	 * public void setCaminoElegido(Casilla caminoElegido) { this.caminoElegido =
-	 * caminoElegido; }
-	 */
 
 	public Color getColor() {
 		return color;
@@ -186,6 +169,13 @@ public class Jugador {
 
 	public boolean isMochilaVacia() {
 		return mochila_objetos.isEmpty();
+	}
+
+	public Objeto usarObjeto(int objetoSelecionado, Jugador jugadorSeleccionado) {
+		if (mochila_objetos.get(objetoSelecionado).isConObjetivo()) {
+			mochila_objetos.get(objetoSelecionado).setVictima(jugadorSeleccionado);
+		}
+		return usarObjeto(objetoSelecionado);
 	}
 
 }

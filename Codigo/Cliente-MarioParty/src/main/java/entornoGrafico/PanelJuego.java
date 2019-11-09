@@ -31,6 +31,7 @@ import comunicacionObserver.Operacion;
 import game.Dado;
 import game.Jugador;
 import game.Partida;
+import mensaje.Mensaje;
 import mensaje.MsjPartidaBotonAccion;
 import mensaje.MsjPartidaElegirCaminoAccion;
 import mensaje.MsjPartidaSelecObjAccion;
@@ -167,31 +168,10 @@ public class PanelJuego extends JPanel {
 		this.textArea.append(jugadorActual.getNombre() + " se encuentra seleccionando un objeto...\n");
 	}
 	
-	public void seleccionarAccion(Jugador jugadorActual) {
-		this.textArea.append(jugadorActual.getNombre() + " seleccione un objeto\n");
-		int objetoElegido = mostrarOpcionesObjetos(jugadorActual);
-
-		cliente.enviarMensaje(new MsjPartidaSelecObjAccion(objetoElegido, jugadorSeleccionado));
-	}
-	
+		
 	public void actualizar(Operacion operacion, Jugador jugadorActual) {
 
 		switch (operacion) {
-
-		case SELECCIONAR_ACCION:
-			this.textArea.append(jugadorActual.getNombre() + " seleccione un objeto\n");
-			int objetoElegido = mostrarOpcionesObjetos(jugadorActual);
-
-			if (objetoElegido != -1) {
-				if (jugadorActual.getMochila_objetos(objetoElegido).isConObjetivo() == true)
-					jugadorActual.getMochila_objetos(objetoElegido).setVictima(jugadorSeleccionado);
-
-				partida.setRespuestaDePanel(objetoElegido);
-			} else {
-				partida.setRespuestaDePanel(null);
-			}
-
-			break;
 
 		case SIN_ACCION:
 			textArea.append(jugadorActual.getNombre() + " no puede realizar ninguna accion.\n");
@@ -254,10 +234,12 @@ public class PanelJuego extends JPanel {
 		repaint();
 	}
 
-	public int mostrarOpcionesObjetos(Jugador jugadorActual) {
+	public void mostrarOpcionesObjetos(Jugador jugadorActual) {
 		ArrayList<Objeto> aListar = jugadorActual.getMochila_objetos();
 		ArrayList<JRadioButton> botonesUsados = new ArrayList<JRadioButton>();
 
+		this.textArea.append(jugadorActual.getNombre() + " seleccione un objeto\n");
+		
 		// creo los componentes
 		JLabel mensaje = new JLabel(
 				"Seleccione un objeto para utilizarlo (tiene " + TIEMPO_ELEGIR_OPCION + " segundos)");
@@ -374,16 +356,18 @@ public class PanelJuego extends JPanel {
 		remove(mensaje);
 		remove(mensajeObj);
 
-		revalidate();
-		repaint();
 		botonPresionado = false;
 
 		int jg_selec = Integer.valueOf(grupoJugadores.getSelection().getActionCommand());
 		jugadorSeleccionado = posiblesObjetivos.get(jg_selec);
 
 		limpiarGrupo(botonesUsados);
+		revalidate();
+		repaint();
 
-		return objetoElegido;
+		MsjPartidaSelecObjAccion msj = new MsjPartidaSelecObjAccion(objetoElegido, jugadorSeleccionado);
+		msj.setJugadorAct(jugadorActual);
+		cliente.enviarMensaje(msj);
 
 	}
 
@@ -488,6 +472,10 @@ public class PanelJuego extends JPanel {
 			g.setFont(new Font(Font.SANS_SERIF, Font.BOLD, 15));
 			jugador_nro++;
 		}
+	}
+	
+	public void agregarTextoAlTextArea(String cadena) {
+		this.textArea.append(cadena);
 	}
 
 }

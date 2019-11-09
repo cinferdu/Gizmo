@@ -26,4 +26,28 @@ public class MsjPartidaSelecObjAccion extends Mensaje {
 		((VentanaJuego) listenerClient.getCliente().getVentanaActual()).getPanel().mostrarOpcionesObjetos(jugadorAct);
 	}
 
+	public int getObjetoElegido() {
+		return objetoElegido;
+	}
+
+	public Jugador getJugObjetivo() {
+		return jugObjetivo;
+	}
+
+	public Jugador getJugadorAct() {
+		return jugadorAct;
+	}
+
+	public void setObjetoElegido(int objetoElegido) {
+		this.objetoElegido = objetoElegido;
+	}
+
+	public void setJugObjetivo(Jugador jugObjetivo) {
+		this.jugObjetivo = jugObjetivo;
+	}
+
+	public void setJugadorAct(Jugador jugadorAct) {
+		this.jugadorAct = jugadorAct;
+	}
+
 }

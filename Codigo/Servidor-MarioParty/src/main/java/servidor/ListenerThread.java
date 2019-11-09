@@ -16,6 +16,7 @@ import casilla.Casilla;
 import game.Jugador;
 import game.Partida;
 import mensaje.Mensaje;
+import mensaje.MsjPartidaTextArea;
 import mensaje.PartidaThread;
 
 public class ListenerThread extends Thread {
@@ -248,5 +249,15 @@ public class ListenerThread extends Thread {
 			System.err.println("No se pudo enviar el mensaje");
 			e.printStackTrace();
 		}
+	}
+
+	public void enviarMensajeBroadcast(Mensaje msj) {
+		ArrayList<Jugador> jugadores = Servidor.partidas.get(this.id_partidaActiva).getJugadores();
+		ArrayList<String> nombres = new ArrayList<String>();
+		for (Jugador jugador : jugadores) {
+			nombres.add(jugador.getNombre());
+		}
+		enviarMensajeBroadcast(msj, nombres);
+		
 	}
 }

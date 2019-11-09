@@ -22,6 +22,8 @@ public class MsjPartidaSelecObjAccion extends Mensaje {
 	@Override
 	public void ejecutar() {
 		listenerServer.notificarCasillaElegina(objetoElegido, jugObjetivo);
+		
+		listenerServer.enviarMensajeBroadcast(new MsjPartidaTextArea(jugadorAct.getNombre() + " utilizo " + jugadorAct.getMochila_objetos(objetoElegido).getNombre()));
 	}
 
 }

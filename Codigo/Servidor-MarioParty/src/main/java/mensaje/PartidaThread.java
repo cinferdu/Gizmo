@@ -68,12 +68,15 @@ public class PartidaThread extends Thread {
 					// Si tiene objetos entra en la etapa de SELECCIONAR_ACCION, sino solo mostrara
 					// un mensaje
 					if (!jugadorActual.isMochilaVacia()) {
+						objetoSelecionado = -1;
 						// El jugador elije su proxima accion
 						avisar(new MsjPartidaSelecObjInf(jugadorActual));
 						avisar(new MsjPartidaSelecObjAccion(jugadorActual),jugadorActual);
+						esperarNofify();
+						Objeto objetoUsado;
+						if (this.objetoSelecionado != -1)
+							objetoUsado = jugadorActual.usarObjeto(objetoSelecionado, jugadorSeleccionado);
 						
-						// if (respuestaDePanel != null)
-						// jugadorActual.usarObjeto((Integer) respuestaDePanel);
 
 					} else {
 						// avisar(Operacion.SIN_ACCION, jugadorActual);
@@ -90,6 +93,7 @@ public class PartidaThread extends Thread {
 
 				// avisar(Operacion.ACTUALIZAR_TABLERO, jugadorActual); // Mostrar monedas y
 				// estrellas??
+				
 
 				// Fin del turno del jugador.
 				// Turno del siguiente jugador.
@@ -196,6 +200,10 @@ public class PartidaThread extends Thread {
 
 	public void setJugadorSelecionado(Jugador jugObjetivo) {
 		this.jugadorSeleccionado = jugObjetivo;
+	}
+	
+	public ArrayList<Jugador> getJugadores() {
+		return partida.getJugadores();
 	}
 
 }
