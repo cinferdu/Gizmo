@@ -3,7 +3,6 @@ package casilla;
 import java.awt.Color;
 
 import game.Jugador;
-import objeto.GeneradorObjetoRandom;
 
 public class ConItem extends TipoDeCasilla {
 	public static final int ID = 3;
@@ -14,7 +13,7 @@ public class ConItem extends TipoDeCasilla {
 
 	@Override
 	public void activarCasilla(Jugador objetivo) {
-		objetivo.addMochila_objetos(GeneradorObjetoRandom.generar());
+		//objetivo.addMochila_objetos(GeneradorObjetoRandom.generar());
 	}
 	
 }

@@ -4,13 +4,13 @@ import entornoGrafico.VentanaJuego;
 import game.Jugador;
 import game.Partida;
 
-public class MsjPartidaTextArea extends Mensaje {
+public class MsjPartidaObjetoUsado extends Mensaje {
 
 	private static final long serialVersionUID = 1L;
 	private String texto;
 	private Jugador jugadorAct;
 
-	public MsjPartidaTextArea(String texto, Jugador jugadorAct) {
+	public MsjPartidaObjetoUsado(String texto, Jugador jugadorAct) {
 		clase = getClass().getSimpleName();
 		this.setTexto(texto);
 		this.setJugadorAct(jugadorAct);
@@ -26,6 +26,7 @@ public class MsjPartidaTextArea extends Mensaje {
 				jugador.setMonedas(jugadorAct.getMonedas());
 			}
 		}
+		((VentanaJuego) listenerClient.getCliente().getVentanaActual()).getPanel().movimiento();
 	}
 
 	public String getTexto() {

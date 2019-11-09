@@ -2,22 +2,14 @@ package game;
 
 import java.util.ArrayList;
 import java.util.Iterator;
-import java.util.List;
 
-import casilla.Casilla;
-import comunicacionObserver.Suscriptor;
-import comunicacionObserver.Operacion;
-import comunicacionObserver.Publicador;
-import miniTenis.MiniTenis;
-
-public class Partida implements Publicador {
+public class Partida {
 	private ArrayList<Jugador> jugadores;
 	private int objetivo;
 	private boolean hayGanador;
 	private Tablero tablero;
 	private Jugador jugadorGanador;
 	private int rondaActual;
-	private List<Suscriptor> clientes;
 	private int idpartida; 
 	
 	private Object respuestaDePanel = null;
@@ -31,7 +23,6 @@ public class Partida implements Publicador {
 		hayGanador = false;
 		jugadorGanador = null;
 		tablero = new Tablero("dataCasilla.txt");
-		clientes = new ArrayList<Suscriptor>();
 		posicionarJugadoresEnElInicio();
 	}
 
@@ -39,25 +30,6 @@ public class Partida implements Publicador {
 		for (Jugador jugador : jugadores)
 			jugador.setPosicionActual(this.tablero.getCasillaInicial());
 
-	}
-
-	private void avanzar(Jugador jugador) {
-		Casilla sigcamino = null;
-
-		while (jugador.getNroPasos() > 0) {
-
-			if ((sigcamino = jugador.getPosicionActual().caminoUnico()) != null)
-				jugador.setPosicionActual(sigcamino);
-			else {
-				avisar(Operacion.SELECCIONAR_CAMINO, jugador);
-
-				jugador.setPosicionActual((Casilla) respuestaDePanel);
-			}
-
-			avisar(Operacion.MOVIMIENTO, jugador);
-
-			jugador.decrementarPasos();
-		}
 	}
 
 	public boolean definirTablero(Tablero tablero) {
@@ -132,30 +104,6 @@ public class Partida implements Publicador {
 
 	public void setRespuestaDePanel(Object respuestaDePanel) {
 		this.respuestaDePanel = respuestaDePanel;
-	}
-
-	public void registrar(Suscriptor obs) {
-		clientes.add(obs);
-	}
-
-	public void desregistrar(Suscriptor obs) {
-		clientes.remove(obs);
-	}
-
-	public void avisar(Operacion operacion, Jugador jugadorActual) {
-		for (Suscriptor consumidor : clientes) {
-			consumidor.actualizar(operacion, jugadorActual);
-		}
-
-		// Para que espere un poco antes de volver a continuar y
-		// no hacer todo en muy poco tiempo
-		// Tal vez habria que modificarlo
-		try {
-			Thread.sleep(500);
-		} catch (InterruptedException e1) {
-			e1.printStackTrace();
-		}
-
 	}
 
 	private Jugador getMejorPuntajeEnMiniJuego() {

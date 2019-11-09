@@ -6,6 +6,7 @@ import game.Jugador;
 import game.Partida;
 import game.Personaje;
 import objeto.CajaMisteriosa;
+import servidor.PartidaThread;
 import servidor.Servidor;
 
 public class MsjIniciarPartida extends Mensaje {

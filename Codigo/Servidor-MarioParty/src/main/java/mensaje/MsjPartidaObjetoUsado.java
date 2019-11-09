@@ -2,18 +2,18 @@ package mensaje;
 
 import game.Jugador;
 
-public class MsjPartidaTextArea extends Mensaje {
+public class MsjPartidaObjetoUsado extends Mensaje {
 
 	private static final long serialVersionUID = 1L;
 	private String texto;
 	private Jugador jugadorAct;
-
-	public MsjPartidaTextArea(String texto, Jugador jugadorAct) {
+	
+	public MsjPartidaObjetoUsado(String texto, Jugador jugadorAct) {
 		clase = getClass().getSimpleName();
 		this.setTexto(texto);
 		this.setJugadorAct(jugadorAct);
 	}
-
+	
 	@Override
 	public void ejecutar() {
 

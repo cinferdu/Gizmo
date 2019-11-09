@@ -10,7 +10,7 @@ public class MsjPartidaSelecObjAccion extends Mensaje {
 	private Jugador jugadorAct;
 
 	public MsjPartidaSelecObjAccion(Jugador jugadorAct) {
-		this.jugadorAct = jugadorAct;
+		this.setJugadorAct(jugadorAct);
 		this.clase = this.getClass().getSimpleName();
 	}
 
@@ -23,10 +23,14 @@ public class MsjPartidaSelecObjAccion extends Mensaje {
 	@Override
 	public void ejecutar() {
 		listenerServer.notificarCasillaElegina(objetoElegido, jugObjetivo);
+	}
 
-		listenerServer.enviarMensajeBroadcast(new MsjPartidaTextArea(
-				jugadorAct.getNombre() + " utilizo " + jugadorAct.getMochila_objetos(objetoElegido).getNombre(),
-				jugadorAct));
+	public Jugador getJugadorAct() {
+		return jugadorAct;
+	}
+
+	public void setJugadorAct(Jugador jugadorAct) {
+		this.jugadorAct = jugadorAct;
 	}
 
 }

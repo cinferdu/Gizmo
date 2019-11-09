@@ -1,4 +1,4 @@
-package mensaje;
+package servidor;
 
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -7,7 +7,18 @@ import casilla.Casilla;
 import game.Dado;
 import game.Jugador;
 import game.Partida;
-import servidor.ListenerThread;
+import mensaje.Mensaje;
+import mensaje.MsjPartidaBotonAccion;
+import mensaje.MsjPartidaBotonInformar;
+import mensaje.MsjPartidaCasillaActivada;
+import mensaje.MsjPartidaElegirCaminoAccion;
+import mensaje.MsjPartidaElegirCaminoInformar;
+import mensaje.MsjPartidaIniRonda;
+import mensaje.MsjPartidaLanzamientoDado;
+import mensaje.MsjPartidaMovimiento;
+import mensaje.MsjPartidaObjetoUsado;
+import mensaje.MsjPartidaSelecObjAccion;
+import mensaje.MsjPartidaSelecObjInf;
 
 public class PartidaThread extends Thread {
 
@@ -70,11 +81,14 @@ public class PartidaThread extends Thread {
 						objetoSelecionado = -1;
 						// El jugador elije su proxima accion
 						avisar(new MsjPartidaSelecObjInf(jugadorActual));
-						avisar(new MsjPartidaSelecObjAccion(jugadorActual),jugadorActual);
+						avisar(new MsjPartidaSelecObjAccion(jugadorActual), jugadorActual);
 						esperarNofify();
+						String nombreobj = null;
 						if (this.objetoSelecionado != -1)
-							jugadorActual.usarObjeto(objetoSelecionado, jugadorSeleccionado);
-						
+							nombreobj = jugadorActual.usarObjeto(objetoSelecionado, jugadorSeleccionado).getNombre();
+
+						listener.enviarMensajeBroadcast(new MsjPartidaObjetoUsado(
+								jugadorActual.getNombre() + " utilizo " + nombreobj + "\n", jugadorActual));
 
 					} else {
 						// avisar(Operacion.SIN_ACCION, jugadorActual);
@@ -91,7 +105,6 @@ public class PartidaThread extends Thread {
 
 				// avisar(Operacion.ACTUALIZAR_TABLERO, jugadorActual); // Mostrar monedas y
 				// estrellas??
-				
 
 				// Fin del turno del jugador.
 				// Turno del siguiente jugador.
@@ -199,7 +212,7 @@ public class PartidaThread extends Thread {
 	public void setJugadorSelecionado(Jugador jugObjetivo) {
 		this.jugadorSeleccionado = jugObjetivo;
 	}
-	
+
 	public ArrayList<Jugador> getJugadores() {
 		return partida.getJugadores();
 	}

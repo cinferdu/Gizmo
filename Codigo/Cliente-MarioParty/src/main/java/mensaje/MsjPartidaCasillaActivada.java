@@ -1,7 +1,5 @@
 package mensaje;
 
-import java.util.ArrayList;
-
 import entornoGrafico.VentanaJuego;
 import game.Jugador;
 

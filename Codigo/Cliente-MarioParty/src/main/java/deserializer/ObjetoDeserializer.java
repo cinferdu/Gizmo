@@ -1,4 +1,4 @@
-package mensaje;
+package deserializer;
 
 import java.lang.reflect.Type;
 

@@ -11,6 +11,8 @@ import com.google.gson.GsonBuilder;
 
 import casilla.TipoDeCasilla;
 import cliente.Listener;
+import deserializer.ObjetoDeserializer;
+import deserializer.TipoDeCasillaJsonDeserializer;
 import objeto.Objeto;
 
 public abstract class Mensaje implements Serializable {

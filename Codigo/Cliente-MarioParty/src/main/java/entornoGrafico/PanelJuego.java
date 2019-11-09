@@ -27,11 +27,9 @@ import javax.swing.text.DefaultCaret;
 
 import casilla.Casilla;
 import cliente.Cliente;
-import comunicacionObserver.Operacion;
 import game.Dado;
 import game.Jugador;
 import game.Partida;
-import mensaje.Mensaje;
 import mensaje.MsjPartidaBotonAccion;
 import mensaje.MsjPartidaElegirCaminoAccion;
 import mensaje.MsjPartidaSelecObjAccion;
@@ -169,31 +167,31 @@ public class PanelJuego extends JPanel {
 	}
 	
 		
-	public void actualizar(Operacion operacion, Jugador jugadorActual) {
-
-		switch (operacion) {
-
-		case SIN_ACCION:
-			textArea.append(jugadorActual.getNombre() + " no puede realizar ninguna accion.\n");
-			break;
-
-		case PERDIO_TURNO:
-			textArea.append(jugadorActual.getNombre() + ", perdiste tu turno.\n");
-			break;
-
-		case PUNTAJES_FINALES:
-			PuntajesVentana ventanaPuntos = new PuntajesVentana((ArrayList<Jugador>) partida.getJugadores(),
-					partida.getJugadorGanador());
-			ventanaPuntos.setVisible(true);
-			ventanaPuntos.setFocusable(true);
-			ventanaJuego.dispose();
-			break;
-
-		default:
-			break;
-		}
-		repaint();
-	}
+//	public void actualizar(Operacion operacion, Jugador jugadorActual) {
+//
+//		switch (operacion) {
+//
+//		case SIN_ACCION:
+//			textArea.append(jugadorActual.getNombre() + " no puede realizar ninguna accion.\n");
+//			break;
+//
+//		case PERDIO_TURNO:
+//			textArea.append(jugadorActual.getNombre() + ", perdiste tu turno.\n");
+//			break;
+//
+//		case PUNTAJES_FINALES:
+//			PuntajesVentana ventanaPuntos = new PuntajesVentana((ArrayList<Jugador>) partida.getJugadores(),
+//					partida.getJugadorGanador());
+//			ventanaPuntos.setVisible(true);
+//			ventanaPuntos.setFocusable(true);
+//			ventanaJuego.dispose();
+//			break;
+//
+//		default:
+//			break;
+//		}
+//		repaint();
+//	}
 
 	public void nuevaRonda(int rondaActual) {
 		partida.setRondaActual(rondaActual);

@@ -16,7 +16,6 @@ import casilla.Casilla;
 import game.Jugador;
 import game.Partida;
 import mensaje.Mensaje;
-import mensaje.PartidaThread;
 
 public class ListenerThread extends Thread {
 	private String nombreCliente;

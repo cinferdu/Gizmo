@@ -10,6 +10,8 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
 import casilla.TipoDeCasilla;
+import deserializer.ObjetoDeserializer;
+import deserializer.TipoDeCasillaJsonDeserializer;
 import objeto.Objeto;
 import servidor.ListenerThread;
 

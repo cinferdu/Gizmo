@@ -6,8 +6,6 @@ import java.net.Socket;
 import java.util.HashMap;
 import java.util.TreeMap;
 
-import mensaje.PartidaThread;
-
 public class Servidor {
 
 	private static final int PUERTO = 10200;
