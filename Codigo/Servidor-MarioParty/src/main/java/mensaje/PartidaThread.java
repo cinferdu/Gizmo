@@ -16,9 +16,9 @@ public class PartidaThread extends Thread {
 	private ListenerThread listener;
 	private ArrayList<String> nombresJugadores;
 	private Casilla caminoSeleccionado;
-	private Objeto objetoSelecionado;
-	
-	
+	private Jugador jugadorSeleccionado;
+	private int objetoSelecionado; // indice del objeto seleccionado
+
 	public PartidaThread(Partida juego, ArrayList<String> nombres, ListenerThread listener) {
 		partida = juego;
 		this.listener = listener;
@@ -27,17 +27,15 @@ public class PartidaThread extends Thread {
 
 	@Override
 	public void run() {
-		
+
 		try {
 			sleep(500);
 		} catch (InterruptedException e1) {
 			e1.printStackTrace();
 		}
-		
+
 		Jugador jugadorActual;
 		Iterator<Jugador> iteradorJugador;
-
-		// TODO observer Actualizar
 
 		while (!partida.isHayGanador()) {
 
@@ -46,38 +44,39 @@ public class PartidaThread extends Thread {
 			iteradorJugador = partida.getJugadores().iterator();
 
 			avisar(new MsjPartidaIniRonda(partida.getRondaActual()));
-			
+
 			while (iteradorJugador.hasNext() && partida.isHayGanador() == false) {
 				jugadorActual = iteradorJugador.next();
 
 				if (!jugadorActual.isPierdeTurno()) {
 
 					avisar(new MsjPartidaBotonInformar(jugadorActual));
-					avisar(new MsjPartidaBotonAccion(jugadorActual),jugadorActual);
+					avisar(new MsjPartidaBotonAccion(jugadorActual), jugadorActual);
 
 					esperarNofify();
-					
+
 					jugadorActual.setNroPasos(Dado.lanzarDado());
-					
+
 					avisar(new MsjPartidaLanzamientoDado(jugadorActual.getNombre(), jugadorActual.getNroPasos()));
 
 					// El jugador avanza los pasos
 					avanzar(jugadorActual); // loop de movimientos
 
 					jugadorActual.activarCasilla();
-					//avisar(Operacion.CASILLA_ACTIVADA, jugadorActual); 
+					avisar(new MsjPartidaCasillaActivada(jugadorActual));
 
 					// Si tiene objetos entra en la etapa de SELECCIONAR_ACCION, sino solo mostrara
 					// un mensaje
 					if (!jugadorActual.isMochilaVacia()) {
 						// El jugador elije su proxima accion
-						//avisar(Operacion.SELECCIONAR_ACCION, jugadorActual); // espera a que haga algo
-
-						//if (respuestaDePanel != null)
-						//	jugadorActual.usarObjeto((Integer) respuestaDePanel);
+						avisar(new MsjPartidaSelecObjInf(jugadorActual));
+						avisar(new MsjPartidaSelecObjAccion(),jugadorActual);
+						
+						// if (respuestaDePanel != null)
+						// jugadorActual.usarObjeto((Integer) respuestaDePanel);
 
 					} else {
-						//avisar(Operacion.SIN_ACCION, jugadorActual);
+						// avisar(Operacion.SIN_ACCION, jugadorActual);
 					}
 
 					// Verifico si el jugador cumplio con el objetivo
@@ -86,39 +85,34 @@ public class PartidaThread extends Thread {
 				} else {
 					// Activo el turno del jugador
 					jugadorActual.setPierdeTurno(false);
-					//avisar(Operacion.PERDIO_TURNO, jugadorActual); // Perdio su turno
+					// avisar(Operacion.PERDIO_TURNO, jugadorActual); // Perdio su turno
 				}
 
-				//avisar(Operacion.ACTUALIZAR_TABLERO, jugadorActual); // Mostrar monedas y estrellas??
+				// avisar(Operacion.ACTUALIZAR_TABLERO, jugadorActual); // Mostrar monedas y
+				// estrellas??
 
 				// Fin del turno del jugador.
 				// Turno del siguiente jugador.
 			}
-/*
-			if (!partida.isHayGanador()) {
-				for (Iterator<Jugador> iterator = partida.getJugadores().iterator(); iterator.hasNext();) {
-					Jugador jugador = iterator.next();
-					// MINIJUEGO
-					MiniTenis miniGame = new MiniTenis();
-					try {
-						miniGame.setGamerName(jugador.getNombre());
-						int score = miniGame.iniciarMiniTenis(jugador.getNombre());
-						jugador.setMiniJuegoPuntos(score);
-					} catch (InterruptedException e) {
-						e.printStackTrace();
-					}
-				}
-				//Jugador mejor = getMejorPuntajeEnMiniJuego();
-				//mejor.aumentarMonedas(mejor.getMiniJuegoPuntos() / 3);
-				//this.limpiarMiniPuntajes();
-
-			}*/
+			/*
+			 * if (!partida.isHayGanador()) { for (Iterator<Jugador> iterator =
+			 * partida.getJugadores().iterator(); iterator.hasNext();) { Jugador jugador =
+			 * iterator.next(); // MINIJUEGO MiniTenis miniGame = new MiniTenis(); try {
+			 * miniGame.setGamerName(jugador.getNombre()); int score =
+			 * miniGame.iniciarMiniTenis(jugador.getNombre());
+			 * jugador.setMiniJuegoPuntos(score); } catch (InterruptedException e) {
+			 * e.printStackTrace(); } } //Jugador mejor = getMejorPuntajeEnMiniJuego();
+			 * //mejor.aumentarMonedas(mejor.getMiniJuegoPuntos() / 3);
+			 * //this.limpiarMiniPuntajes();
+			 * 
+			 * }
+			 */
 
 		}
-		//avisar(Operacion.PUNTAJES_FINALES, partida.getJugadorGanador());
+		// avisar(Operacion.PUNTAJES_FINALES, partida.getJugadorGanador());
 
 	}
-	
+
 	public void avanzar(Jugador jugador) {
 		Casilla sigcamino = null;
 
@@ -127,13 +121,13 @@ public class PartidaThread extends Thread {
 			if ((sigcamino = jugador.getPosicionActual().caminoUnico()) != null)
 				jugador.setPosicionActual(sigcamino);
 			else {
-				//avisar(Operacion.SELECCIONAR_CAMINO, jugador);
+				// avisar(Operacion.SELECCIONAR_CAMINO, jugador);
 				avisar(new MsjPartidaElegirCaminoInformar(jugador));
-				avisar(new MsjPartidaElegirCaminoAccion(jugador, jugador.getPosicionActual().getSiguientesCasillas()));
+				avisar(new MsjPartidaElegirCaminoAccion(jugador, jugador.getPosicionActual().getSiguientesCasillas()),
+						jugador);
 				esperarNofify();
-				
-				//jugador.setPosicionActual((Casilla) respuestaDePanel);
-				jugador.setPosicionActual(caminoSeleccionado);
+
+				jugador.setPosicionActual(buscarCasilla(jugador));
 			}
 
 			avisar(new MsjPartidaMovimiento(jugador));
@@ -141,13 +135,24 @@ public class PartidaThread extends Thread {
 			jugador.decrementarPasos();
 		}
 	}
-	
+
+	private Casilla buscarCasilla(Jugador jugador) {
+		for (Casilla casilla : jugador.getPosicionActual().getSiguientesCasillas()) {
+			if (casilla.getPosX() == caminoSeleccionado.getPosX()
+					&& casilla.getPosY() == caminoSeleccionado.getPosY()) {
+				return casilla;
+			}
+		}
+		return null;
+	}
+
 	/**
 	 * Envia un mensaje a todos los jugadores
+	 * 
 	 * @param msjPartida
 	 */
 	private void avisar(Mensaje msjPartida) {
-		listener.enviarMensajeBroadcast(msjPartida, this.nombresJugadores); 
+		listener.enviarMensajeBroadcast(msjPartida, this.nombresJugadores);
 		try {
 			Thread.sleep(1000);
 		} catch (InterruptedException e) {
@@ -180,14 +185,17 @@ public class PartidaThread extends Thread {
 			}
 		}
 	}
-	
+
 	public void setCaminoSeleccionado(Casilla caminoSeleccionado) {
 		this.caminoSeleccionado = caminoSeleccionado;
 	}
 
-	public void setObjetoSelecionado(Objeto objetoSelecionado) {
+	public void setObjetoSelecionado(int objetoSelecionado) {
 		this.objetoSelecionado = objetoSelecionado;
 	}
-	
-	
+
+	public void setJugadorSelecionado(Jugador jugObjetivo) {
+		this.jugadorSeleccionado = jugObjetivo;
+	}
+
 }

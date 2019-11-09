@@ -7,7 +7,10 @@ import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
 
 import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 
+import casilla.TipoDeCasilla;
+import objeto.Objeto;
 import servidor.ListenerThread;
 
 public abstract class Mensaje implements Serializable {
@@ -17,7 +20,10 @@ public abstract class Mensaje implements Serializable {
 	protected String clase;
 	protected boolean resultado;
 	
-	private final static Gson gson = new Gson();
+	private final static Gson gson = new GsonBuilder()
+			.registerTypeAdapter(TipoDeCasilla.class, new TipoDeCasillaJsonDeserializer())
+			.registerTypeAdapter(Objeto.class, new ObjetoDeserializer())
+			.create();
 
 	public abstract void ejecutar();
 

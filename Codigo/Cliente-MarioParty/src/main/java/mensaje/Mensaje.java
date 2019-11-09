@@ -11,18 +11,22 @@ import com.google.gson.GsonBuilder;
 
 import casilla.TipoDeCasilla;
 import cliente.Listener;
+import objeto.Objeto;
 
 public abstract class Mensaje implements Serializable {
-	
+
 	private static final long serialVersionUID = -6544865381140109432L;
 	protected transient Listener listenerClient;
 	protected String clase;
 	protected boolean resultado;
-	
-	private final static Gson gson = new GsonBuilder().registerTypeAdapter(TipoDeCasilla.class, new TipoDeCasillaJsonDeserializer()).create();
-	
+
+	private final static Gson gson = new GsonBuilder()
+			.registerTypeAdapter(TipoDeCasilla.class, new TipoDeCasillaJsonDeserializer())
+			.registerTypeAdapter(Objeto.class, new ObjetoDeserializer())
+			.create();
+
 	public abstract void ejecutar();
-	
+
 	public void setListener(Listener lc) {
 		this.listenerClient = lc;
 	}
@@ -43,13 +47,16 @@ public abstract class Mensaje implements Serializable {
 		this.resultado = resultado;
 	}
 
-	// se encargar de crear el mensaje correspondiente (con el getComando) y cargarlo con la infomacion (transformando cadenaLeida al paquete que necesite)
+	// se encargar de crear el mensaje correspondiente (con el getComando) y
+	// cargarlo con la infomacion (transformando cadenaLeida al paquete que
+	// necesite)
 	public static Mensaje getMensaje(String cadenaLeida) {
 		Mensaje msj = null;
 		JSONParser parser = new JSONParser();
 		try {
 			JSONObject json = (JSONObject) parser.parse(cadenaLeida);
-			//Gson gson = new GsonBuilder().registerTypeAdapter(TipoDeCasilla.class, new TipoDeCasillaJsonDeserializer()).create();
+			// Gson gson = new GsonBuilder().registerTypeAdapter(TipoDeCasilla.class, new
+			// TipoDeCasillaJsonDeserializer()).create();
 //			Gson gson = new Gson();
 			msj = (Mensaje) gson.fromJson(cadenaLeida, Class.forName("mensaje." + json.get("clase")));
 		} catch (ParseException e) {
@@ -60,6 +67,4 @@ public abstract class Mensaje implements Serializable {
 		return msj;
 	}
 
-	
-	
 }

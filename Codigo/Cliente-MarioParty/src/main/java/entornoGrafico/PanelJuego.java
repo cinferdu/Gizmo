@@ -32,6 +32,8 @@ import game.Dado;
 import game.Jugador;
 import game.Partida;
 import mensaje.MsjPartidaBotonAccion;
+import mensaje.MsjPartidaElegirCaminoAccion;
+import mensaje.MsjPartidaSelecObjAccion;
 import objeto.Objeto;
 
 public class PanelJuego extends JPanel {
@@ -130,24 +132,6 @@ public class PanelJuego extends JPanel {
 
 	}
 
-	private void mostrarBotonDado() {
-		Graphics2D g = (Graphics2D) this.getGraphics();
-
-		g.drawImage(ImgExtra.CUADR_TEXTO, 25, 25, null);
-		g.drawString("Haga clic sobre los dados", 50, 50);
-		g.drawString("para iniciar su turno", 50, 65);
-		g.drawImage(dado_boton, 280, 30, null);
-		// repaint();
-	}
-
-	private void mostrarDado(Jugador jugadorActual) {
-		dado = Dado.getImgCara(jugadorActual.getNroPasos()).getScaledInstance(50, 50, Image.SCALE_SMOOTH);
-		this.textArea.append(jugadorActual.getNombre() + " avanza " + jugadorActual.getNroPasos() + " casillas" + "\n");
-		Graphics g = getGraphics();
-		g.drawImage(dado, 302, 50, null);
-		modificadorDelCursor.setVisible(false);
-	}
-
 	public void nuevaRonda() {
 		this.textArea.append("*** INICIANDO RONDA " + partida.getRondaActual() + " ***\n");
 	}
@@ -164,40 +148,35 @@ public class PanelJuego extends JPanel {
 
 	public void casilla_activada(Jugador jugadorActual) {
 		this.textArea.append(jugadorActual.getNombre() + " activo una " + jugadorActual.getPosicionActual() + "\n");
+		for (Jugador jugador : partida.getJugadores()) {
+			if (jugador.getNombre().equals(jugadorActual.getNombre())) {
+				jugador.setPierdeTurno(jugadorActual.isPierdeTurno());
+				jugador.setMonedas(jugadorActual.getMonedas());
+			}
+		}
+		repaint();
 	}
-	
+
 	public void seleccionar_camino(Jugador jugadorActual) {
 		textArea.append(jugadorActual.getNombre() + " te quedan " + jugadorActual.getNroPasos() + " pasos\n");
 		textArea.append(jugadorActual.getNombre() + " seleccione un camino\n");
+		repaint();
+	}
+
+	public void seleccionarAccionMensaje(Jugador jugadorActual) {
+		this.textArea.append(jugadorActual.getNombre() + " se encuentra seleccionando un objeto...\n");
+	}
+	
+	public void seleccionarAccion(Jugador jugadorActual) {
+		this.textArea.append(jugadorActual.getNombre() + " seleccione un objeto\n");
+		int objetoElegido = mostrarOpcionesObjetos(jugadorActual);
+
+		cliente.enviarMensaje(new MsjPartidaSelecObjAccion(objetoElegido, jugadorSeleccionado));
 	}
 	
 	public void actualizar(Operacion operacion, Jugador jugadorActual) {
 
 		switch (operacion) {
-		case NUEVA_RONDA:
-			this.textArea.append("*** INICIANDO RONDA " + partida.getRondaActual() + " ***\n");
-			break;
-		case BOTON_DADO:
-			esperarLanzamientoDelDado();
-
-			break;
-		case LANZAMIENTO_DADO:
-			dado = Dado.getImgCara(jugadorActual.getNroPasos()).getScaledInstance(50, 50, Image.SCALE_SMOOTH);
-			this.textArea
-					.append(jugadorActual.getNombre() + " avanza " + jugadorActual.getNroPasos() + " casillas" + "\n");
-			break;
-
-		case CASILLA_ACTIVADA:
-			this.textArea.append(jugadorActual.getNombre() + " activo una " + jugadorActual.getPosicionActual() + "\n");
-			break;
-
-		case SELECCIONAR_CAMINO:
-			textArea.append(jugadorActual.getNombre() + " te quedan " + jugadorActual.getNroPasos() + " pasos\n");
-			textArea.append(jugadorActual.getNombre() + " seleccione un camino\n");
-			//mostrarOpcionesCamino(jugadorActual.getPosicionActual());
-
-			partida.setRespuestaDePanel(caminoElegido);
-			break;
 
 		case SELECCIONAR_ACCION:
 			this.textArea.append(jugadorActual.getNombre() + " seleccione un objeto\n");
@@ -252,8 +231,7 @@ public class PanelJuego extends JPanel {
 		dado = null;
 		addMouseListener(new MouseAdapter() {
 			public void mouseClicked(MouseEvent e) {
-				if (e.getX() > 280 && e.getX() < (280 + dado_boton.getHeight(null)) && e.getY() > 30
-						&& e.getY() < (280 + dado_boton.getWidth(null))) {
+				if (e.getX() > 280 && e.getX() < 380 && e.getY() > 30 && e.getY() < 380) {
 					botonPresionado = true;
 				}
 			}
@@ -271,7 +249,7 @@ public class PanelJuego extends JPanel {
 		cliente.enviarMensaje(new MsjPartidaBotonAccion(null));
 		repaint();
 	}
-	
+
 	public void movimiento() {
 		repaint();
 	}
@@ -474,10 +452,10 @@ public class PanelJuego extends JPanel {
 		if (botonPresionado) {
 			botonPresionado = false;
 		} else {
-			caminoElegido = aListar.get((int) (Math.random()*aListar.size()));
+			caminoElegido = aListar.get((int) (Math.random() * aListar.size()));
 		}
-		
-		
+
+		cliente.enviarMensaje(new MsjPartidaElegirCaminoAccion(null, caminoElegido));
 	}
 
 	private void imprimirPuntajes(Graphics g) {

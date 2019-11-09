@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import game.Jugador;
 import game.Partida;
 import game.Personaje;
+import objeto.CajaMisteriosa;
 import servidor.Servidor;
 
 public class MsjIniciarPartida extends Mensaje {
@@ -23,6 +24,7 @@ public class MsjIniciarPartida extends Mensaje {
 		for (String name : nombresJugadores) {
 			Jugador jug = new Jugador(name);
 			jug.setPersonaje(new Personaje("peach")); //Cambiar nombre
+			jug.addMochila_objetos(new CajaMisteriosa());
 			participantes.add(jug);
 		}
 		

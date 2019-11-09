@@ -13,6 +13,7 @@ import java.util.TreeMap;
 import com.google.gson.Gson;
 
 import casilla.Casilla;
+import game.Jugador;
 import game.Partida;
 import mensaje.Mensaje;
 import mensaje.PartidaThread;
@@ -157,7 +158,7 @@ public class ListenerThread extends Thread {
 		this.id_partidaActiva = id_partidaActiva;
 	}
 
-	public void enviarMensaje(Object mensaje) {
+	public synchronized void enviarMensaje(Object mensaje) {
 		try {
 			salida.writeUTF(gson.toJson(mensaje));
 			salida.flush();
@@ -167,7 +168,7 @@ public class ListenerThread extends Thread {
 		}
 	}
 	
-	public void enviarMensajeBroadcast(Object mensaje, ArrayList<String> nombres) {
+	public synchronized void enviarMensajeBroadcast(Object mensaje, ArrayList<String> nombres) {
 		for (String string : nombres) {
 			this.clientesConectados.get(string).enviarMensaje(mensaje);
 		}
@@ -226,8 +227,19 @@ public class ListenerThread extends Thread {
 			}
 		}
 	}
+	
+	public void notificarCasillaElegina(int indexObjeto, Jugador jugObjetivo) {
+		synchronized (Servidor.partidas) {
+			PartidaThread thread = Servidor.partidas.get(this.getId_partidaActiva());
+			synchronized (thread) {
+				thread.setObjetoSelecionado(indexObjeto);
+				thread.setJugadorSelecionado(jugObjetivo);
+				thread.notify();
+			}
+		}
+	}
 
-	public void enviarMensaje(Mensaje msjPartida, String nombre) {
+	public synchronized void enviarMensaje(Mensaje msjPartida, String nombre) {
 		
 		try {
 			clientesConectados.get(nombre).getSalida().writeUTF(gson.toJson(msjPartida));
