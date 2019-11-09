@@ -219,5 +219,17 @@ public class PartidaThread extends Thread {
 	public ArrayList<Jugador> getJugadores() {
 		return partida.getJugadores();
 	}
+	
+	public ArrayList<String> getNombreJugadores() {
+		return this.nombresJugadores;
+	}
+	
+	public void setNombreJugadores(ArrayList<String> jugadores) {
+		this.nombresJugadores = jugadores;
+	}
+
+	public Partida getPartida() {
+		return partida;
+	}
 
 }

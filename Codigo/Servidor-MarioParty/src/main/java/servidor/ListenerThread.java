@@ -18,6 +18,8 @@ import casilla.Casilla;
 import game.Jugador;
 import game.Partida;
 import mensaje.Mensaje;
+import mensaje.MsjPartidaBotonAccion;
+import mensaje.MsjPartidaIniRonda;
 
 public class ListenerThread extends Thread {
 	private String nombreCliente;
@@ -53,20 +55,35 @@ public class ListenerThread extends Thread {
 	
 	@Override
 	public void run() {
+		Mensaje msj = null;
 		try {
 			String cadenaLeida = entrada.readUTF();
 			while (true) {//preguntar si es Desconectar
 				LOGGER.info(this.nombreCliente);
-				Mensaje msj = Mensaje.getMensaje(cadenaLeida);
+				msj = Mensaje.getMensaje(cadenaLeida);
 				msj.setListener(this);
 				msj.ejecutar();
 
 				cadenaLeida = entrada.readUTF();
 			}
 			
-			
-			
 		} catch (IOException e ) {
+			clientesConectados.remove(nombreCliente);
+			PartidaThread partidaThread = Servidor.partidas.get(id_partidaActiva);
+			Partida partida = partidaThread.getPartida();
+			ArrayList<String> jugadores = partidaThread.getNombreJugadores();
+			jugadores.remove(nombreCliente);
+			partidaThread.setNombreJugadores(jugadores);
+			ArrayList<Jugador> jugadoresX = partida.getJugadores();
+			jugadoresX.remove(new Jugador(nombreCliente));
+			partida.setJugadores(jugadoresX);
+			if(jugadores.size() == 1) {
+				partida.setJugadorGanador(partidaThread.getJugadores().get(0));
+				partida.setHayGanador(true);
+			}
+			
+			//TODO : mjs de desconexion a otros jugadores!
+			
 			LOGGER.error("Error de conexion con el cliente " + nombreCliente);
 			LOGGER.error(e.getStackTrace());
 		}

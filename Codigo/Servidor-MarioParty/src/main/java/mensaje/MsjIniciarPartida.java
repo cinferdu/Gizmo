@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import game.Jugador;
 import game.Partida;
 import game.Personaje;
+import game.Sprite;
 import objeto.CajaMisteriosa;
 import servidor.PartidaThread;
 import servidor.Servidor;
@@ -21,12 +22,14 @@ public class MsjIniciarPartida extends Mensaje {
 	
 	@Override
 	public void ejecutar() {
+		int cont = 0;
 		ArrayList<Jugador> participantes = new ArrayList<Jugador>();
 		for (String name : nombresJugadores) {
 			Jugador jug = new Jugador(name);
-			jug.setPersonaje(new Personaje("peach")); //Cambiar nombre
+			jug.setPersonaje(new Personaje(Sprite.SpriteById(cont % Sprite.values().length).getNombre()));
 			jug.addMochila_objetos(new CajaMisteriosa());
 			participantes.add(jug);
+			cont ++;
 		}
 		
 		this.game = new Partida(participantes, 50); // EN LA VENTANA DE CREAR SALA AGREGAR "OBJETIVO" o "LIMITE DE MONEDAS"
