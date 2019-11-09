@@ -58,31 +58,31 @@ public class LobbyVentana extends JFrame {
 		setContentPane(contentPane);
 		contentPane.setLayout(null);
 		setResizable(false);
-		
 
 		listModel = new DefaultListModel<String>();
-		
+
 		list = new JList<String>(listModel);
 		list.setSelectedIndex(0);
 		list.setVisibleRowCount(10);
 		list.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 		list.setBounds(10, 128, 485, 169);
 		list.setLayoutOrientation(JList.VERTICAL);
-		
+
 		JScrollPane scrollPane = new JScrollPane(list);
 		scrollPane.setBounds(10, 128, 485, 169);
 		contentPane.add(scrollPane);
-		
+
 		JButton btnIngresar = new JButton("Entrar");
-		btnIngresar.addActionListener(new ActionListener() {//TODO fijarse la conexion a la sala!
+		btnIngresar.addActionListener(new ActionListener() {// TODO fijarse la conexion a la sala!
 			public void actionPerformed(ActionEvent arg0) {
 				String salaCompleta = list.getSelectedValue();
 				if (salaCompleta == null) {
 					return;
 				}
 				int idSala = Integer.valueOf(salaCompleta.substring(0, salaCompleta.indexOf(".")));
-				
-				client.enviarMensaje(new MsjIngresarSala(idSala)); //TODO enviar mjs al server para recuperar sala de x cliente
+
+				client.enviarMensaje(new MsjIngresarSala(idSala)); // TODO enviar mjs al server para recuperar sala de x
+																	// cliente
 //				CrearSalaVentana ventana = new CrearSalaVentana(cliente);
 //				ventana.setVisible(true);
 //				cliente.setVentanaActual(ventana);
@@ -91,7 +91,7 @@ public class LobbyVentana extends JFrame {
 		});
 		btnIngresar.setBounds(41, 54, 142, 63);
 		contentPane.add(btnIngresar);
-		
+
 		JButton btnCrearSala = new JButton("Crear Sala");
 		btnCrearSala.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
@@ -104,19 +104,20 @@ public class LobbyVentana extends JFrame {
 		});
 		btnCrearSala.setBounds(313, 54, 142, 63);
 		contentPane.add(btnCrearSala);
-		
+
 		JLabel lblLobby = new JLabel("Lobby");
 		lblLobby.setFont(new Font("Tahoma", Font.PLAIN, 14));
 		lblLobby.setHorizontalAlignment(SwingConstants.CENTER);
 		lblLobby.setBounds(183, 11, 129, 27);
 		contentPane.add(lblLobby);
-		
+
 	}
-	
+
 	public void mostrarSala(TreeMap<Integer, Sala> salasActivas) {
 		for (Entry<Integer, Sala> entry : salasActivas.entrySet()) {
-			listModel.addElement(entry.getKey() + ". " + entry.getValue().getNombreSala());
+			listModel.addElement(entry.getKey() + ". " + entry.getValue().getNombreSala() + " [Max Players: "
+					+ entry.getValue().getLimiteJugadores() + " Lider: " + entry.getValue().getNombreDuenio()+"]");
 		}
 	}
-	
+
 }

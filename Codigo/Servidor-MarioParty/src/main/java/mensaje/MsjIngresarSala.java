@@ -26,15 +26,14 @@ public class MsjIngresarSala extends Mensaje {
 
 			listenerServer.enviarMensajeBroadcast(new MsjAvisarNuevoClienteEnSala(listenerServer.getNombreCliente()),
 					sala.getNombreJugadores());
-
+			
 			this.sala.addCliente(listenerServer.getNombreCliente());
 		} else {
 			this.resultado = false;
 		}
 
 		listenerServer.enviarMensaje(this);
-		// listenerServer.enviarMensajeBroadcast(new avisaNuevasala/ActualizarSala, a
-		// los del lobby);
+		
 	}
 
 	public Sala getSala() {
