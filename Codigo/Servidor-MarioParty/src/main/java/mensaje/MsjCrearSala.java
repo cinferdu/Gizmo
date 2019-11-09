@@ -15,16 +15,19 @@ public class MsjCrearSala extends Mensaje {
 		this.capMax = capacidadMaxima;
 		this.clase = this.getClass().getSimpleName();
 	}
-	
+
 	@Override
 	public void ejecutar() {
-		Sala nuevaSala = new Sala(nombreSala,duenio,capMax);
+		Sala nuevaSala = new Sala(nombreSala, duenio, capMax);
 		nuevaSala.addCliente(duenio);
 		listenerServer.agregarSala(nuevaSala);
-		
+
 		MsjIngresarSala aEnviar = new MsjIngresarSala(nuevaSala);
 		aEnviar.setResultado(true);
+		listenerServer.getLobby().removeCliente(duenio);
 		listenerServer.enviarMensaje(aEnviar);
+		
+		listenerServer.enviarMensajeBroadcast(new MsjAvisarNuevaSala(listenerServer.getSalas()),listenerServer.getLobby().getNombreJugadores());
 	}
 
 }
