@@ -10,6 +10,8 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.TreeMap;
 
+import org.apache.log4j.Logger;
+
 import com.google.gson.Gson;
 
 import casilla.Casilla;
@@ -27,6 +29,8 @@ public class ListenerThread extends Thread {
 	private Sala lobby;
 	private TreeMap<Integer, Sala> salas;
 	//private TreeMap<Integer, PartidaThread> partidas;
+	
+	private final static Logger LOGGER = Logger.getLogger(ListenerThread.class);
 	
 	private Gson gson = new Gson();
 
@@ -51,8 +55,8 @@ public class ListenerThread extends Thread {
 	public void run() {
 		try {
 			String cadenaLeida = entrada.readUTF();
-			
 			while (true) {//preguntar si es Desconectar
+				LOGGER.info(this.nombreCliente);
 				Mensaje msj = Mensaje.getMensaje(cadenaLeida);
 				msj.setListener(this);
 				msj.ejecutar();
@@ -63,8 +67,8 @@ public class ListenerThread extends Thread {
 			
 			
 		} catch (IOException e ) {
-			System.err.println("Error de conexion con el cliente " + nombreCliente);
-			//e.printStackTrace();
+			LOGGER.error("Error de conexion con el cliente " + nombreCliente);
+			LOGGER.error(e.getStackTrace());
 		}
 		/*
 		comando.setListener(this);
