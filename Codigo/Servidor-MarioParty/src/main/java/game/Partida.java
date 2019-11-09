@@ -5,9 +5,9 @@ import java.util.Iterator;
 import java.util.List;
 
 import casilla.Casilla;
-import comunicacionObserver.Suscriptor;
 import comunicacionObserver.Operacion;
 import comunicacionObserver.Publicador;
+import comunicacionObserver.Suscriptor;
 import miniTenis.MiniTenis;
 
 public class Partida implements Publicador {
@@ -18,11 +18,11 @@ public class Partida implements Publicador {
 	private Jugador jugadorGanador;
 	private int rondaActual;
 	private transient List<Suscriptor> clientes;
-	private int idpartida; 
-	
+	private int idpartida;
+
 	private transient Object respuestaDePanel = null;
 	private transient static int partidasCreadas = 0;
-	
+
 	public Partida(ArrayList<Jugador> participantes, int objetivo) {
 		setIdpartida(++partidasCreadas);
 		jugadores = participantes;
@@ -39,8 +39,7 @@ public class Partida implements Publicador {
 
 		if (jugadores.size() < 2)
 			return;
-		
-		
+
 		Jugador jugadorActual;
 		Iterator<Jugador> iteradorJugador;
 
@@ -268,7 +267,7 @@ public class Partida implements Publicador {
 	public void setIdpartida(int idpartida) {
 		this.idpartida = idpartida;
 	}
-	
+
 	public void aumentarRonda() {
 		rondaActual++;
 	}
