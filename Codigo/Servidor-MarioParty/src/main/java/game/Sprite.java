@@ -2,7 +2,8 @@ package game;
 
 public enum Sprite {
 	PEACH(0,"peach"),
-	LUIGI(1,"luigi");
+	LUIGI(1,"luigi"),
+	MARIO(2,"mario");
 	
 	private int id;
 	private String nombre;

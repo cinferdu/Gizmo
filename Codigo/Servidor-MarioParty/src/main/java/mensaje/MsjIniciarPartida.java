@@ -15,15 +15,16 @@ public class MsjIniciarPartida extends Mensaje {
 	private static final long serialVersionUID = 1L;
 	private ArrayList<String> nombresJugadores;
 	private Partida game;
-	
+
 	public MsjIniciarPartida(ArrayList<String> nombresJugadores) {
 		this.clase = this.getClass().getSimpleName();
 	}
-	
+
 	@Override
 	public void ejecutar() {
 		int cont = 0;
 		ArrayList<Jugador> participantes = new ArrayList<Jugador>();
+		int i = 0;
 		for (String name : nombresJugadores) {
 			Jugador jug = new Jugador(name);
 			jug.setPersonaje(new Personaje(Sprite.SpriteById(cont % Sprite.values().length).getNombre()));
@@ -31,11 +32,12 @@ public class MsjIniciarPartida extends Mensaje {
 			participantes.add(jug);
 			cont ++;
 		}
-		
-		this.game = new Partida(participantes, 50); // EN LA VENTANA DE CREAR SALA AGREGAR "OBJETIVO" o "LIMITE DE MONEDAS"
+
+		this.game = new Partida(participantes, 50); // EN LA VENTANA DE CREAR SALA AGREGAR "OBJETIVO" o "LIMITE DE
+													// MONEDAS"
 		PartidaThread hiloPartida = listenerServer.crearHiloPartida(game, nombresJugadores);
 		listenerServer.asignarThread(game.getIdpartida(), nombresJugadores);
-		
+
 		synchronized (Servidor.partidas) {
 			Servidor.partidas.put(game.getIdpartida(), hiloPartida);
 		}
