@@ -1,7 +1,7 @@
 package mensaje;
 
 import java.io.Serializable;
-
+import org.apache.log4j.Logger;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
@@ -16,6 +16,8 @@ import deserializer.TipoDeCasillaJsonDeserializer;
 import objeto.Objeto;
 
 public abstract class Mensaje implements Serializable {
+	
+	private final static Logger LOGGER = Logger.getLogger(Mensaje.class);
 
 	private static final long serialVersionUID = -6544865381140109432L;
 	protected transient Listener listenerClient;
@@ -55,6 +57,7 @@ public abstract class Mensaje implements Serializable {
 	public static Mensaje getMensaje(String cadenaLeida) {
 		Mensaje msj = null;
 		JSONParser parser = new JSONParser();
+		LOGGER.info(cadenaLeida);
 		try {
 			JSONObject json = (JSONObject) parser.parse(cadenaLeida);
 			// Gson gson = new GsonBuilder().registerTypeAdapter(TipoDeCasilla.class, new

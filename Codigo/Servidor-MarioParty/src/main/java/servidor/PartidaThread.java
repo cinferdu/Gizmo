@@ -169,7 +169,7 @@ public class PartidaThread extends Thread {
 	private void avisar(Mensaje msjPartida) {
 		listener.enviarMensajeBroadcast(msjPartida, this.nombresJugadores);
 		try {
-			Thread.sleep(1000);
+			Thread.sleep(500);
 		} catch (InterruptedException e) {
 			e.printStackTrace();
 		}
@@ -185,7 +185,7 @@ public class PartidaThread extends Thread {
 		listener.enviarMensaje(msjPartida, jugadorActual.getNombre());
 
 		try {
-			Thread.sleep(1000);
+			Thread.sleep(500);
 		} catch (InterruptedException e) {
 			e.printStackTrace();
 		}
