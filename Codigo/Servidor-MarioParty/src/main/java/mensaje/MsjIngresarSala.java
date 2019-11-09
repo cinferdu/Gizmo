@@ -17,17 +17,24 @@ public class MsjIngresarSala extends Mensaje {
 	@Override
 	public void ejecutar() {
 		// si alguien pide entrar en una sala
-		if (resultado = listenerServer.getSalas().containsKey(id_sala)) {
+		Sala salaSolicitada = listenerServer.getSalas().get(id_sala);
+		if ((listenerServer.getSalas().containsKey(id_sala) == true)
+				&& salaSolicitada.getNombreJugadores().size() < salaSolicitada.getLimiteJugadores()) {
+			this.resultado = true;
 			listenerServer.sacarClienteAlLobby(listenerServer.getNombreCliente());
-			this.sala = listenerServer.getSalas().get(id_sala);
-			
+			this.sala = salaSolicitada;
+
 			listenerServer.enviarMensajeBroadcast(new MsjAvisarNuevoClienteEnSala(listenerServer.getNombreCliente()),
 					sala.getNombreJugadores());
-			
+
 			this.sala.addCliente(listenerServer.getNombreCliente());
+		} else {
+			this.resultado = false;
 		}
+
 		listenerServer.enviarMensaje(this);
-		//listenerServer.enviarMensajeBroadcast(new avisaNuevasala/ActualizarSala, a los del lobby);
+		// listenerServer.enviarMensajeBroadcast(new avisaNuevasala/ActualizarSala, a
+		// los del lobby);
 	}
 
 	public Sala getSala() {

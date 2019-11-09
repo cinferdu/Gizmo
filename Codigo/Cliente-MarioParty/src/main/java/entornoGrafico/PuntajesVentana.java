@@ -32,6 +32,7 @@ public class PuntajesVentana extends JFrame {
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 		setContentPane(contentPane);
 		contentPane.setLayout(null);
+		setResizable(false);
 
 		mLabel = new JLabel();
 		mLabel.setBounds(10, 10, 900, 65);

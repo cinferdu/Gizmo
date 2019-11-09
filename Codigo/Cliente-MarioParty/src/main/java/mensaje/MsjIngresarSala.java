@@ -38,7 +38,7 @@ public class MsjIngresarSala extends Mensaje {
 			//}
 			
 		} else {
-			JOptionPane.showMessageDialog(null, "La sala no fue creada");
+			JOptionPane.showMessageDialog(null, "Sala llena");
 		}
 	}
 
