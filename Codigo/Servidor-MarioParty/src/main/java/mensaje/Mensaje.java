@@ -2,6 +2,7 @@ package mensaje;
 
 import java.io.Serializable;
 
+import org.apache.log4j.Logger;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
@@ -16,6 +17,8 @@ import objeto.Objeto;
 import servidor.ListenerThread;
 
 public abstract class Mensaje implements Serializable {
+	
+	private final static Logger LOGGER = Logger.getLogger(Mensaje.class);
 
 	private static final long serialVersionUID = 1L;
 	protected transient ListenerThread listenerServer;
@@ -53,6 +56,7 @@ public abstract class Mensaje implements Serializable {
 	// cargarlo con la infomacion (transformando cadenaLeida al paquete que
 	// necesite)
 	public static Mensaje getMensaje(String cadenaLeida) {
+		LOGGER.info(cadenaLeida);
 		Mensaje msj = null;
 		JSONParser parser = new JSONParser();
 		try {

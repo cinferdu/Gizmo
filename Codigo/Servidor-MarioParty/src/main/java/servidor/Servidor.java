@@ -7,7 +7,7 @@ import java.util.HashMap;
 import java.util.TreeMap;
 
 public class Servidor {
-
+	
 	private static final int PUERTO = 10200;
 	
 	private HashMap<String, ListenerThread> clientesConectados; // nombre + socket
@@ -42,7 +42,7 @@ public class Servidor {
 		}
 	}
 	
-	public static void main(String[] args) {
+	public static void main(String[] args) throws SecurityException, IOException {
 		new Servidor();
 	}
 }
