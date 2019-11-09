@@ -18,8 +18,7 @@ import casilla.Casilla;
 import game.Jugador;
 import game.Partida;
 import mensaje.Mensaje;
-import mensaje.MsjPartidaBotonAccion;
-import mensaje.MsjPartidaIniRonda;
+import mensaje.MsjPartidaPuntajesFinales;
 
 public class ListenerThread extends Thread {
 	private String nombreCliente;
@@ -82,7 +81,7 @@ public class ListenerThread extends Thread {
 				partida.setHayGanador(true);
 			}
 			
-			//TODO : mjs de desconexion a otros jugadores!
+			partidaThread.avisar(new MsjPartidaPuntajesFinales(partida.getJugadorGanador(),partida.getJugadores()));
 			
 			LOGGER.error("Error de conexion con el cliente " + nombreCliente);
 			LOGGER.error(e.getStackTrace());
