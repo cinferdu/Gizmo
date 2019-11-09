@@ -65,7 +65,7 @@ public class PuntajesVentana extends JFrame {
 		g2d.drawString("Monedas", 700, 180);
 
 		for (int i = 0; i < jugadores.size(); i++) {
-			if (ganador.getNombre() == jugadores.get(i).getNombre()) {
+			if (ganador.getNombre().equals(jugadores.get(i).getNombre())) {
 				g2d.drawString("*", 55, 240 + 40 * i);
 			}
 			g2d.drawString(jugadores.get(i).getNombre(), 80, 240 + 40 * i);

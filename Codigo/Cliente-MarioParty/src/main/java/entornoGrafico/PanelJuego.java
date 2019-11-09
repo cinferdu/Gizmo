@@ -175,10 +175,10 @@ public class PanelJuego extends JPanel {
 		textArea.append(jugadorActual.getNombre() + ", perdiste tu turno.\n");
 	}
 
-	public void mostrarVentanaPuntajesFinales() {
+	public void mostrarVentanaPuntajesFinales(Jugador ganador) {
 		JFrame ventanaActual = cliente.getVentanaActual();
 		PuntajesVentana ventanaPuntos = new PuntajesVentana((ArrayList<Jugador>) partida.getJugadores(),
-				partida.getJugadorGanador());
+				ganador);
 		ventanaPuntos.setVisible(true);
 		ventanaPuntos.setFocusable(true);
 		
@@ -261,9 +261,13 @@ public class PanelJuego extends JPanel {
 		add(mensajeObj);
 
 		// Lo clono para que el remove no borre ese jugador en la partida
-		ArrayList<Jugador> posiblesObjetivos = new ArrayList<Jugador>(partida.getJugadores());
-
-		posiblesObjetivos.remove(jugadorActual);
+		ArrayList<Jugador> posiblesObjetivos = new ArrayList<Jugador>();
+		//partida.getJugadores()
+		for (Jugador jugador : partida.getJugadores()) {
+			if (!jugadorActual.getNombre().equals(jugador.getNombre())) {
+				posiblesObjetivos.add(jugador);
+			}
+		}
 
 		// Si es necesario elegir un objetivo
 		ButtonGroup grupoJugadores = new ButtonGroup();

@@ -1,7 +1,6 @@
 package game;
 
 import java.util.ArrayList;
-import java.util.Iterator;
 
 public class Partida {
 	private ArrayList<Jugador> jugadores;

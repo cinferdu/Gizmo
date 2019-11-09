@@ -18,6 +18,7 @@ import mensaje.MsjPartidaLanzamientoDado;
 import mensaje.MsjPartidaMovimiento;
 import mensaje.MsjPartidaObjetoUsado;
 import mensaje.MsjPartidaPierdeTurno;
+import mensaje.MsjPartidaPuntajesFinales;
 import mensaje.MsjPartidaSelecObjAccion;
 import mensaje.MsjPartidaSelecObjInf;
 import mensaje.MsjPartidaSinAccion;
@@ -128,7 +129,7 @@ public class PartidaThread extends Thread {
 
 		}
 		// avisar(Operacion.PUNTAJES_FINALES, partida.getJugadorGanador());
-
+		avisar(new MsjPartidaPuntajesFinales(partida.getJugadorGanador(),partida.getJugadores()));
 	}
 
 	public void avanzar(Jugador jugador) {
