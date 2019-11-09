@@ -1,15 +1,19 @@
 package mensaje;
 
+import game.Jugador;
+
 public class MsjPartidaTextArea extends Mensaje {
 
 	private static final long serialVersionUID = 1L;
 	private String texto;
-	
-	public MsjPartidaTextArea(String texto) {
+	private Jugador jugadorAct;
+
+	public MsjPartidaTextArea(String texto, Jugador jugadorAct) {
 		clase = getClass().getSimpleName();
 		this.setTexto(texto);
+		this.setJugadorAct(jugadorAct);
 	}
-	
+
 	@Override
 	public void ejecutar() {
 
@@ -21,6 +25,14 @@ public class MsjPartidaTextArea extends Mensaje {
 
 	public void setTexto(String texto) {
 		this.texto = texto;
+	}
+
+	public Jugador getJugadorAct() {
+		return jugadorAct;
+	}
+
+	public void setJugadorAct(Jugador jugadorAct) {
+		this.jugadorAct = jugadorAct;
 	}
 
 }

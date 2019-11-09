@@ -7,7 +7,6 @@ import casilla.Casilla;
 import game.Dado;
 import game.Jugador;
 import game.Partida;
-import objeto.Objeto;
 import servidor.ListenerThread;
 
 public class PartidaThread extends Thread {
@@ -73,9 +72,8 @@ public class PartidaThread extends Thread {
 						avisar(new MsjPartidaSelecObjInf(jugadorActual));
 						avisar(new MsjPartidaSelecObjAccion(jugadorActual),jugadorActual);
 						esperarNofify();
-						Objeto objetoUsado;
 						if (this.objetoSelecionado != -1)
-							objetoUsado = jugadorActual.usarObjeto(objetoSelecionado, jugadorSeleccionado);
+							jugadorActual.usarObjeto(objetoSelecionado, jugadorSeleccionado);
 						
 
 					} else {

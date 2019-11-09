@@ -16,7 +16,6 @@ import casilla.Casilla;
 import game.Jugador;
 import game.Partida;
 import mensaje.Mensaje;
-import mensaje.MsjPartidaTextArea;
 import mensaje.PartidaThread;
 
 public class ListenerThread extends Thread {
@@ -66,7 +65,7 @@ public class ListenerThread extends Thread {
 			
 		} catch (IOException e ) {
 			System.err.println("Error de conexion con el cliente " + nombreCliente);
-			e.printStackTrace();
+			//e.printStackTrace();
 		}
 		/*
 		comando.setListener(this);

@@ -16,6 +16,9 @@ import mensaje.Mensaje;
 
 public class Cliente {
 
+	private final static String IPSERVIDOR = "127.0.0.1";
+	private final static int PUERTO = 10200;
+	
 	private String nombreCliente;
 	Socket readSocket;
 	Socket writeSocket;
@@ -66,12 +69,8 @@ public class Cliente {
 		}
 	}
 	
-	public static void test(String msj) {
-		System.out.println("****" + msj);
-	}
-
 	public static void main(String[] args) {
-		new Cliente("127.0.0.1", 10200);
+		new Cliente(IPSERVIDOR, PUERTO);
 	}
 
 	public String recibirMsg() {
