@@ -170,7 +170,7 @@ public class PartidaThread extends Thread {
 	 * 
 	 * @param msjPartida
 	 */
-	private void avisar(Mensaje msjPartida) {
+	public void avisar(Mensaje msjPartida) {
 		listener.enviarMensajeBroadcast(msjPartida, this.nombresJugadores);
 		try {
 			Thread.sleep(500);
