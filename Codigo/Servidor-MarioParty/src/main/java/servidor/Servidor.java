@@ -8,6 +8,8 @@ import java.util.TreeMap;
 
 import org.apache.log4j.Logger;
 
+import util.UtilesLog;
+
 public class Servidor {
 	
 	private static final int PUERTO = 10200;
@@ -42,7 +44,7 @@ public class Servidor {
 			
 		} catch (IOException e) {
 			LOGGER.error("Ocurrio un problema en el servidor");
-			LOGGER.error(e.getStackTrace());
+			UtilesLog.loggerStackTrace(e, this.getClass());
 		}
 	}
 	

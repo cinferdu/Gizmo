@@ -32,4 +32,27 @@ public class MsjPartidaElegirCaminoAccion extends Mensaje {
 		listenerServer.notificarCasillaElegina(casillaElegida);
 	}
 
+	public Casilla getCasillaElegida() {
+		return casillaElegida;
+	}
+
+	public void setCasillaElegida(Casilla casillaElegida) {
+		this.casillaElegida = casillaElegida;
+	}
+
+	public ArrayList<Casilla> getCaminosPosibles() {
+		return caminosPosibles;
+	}
+
+	public void setCaminosPosibles(ArrayList<Casilla> caminosPosibles) {
+		this.caminosPosibles = caminosPosibles;
+	}
+
+	public Jugador getJugadorActual() {
+		return jugadorActual;
+	}
+
+	public void setJugadorActual(Jugador jugadorActual) {
+		this.jugadorActual = jugadorActual;
+	}
 }

@@ -4,11 +4,16 @@ import java.util.ArrayList;
 
 import javax.swing.JFrame;
 
+import org.apache.log4j.Logger;
+
+import cliente.Listener;
 import entornoGrafico.VentanaJuego;
 import game.Partida;
 
 public class MsjIniciarPartida extends Mensaje {
 
+	private final static Logger LOGGER = Logger.getLogger(MsjIniciarPartida.class);
+	
 	private static final long serialVersionUID = 1L;
 	private ArrayList<String> nombresJugadores;
 	private Partida game;
@@ -21,10 +26,11 @@ public class MsjIniciarPartida extends Mensaje {
 	@Override
 	public void ejecutar() {
 		JFrame ventana = listenerClient.getCliente().getVentanaActual();
-		
 		ventana.dispose();
 		listenerClient.getCliente().setPartidaActual(game);
+		LOGGER.info("Cierra ventana!!!");
 		ventana = new VentanaJuego(listenerClient.getCliente());
+		LOGGER.info("Abre ventana!!!");
 		listenerClient.getCliente().setVentanaActual(ventana);
 		ventana.setVisible(true);
 	}

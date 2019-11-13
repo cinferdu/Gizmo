@@ -20,7 +20,7 @@ public enum Sprite {
 		}
 		return null;
 	}
-
+	
 	public int getId() {
 		return id;
 	}

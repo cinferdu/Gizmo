@@ -5,7 +5,7 @@ import game.Jugador;
 public class MsjPartidaElegirCaminoInformar extends Mensaje {
 
 	private static final long serialVersionUID = 1L;
-	private Jugador jugadorActual;
+	private Jugador jugadorActual ;
 	
 	public MsjPartidaElegirCaminoInformar(Jugador jugadorActual) {
 		super();
@@ -18,4 +18,11 @@ public class MsjPartidaElegirCaminoInformar extends Mensaje {
 		
 	}
 
+	public Jugador getJugadorActual() {
+		return jugadorActual;
+	}
+
+	public void setJugadorActual(Jugador jugadorActual) {
+		this.jugadorActual = jugadorActual;
+	}
 }

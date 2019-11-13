@@ -18,4 +18,11 @@ public class MsjPartidaSelecObjInf extends Mensaje {
 
 	}
 
+	public Jugador getJugadorAct() {
+		return jugadorAct;
+	}
+
+	public void setJugadorAct(Jugador jugadorAct) {
+		this.jugadorAct = jugadorAct;
+	}
 }

@@ -5,12 +5,12 @@ import java.awt.Image;
 import javax.swing.ImageIcon;
 
 public class Dado {
-	public static final Image CARA_UNO = new ImageIcon("img//cara1.png").getImage();
-	public static final Image CARA_DOS = new ImageIcon("img//cara2.png").getImage();
-	public static final Image CARA_TRES = new ImageIcon("img//cara3.png").getImage();
-	public static final Image CARA_CUATRO = new ImageIcon("img//cara4.png").getImage();
-	public static final Image CARA_CINCO = new ImageIcon("img//cara5.png").getImage();
-	public static final Image CARA_SEIS = new ImageIcon("img//cara6.png").getImage();
+	public static final Image CARA_UNO = new ImageIcon(Dado.class.getResource("/img/cara1.png")).getImage();
+	public static final Image CARA_DOS = new ImageIcon(Dado.class.getResource("/img/cara2.png")).getImage();
+	public static final Image CARA_TRES = new ImageIcon(Dado.class.getResource("/img/cara3.png")).getImage();
+	public static final Image CARA_CUATRO = new ImageIcon(Dado.class.getResource("/img/cara4.png")).getImage();
+	public static final Image CARA_CINCO = new ImageIcon(Dado.class.getResource("/img/cara5.png")).getImage();
+	public static final Image CARA_SEIS = new ImageIcon(Dado.class.getResource("/img/cara6.png")).getImage();
 
 	public static int lanzarDado() {
 		return (int) (Math.random() * 6 + 1);

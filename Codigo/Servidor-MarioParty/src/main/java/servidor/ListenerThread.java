@@ -10,6 +10,8 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.TreeMap;
 
+import javax.swing.text.Utilities;
+
 import org.apache.log4j.Logger;
 
 import com.google.gson.Gson;
@@ -19,6 +21,7 @@ import game.Jugador;
 import game.Partida;
 import mensaje.Mensaje;
 import mensaje.MsjPartidaPuntajesFinales;
+import util.UtilesLog;
 
 public class ListenerThread extends Thread {
 	private String nombreCliente;
@@ -58,11 +61,12 @@ public class ListenerThread extends Thread {
 		try {
 			String cadenaLeida = entrada.readUTF();
 			while (true) {//preguntar si es Desconectar
-				LOGGER.info(this.nombreCliente);
+				LOGGER.info("nombre del cliente : " + this.nombreCliente);
 				msj = Mensaje.getMensaje(cadenaLeida);
+				LOGGER.info("mjs leido!");
 				msj.setListener(this);
 				msj.ejecutar();
-
+				LOGGER.info("mjs ejecutado!");
 				cadenaLeida = entrada.readUTF();
 			}
 			
@@ -84,8 +88,17 @@ public class ListenerThread extends Thread {
 			partidaThread.avisar(new MsjPartidaPuntajesFinales(partida.getJugadorGanador(),partida.getJugadores()));
 			
 			LOGGER.error("Error de conexion con el cliente " + nombreCliente);
-			LOGGER.error(e.getStackTrace());
+			UtilesLog.loggerStackTrace(e, this.getClass());
 		}
+		/*
+		comando.setListener(this);
+		comando.ejecutar();
+		*/
+		// DESCONEXION
+		// lo borro de las listas de conectado
+		// .close() a todo
+		// mensaje cliente X desconectado si esta en alguna sala
+	
 	}
 
 	public String getNombreCliente() {
@@ -256,7 +269,7 @@ public class ListenerThread extends Thread {
 			clientesConectados.get(nombre).getSalida().flush();
 		} catch (IOException e) {
 			System.err.println("No se pudo enviar el mensaje");
-			e.printStackTrace();
+			UtilesLog.loggerStackTrace(e, this.getClass());
 		}
 	}
 

@@ -3,6 +3,7 @@ package game;
 import java.util.ArrayList;
 
 public class Partida {
+	public static final String ARCHIVO = "dataCasilla.txt";
 	private ArrayList<Jugador> jugadores;
 	private int objetivo;
 	private boolean hayGanador;
@@ -20,7 +21,7 @@ public class Partida {
 		this.objetivo = objetivo;
 		hayGanador = false;
 		jugadorGanador = null;
-		tablero = new Tablero("dataCasilla.txt");
+		tablero = new Tablero(ARCHIVO);
 		posicionarJugadoresEnElInicio();
 	}
 
@@ -104,4 +105,10 @@ public class Partida {
 		rondaActual++;
 	}
 
+	@Override
+	public String toString() {
+		return "Partida [jugadores=" + jugadores + ", objetivo=" + objetivo + ", hayGanador=" + hayGanador
+				+ ", tablero=" + tablero + ", jugadorGanador=" + jugadorGanador + ", rondaActual=" + rondaActual
+				+ ", idpartida=" + idpartida + "]";
+	}
 }

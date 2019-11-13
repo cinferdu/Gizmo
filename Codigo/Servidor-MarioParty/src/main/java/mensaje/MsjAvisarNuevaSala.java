@@ -20,4 +20,11 @@ public class MsjAvisarNuevaSala extends Mensaje {
 
 	}
 
+	public TreeMap<Integer, Sala> getSalas() {
+		return salas;
+	}
+
+	public void setSalas(TreeMap<Integer, Sala> salas) {
+		this.salas = salas;
+	}
 }

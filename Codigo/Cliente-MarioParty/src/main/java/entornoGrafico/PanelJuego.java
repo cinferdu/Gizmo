@@ -6,7 +6,6 @@ import java.awt.Font;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.Image;
-import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
@@ -16,6 +15,7 @@ import java.util.Enumeration;
 
 import javax.swing.AbstractButton;
 import javax.swing.ButtonGroup;
+import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
@@ -26,6 +26,8 @@ import javax.swing.JSeparator;
 import javax.swing.JTextArea;
 import javax.swing.text.DefaultCaret;
 
+import org.apache.log4j.Logger;
+
 import casilla.Casilla;
 import cliente.Cliente;
 import game.Dado;
@@ -35,6 +37,7 @@ import mensaje.MsjPartidaBotonAccion;
 import mensaje.MsjPartidaElegirCaminoAccion;
 import mensaje.MsjPartidaSelecObjAccion;
 import objeto.Objeto;
+import util.UtilesLog;
 
 public class PanelJuego extends JPanel {
 	private static final int INICIO_PUNTAJES = 730;
@@ -42,6 +45,8 @@ public class PanelJuego extends JPanel {
 	private static final int TAMANIO_CASILLA = 30;
 	private static final int TIEMPO_ELEGIR_OPCION = 10; // en segundos
 
+	private final static Logger LOGGER = Logger.getLogger(PanelJuego.class);
+	
 	private Image fondo;
 	private Image dado = null;
 	private Image dado_boton;
@@ -85,9 +90,13 @@ public class PanelJuego extends JPanel {
 		add(separator);
 
 		partida = cliente.getPartidaActual();
-
-		fondo = ImgExtra.FONDO;
-		dado_boton = ImgExtra.BOTON_DADO;
+		LOGGER.info("llego a las imagenes!!!");
+		try {
+			fondo = ImgExtra.FONDO;
+			dado_boton = ImgExtra.BOTON_DADO;
+		} catch (Exception e) {
+			UtilesLog.loggerStackTrace(e, this.getClass());
+		}
 		modificadorDelCursor = new JLabel();
 		modificadorDelCursor.setBounds(280, 30, 100, 100);
 		modificadorDelCursor.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
@@ -122,9 +131,8 @@ public class PanelJuego extends JPanel {
 
 		// Dibujo los jugadores
 		for (Jugador jugador : partida.getJugadores()) {
-			Toolkit t = Toolkit.getDefaultToolkit();
-			Image imagen = t.getImage("Personajes/" + jugador.getPersonaje().getName() + "-body.png");
-			g.drawImage(imagen, jugador.getPosicionActual().getPosX(), jugador.getPosicionActual().getPosY() - 12, 30,
+			Image image = new ImageIcon(ImgExtra.class.getResource("/Personajes/" + jugador.getPersonaje().getName() + "-body.png")).getImage();
+			g.drawImage(image, jugador.getPosicionActual().getPosX(), jugador.getPosicionActual().getPosY() - 12, 30,
 					40, null);
 		}
 

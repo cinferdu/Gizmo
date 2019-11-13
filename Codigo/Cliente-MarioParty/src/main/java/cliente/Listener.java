@@ -28,9 +28,10 @@ public class Listener extends Thread {
 				LOGGER.info(cliente);
 				String cadenaLeida = leer.readUTF();
 				msj = Mensaje.getMensaje(cadenaLeida);
-				
+				LOGGER.info("mjs leido!");
 				msj.setListener(this);
 				msj.ejecutar();
+				LOGGER.info("mjs ejecutado!");
 			}
 			catch (Exception ex) {
 				escuchando = false;

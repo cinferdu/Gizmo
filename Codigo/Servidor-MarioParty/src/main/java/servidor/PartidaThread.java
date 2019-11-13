@@ -185,7 +185,7 @@ public class PartidaThread extends Thread {
 	 * @param msjPartida
 	 * @param jugadorActual
 	 */
-	private void avisar(Mensaje msjPartida, Jugador jugadorActual) {
+	public void avisar(Mensaje msjPartida, Jugador jugadorActual) {
 		listener.enviarMensaje(msjPartida, jugadorActual.getNombre());
 
 		try {

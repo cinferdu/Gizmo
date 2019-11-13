@@ -56,6 +56,7 @@ public class Cliente {
 		jugador = null;
 
 		new Listener(this).start();
+		// System.out.println("escuchando");
 
 		ventanaActual = new Login(this);
 		ventanaActual.setVisible(true);
@@ -125,4 +126,10 @@ public class Cliente {
 		this.jugador = jugador;
 	}
 
+	@Override
+	public String toString() {
+		return "Cliente [nombreCliente=" + nombreCliente + ", readSocket=" + readSocket + ", writeSocket=" + writeSocket
+				+ ", ventanaActual=" + ventanaActual + ", salaActual=" + salaActual + ", partidaActual=" + partidaActual
+				+ ", jugador=" + jugador + ", entrada=" + entrada + ", salida=" + salida + ", gson=" + gson + "]";
+	}
 }

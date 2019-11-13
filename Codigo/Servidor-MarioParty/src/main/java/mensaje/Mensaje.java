@@ -15,6 +15,7 @@ import deserializer.ObjetoDeserializer;
 import deserializer.TipoDeCasillaJsonDeserializer;
 import objeto.Objeto;
 import servidor.ListenerThread;
+import util.UtilesLog;
 
 public abstract class Mensaje implements Serializable {
 	
@@ -63,9 +64,9 @@ public abstract class Mensaje implements Serializable {
 			JSONObject json = (JSONObject) parser.parse(cadenaLeida);
 			msj = (Mensaje) gson.fromJson(cadenaLeida, Class.forName("mensaje." + json.get("clase")));
 		} catch (ParseException e) {
-			e.printStackTrace();
+			UtilesLog.loggerStackTrace(e, Mensaje.class);
 		} catch (ClassNotFoundException e) {
-			e.printStackTrace();
+			UtilesLog.loggerStackTrace(e, Mensaje.class);
 		}
 		return msj;
 	}

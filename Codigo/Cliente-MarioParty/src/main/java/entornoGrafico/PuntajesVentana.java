@@ -18,8 +18,8 @@ public class PuntajesVentana extends JFrame {
 
 	private static final long serialVersionUID = 4095766066350057723L;
 	private JPanel contentPane;
-	private ImageIcon tabla_puntajes = new ImageIcon("img//tabla_puntajes.png");
-	private ImageIcon titulo_puntajes = new ImageIcon("img//titulo_puntajes.png");
+	private ImageIcon tabla_puntajes = new ImageIcon(PuntajesVentana.class.getResource("img//tabla_puntajes.png"));
+	private ImageIcon titulo_puntajes = new ImageIcon(PuntajesVentana.class.getResource("img//titulo_puntajes.png"));
 	private JLabel mLabel;
 	private JLabel mLabel_tabla;
 	private ArrayList<Jugador> jugadores;

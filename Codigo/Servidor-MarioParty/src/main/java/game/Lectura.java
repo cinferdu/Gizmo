@@ -3,20 +3,22 @@ package game;
 import static casilla.CreadorDeCasilla.crearInstancia;
 
 import java.io.BufferedReader;
-import java.io.File;
 import java.io.FileNotFoundException;
-import java.io.FileReader;
 import java.io.IOException;
+import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.HashMap;
 
+import org.apache.log4j.Logger;
+
 import casilla.Casilla;
+import mensaje.Mensaje;
+import util.UtilesLog;
 
 public class Lectura {
-
+	private final static Logger LOGGER = Logger.getLogger(Lectura.class);
+	
 	public static void cargarTablero(String archivo, Tablero tablero) {
-		File file = null;
-		FileReader fr = null;
 		BufferedReader br = null;
 		HashMap<Integer, Casilla> casillasHM = new HashMap<Integer, Casilla>();
 		int id;
@@ -27,18 +29,19 @@ public class Lectura {
 		String[] anteriores;
 
 		try {
-			file = new File(archivo);
-			fr = new FileReader(file);
-			br = new BufferedReader(fr);
+			LOGGER.info("llego antes del reader!");
+			LOGGER.info(Lectura.class.getResourceAsStream( "/" + archivo));
+			br = new BufferedReader(new InputStreamReader(Lectura.class.getResourceAsStream( "/" + archivo)));
 
 			String[] linea = br.readLine().split(" ");
+			LOGGER.info(linea);
 			int cantidadDeCasillas = Integer.valueOf(linea[0]);
 			int ancho = Integer.valueOf(linea[1]);
 			int alto = Integer.valueOf(linea[2]);
 
 			for (int i = 0; i < cantidadDeCasillas; i++) {
 				linea = br.readLine().split(" ");
-
+				LOGGER.info(linea.toString());
 				id = Integer.valueOf(linea[0]);
 				posX = Integer.valueOf(linea[1]);
 				posY = Integer.valueOf(linea[2]);
@@ -73,9 +76,9 @@ public class Lectura {
 			tablero.setColumnas(ancho);
 			
 		} catch (FileNotFoundException e) {
-			e.printStackTrace();
+			UtilesLog.loggerStackTrace(e, Lectura.class);
 		} catch (IOException e) {
-			e.printStackTrace();
+			UtilesLog.loggerStackTrace(e, Lectura.class);
 		}
 
 	}

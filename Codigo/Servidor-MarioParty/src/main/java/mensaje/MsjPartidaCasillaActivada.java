@@ -1,7 +1,5 @@
 package mensaje;
 
-import java.util.ArrayList;
-
 import game.Jugador;
 
 public class MsjPartidaCasillaActivada extends Mensaje {
@@ -20,4 +18,11 @@ public class MsjPartidaCasillaActivada extends Mensaje {
 		
 	}
 
+	public Jugador getJugadorActual() {
+		return jugadorActual;
+	}
+
+	public void setJugadorActual(Jugador jugadorActual) {
+		this.jugadorActual = jugadorActual;
+	}
 }
