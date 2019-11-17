@@ -11,7 +11,6 @@ import org.apache.log4j.Logger;
 import util.UtilesLog;
 
 public class Servidor {
-	
 	private static final int PUERTO = 10200;
 	
 	private HashMap<String, ListenerThread> clientesConectados; // nombre + socket

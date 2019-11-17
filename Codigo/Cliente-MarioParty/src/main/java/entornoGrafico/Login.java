@@ -9,6 +9,7 @@ import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
+import javax.swing.JPasswordField;
 import javax.swing.JTextField;
 import javax.swing.SwingConstants;
 import javax.swing.border.EmptyBorder;
@@ -20,7 +21,8 @@ public class Login extends JFrame {
 
 	private static final long serialVersionUID = 1L;
 	private JPanel contentPane;
-	private JTextField textField;
+	private JTextField textFieldUser;
+	private JTextField textFieldPass;
 	private Cliente cliente;
 
 	public static void main(String[] args) {
@@ -42,10 +44,15 @@ public class Login extends JFrame {
 		contentPane.setLayout(null);
 		setResizable(false);
 
-		textField = new JTextField();
-		textField.setBounds(29, 112, 100, 20);
-		contentPane.add(textField);
-		textField.setColumns(10);
+		textFieldUser = new JTextField();
+		textFieldUser.setBounds(29, 86, 100, 20);
+		contentPane.add(textFieldUser);
+		textFieldUser.setColumns(10);
+
+		textFieldPass = new JPasswordField();
+		textFieldPass.setBounds(29, 130, 100, 20);
+		contentPane.add(textFieldPass);
+		textFieldPass.setColumns(10);
 
 		JLabel lblLogin = new JLabel("Login");
 		lblLogin.setHorizontalAlignment(SwingConstants.CENTER);
@@ -56,20 +63,30 @@ public class Login extends JFrame {
 		JButton btnNewButton = new JButton("Ingresar");
 		btnNewButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				String nombre = textField.getText().trim();
+				String user = textFieldUser.getText().trim();
+				String pass = textFieldPass.getText().trim();
 
-				if (nombre.length() > 0) {
-					cliente.enviarMensaje(new MsjLogin(nombre));
-				} else {
+				if (user.length() < 0) {
 					JOptionPane.showMessageDialog(contentPane, "Usa 1 caracter o mas para tu usuario");
+					return;
 				}
+				if (user.length() < 0) {
+					JOptionPane.showMessageDialog(contentPane, "La contraseña no puede estar vacia.");
+					return;
+				}
+				
+				cliente.enviarMensaje(new MsjLogin(user,pass));
 			}
 		});
 		btnNewButton.setBounds(29, 163, 100, 23);
 		contentPane.add(btnNewButton);
 
-		JLabel lblNombre = new JLabel("Nombre");
-		lblNombre.setBounds(29, 87, 46, 14);
-		contentPane.add(lblNombre);
+		JLabel lblUser = new JLabel("Usuario");
+		lblUser.setBounds(29, 66, 46, 14);
+		contentPane.add(lblUser);
+
+		JLabel lblPass = new JLabel("Contraseña");
+		lblPass.setBounds(29, 104, 100, 30);
+		contentPane.add(lblPass);
 	}
 }

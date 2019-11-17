@@ -2,45 +2,58 @@ package mensaje;
 
 import java.util.TreeMap;
 
+import controller.UsuarioController;
+import model.Usuario;
 import servidor.Sala;
 
 public class MsjLogin extends Mensaje {
 
 	private static final long serialVersionUID = 1L;
-	private String nombre;
+	private String user;
+	private String pass;
 	// si resultado=false lo siguiente sera NULL
 	private TreeMap<Integer, Sala> salas;
 
-	public MsjLogin(String nombre) {
+	public MsjLogin(String user,String pass) {
 		super();
-		this.nombre = nombre;
+		this.user = user;
+		this.pass = pass;
 		this.resultado = false;
 		this.salas = null;
 		this.clase = this.getClass().getSimpleName();
 	}
 	@Override
 	public void ejecutar() {
-		resultado = !listenerServer.getClientesConectados().containsKey(nombre);
+		if(UsuarioController.loggin(new Usuario(user, pass)) && !listenerServer.getClientesConectados().containsKey(user))
+			resultado = true;
 		
 		if (resultado) {
 			salas = listenerServer.getSalas();
 			
-			listenerServer.getClientesConectados().put(nombre, listenerServer);
-			listenerServer.setNombreCliente(nombre);
-			listenerServer.agregarClienteAlLobby(nombre);
+			listenerServer.getClientesConectados().put(user, listenerServer);
+			listenerServer.setNombreCliente(user);
+			listenerServer.agregarClienteAlLobby(user);
 		}
 		
 		listenerServer.enviarMensaje(this);
 	}
 	
-	public String getNombre() {
-		return nombre;
+	public String getUser() {
+		return user;
 	}
 
-	public void setNombre(String nombre) {
-		this.nombre = nombre;
+	public void setUser(String user) {
+		this.user = user;
 	}
-
+	
+	public String getPass() {
+		return pass;
+	}
+	
+	public void setPass(String pass) {
+		this.pass = pass;
+	}
+	
 	public boolean isResultado() {
 		return resultado;
 	}

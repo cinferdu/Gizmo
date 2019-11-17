@@ -11,13 +11,15 @@ import entornoGrafico.LobbyVentana;
 public class MsjLogin extends Mensaje {
 
 	private static final long serialVersionUID = 1L;
-	private String nombre;
+	private String user;
+	private String pass;
 	// si resultado=false lo siguiente sera NULL
 	private TreeMap<Integer, Sala> salas;
 
-	public MsjLogin(String nombre) {
+	public MsjLogin(String user,String pass) {
 		super();
-		this.nombre = nombre;
+		this.user = user;
+		this.pass = pass;
 		this.resultado = false;
 		this.salas = null;
 		this.clase = this.getClass().getSimpleName();
@@ -31,22 +33,30 @@ public class MsjLogin extends Mensaje {
 			ventana.dispose();
 			ventana = new LobbyVentana(listenerClient.getCliente());
 			ventana.setVisible(true);
-			ventana.setTitle("Bienvenido/a " + nombre);
+			ventana.setTitle("Bienvenido/a " + user);
 			((LobbyVentana) ventana).mostrarSala(salas);
 			
 			listenerClient.getCliente().setVentanaActual(ventana);
-			listenerClient.getCliente().setNombreCliente(nombre);
+			listenerClient.getCliente().setNombreCliente(user);
 		}else {
-			JOptionPane.showMessageDialog(null, "Ya existe una sesión iniciada con ese usuario.");
+			JOptionPane.showMessageDialog(null, "El nombre de usuario o la contraseña son incorrectas.");
 		}
 	}
 
-	public String getNombre() {
-		return nombre;
+	public String getUser() {
+		return user;
 	}
 
-	public void setNombre(String nombre) {
-		this.nombre = nombre;
+	public void setUser(String user) {
+		this.user = user;
+	}
+
+	public String getPass() {
+		return pass;
+	}
+
+	public void setPass(String pass) {
+		this.pass = pass;
 	}
 
 	public TreeMap<Integer, Sala> getSalas() {
