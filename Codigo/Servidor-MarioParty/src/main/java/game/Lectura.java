@@ -12,7 +12,6 @@ import java.util.HashMap;
 import org.apache.log4j.Logger;
 
 import casilla.Casilla;
-import mensaje.Mensaje;
 import util.UtilesLog;
 
 public class Lectura {
@@ -36,8 +35,6 @@ public class Lectura {
 			String[] linea = br.readLine().split(" ");
 			LOGGER.info(linea);
 			int cantidadDeCasillas = Integer.valueOf(linea[0]);
-			int ancho = Integer.valueOf(linea[1]);
-			int alto = Integer.valueOf(linea[2]);
 
 			for (int i = 0; i < cantidadDeCasillas; i++) {
 				linea = br.readLine().split(" ");
@@ -72,8 +69,6 @@ public class Lectura {
 			}
 			
 			tablero.setCasilleros(caminos);
-			tablero.setFilas(alto);
-			tablero.setColumnas(ancho);
 			
 		} catch (FileNotFoundException e) {
 			UtilesLog.loggerStackTrace(e, Lectura.class);

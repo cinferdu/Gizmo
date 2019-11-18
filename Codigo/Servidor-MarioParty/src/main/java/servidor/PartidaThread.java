@@ -98,8 +98,10 @@ public class PartidaThread extends Thread {
 					}
 
 					// Verifico si el jugador cumplio con el objetivo
-					if (partida.verificarObjetivo(jugadorActual))
+					if (partida.verificarObjetivo(jugadorActual)) {
 						partida.setJugadorGanador(jugadorActual);// El jugador gano la partida
+						partida.setHayGanador(true);
+					}
 				} else {
 					// Activo el turno del jugador
 					jugadorActual.setPierdeTurno(false);
@@ -129,7 +131,7 @@ public class PartidaThread extends Thread {
 
 		}
 		// avisar(Operacion.PUNTAJES_FINALES, partida.getJugadorGanador());
-		avisar(new MsjPartidaPuntajesFinales(partida.getJugadorGanador(),partida.getJugadores()));
+		avisar(new MsjPartidaPuntajesFinales(partida.getJugadorGanador(), partida.getJugadores()));
 	}
 
 	public void avanzar(Jugador jugador) {
@@ -188,11 +190,6 @@ public class PartidaThread extends Thread {
 	public void avisar(Mensaje msjPartida, Jugador jugadorActual) {
 		listener.enviarMensaje(msjPartida, jugadorActual.getNombre());
 
-		try {
-			Thread.sleep(500);
-		} catch (InterruptedException e) {
-			e.printStackTrace();
-		}
 	}
 
 	private void esperarNofify() {

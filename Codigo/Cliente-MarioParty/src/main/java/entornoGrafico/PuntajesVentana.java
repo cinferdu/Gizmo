@@ -16,10 +16,15 @@ import java.awt.Font;
 
 public class PuntajesVentana extends JFrame {
 
+	private static final int MONEDA_INICIO_X = 650;
+	private static final int NOMBRE_INICIO_X = 200;
+	private static final int NOMBRE_SEPARACION = 60;
+	private static final int TITULO_Y = 180;
+	
 	private static final long serialVersionUID = 4095766066350057723L;
 	private JPanel contentPane;
-	private ImageIcon tabla_puntajes = new ImageIcon(PuntajesVentana.class.getResource("img//tabla_puntajes.png"));
-	private ImageIcon titulo_puntajes = new ImageIcon(PuntajesVentana.class.getResource("img//titulo_puntajes.png"));
+	private ImageIcon tabla_puntajes = new ImageIcon(PuntajesVentana.class.getResource("/img/tabla_puntajes.png"));
+	private ImageIcon titulo_puntajes = new ImageIcon(PuntajesVentana.class.getResource("/img/titulo_puntajes.png"));
 	private JLabel mLabel;
 	private JLabel mLabel_tabla;
 	private ArrayList<Jugador> jugadores;
@@ -61,15 +66,15 @@ public class PuntajesVentana extends JFrame {
 		g2d.setFont(new Font("Comic Sans MS", Font.BOLD | Font.ITALIC, 30));
 		g2d.drawString("PUNTAJES FINALES", 280, 80);
 		g2d.setColor(Color.black);
-		g2d.drawString("Nombre", 80, 180);
-		g2d.drawString("Monedas", 700, 180);
+		g2d.drawString("Nombre", NOMBRE_INICIO_X, TITULO_Y);
+		g2d.drawString("Monedas", MONEDA_INICIO_X, TITULO_Y);
 
 		for (int i = 0; i < jugadores.size(); i++) {
 			if (ganador.getNombre().equals(jugadores.get(i).getNombre())) {
-				g2d.drawString("*", 55, 240 + 40 * i);
+				g2d.drawString("*", 55, 240 + NOMBRE_SEPARACION * i);
 			}
-			g2d.drawString(jugadores.get(i).getNombre(), 80, 240 + 40 * i);
-			g2d.drawString(jugadores.get(i).getMonedas()+"", 700, 240 + 40 * i);
+			g2d.drawString(jugadores.get(i).getNombre(), NOMBRE_INICIO_X, 240 + NOMBRE_SEPARACION * i);
+			g2d.drawString(jugadores.get(i).getMonedas()+"", MONEDA_INICIO_X, 240 + NOMBRE_SEPARACION * i);
 		}
 
 	}
