@@ -28,6 +28,7 @@ public class JSala extends JFrame {
 	private DefaultListModel<String> listModel;
 	private JLabel labelDuenio;
 	private Cliente cliente;
+	private JButton btnIniciarPartida;
 
 	/**
 	 * Launch the application.
@@ -82,8 +83,8 @@ public class JSala extends JFrame {
 		JLabel lblJugadoresOnline = new JLabel("Jugadores Online");
 		lblJugadoresOnline.setBounds(148, 47, 126, 14);
 		contentPane.add(lblJugadoresOnline);
-
-		JButton btnIniciarPartida = new JButton("Iniciar Partida");
+		/*
+		btnIniciarPartida = new JButton("Iniciar Partida");
 		btnIniciarPartida.setBounds(10, 220, 120, 30);
 		contentPane.add(btnIniciarPartida);
 
@@ -101,12 +102,34 @@ public class JSala extends JFrame {
 				}
 			}
 		});
+		*/
 	}
 
 	public void inicializarSala(Sala sala) {
+		setTitle("Sala: " + sala.getNombreSala());
 		this.labelDuenio.setText(sala.getNombreDuenio());
 		for (String nombre : sala.getNombreJugadores()) {
 			this.listModel.addElement(nombre);
+		}
+		if (sala.getNombreDuenio().equals(cliente.getNombreCliente())) {
+			btnIniciarPartida = new JButton("Iniciar Partida");
+			btnIniciarPartida.setBounds(10, 220, 120, 30);
+			contentPane.add(btnIniciarPartida);
+
+			btnIniciarPartida.addActionListener(new ActionListener() {
+
+				@Override
+				public void actionPerformed(ActionEvent e) {
+					if (listModel.getSize() >= 2) {
+
+						cliente.enviarMensaje(new MsjIniciarPartida(obtenerNombreDeJugadores()));
+
+					} else {
+						JOptionPane.showMessageDialog(contentPane,
+								"Para iniciar la partida deben ser al menos 2 jugadores en la sala");
+					}
+				}
+			});
 		}
 	}
 

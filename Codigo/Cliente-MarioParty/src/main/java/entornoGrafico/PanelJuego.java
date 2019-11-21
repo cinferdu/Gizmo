@@ -15,11 +15,12 @@ import java.util.Enumeration;
 
 import javax.swing.AbstractButton;
 import javax.swing.ButtonGroup;
+import javax.swing.Icon;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
-import javax.swing.JPanel;
+import javax.swing.JLayeredPane;
 import javax.swing.JRadioButton;
 import javax.swing.JScrollPane;
 import javax.swing.JSeparator;
@@ -39,7 +40,7 @@ import mensaje.MsjPartidaSelecObjAccion;
 import objeto.Objeto;
 import util.UtilesLog;
 
-public class PanelJuego extends JPanel {
+public class PanelJuego extends JLayeredPane {
 	private static final int INICIO_PUNTAJES = 730;
 	private static final int SEPARACION_PUNTAJES = 50;
 	private static final int TAMANIO_CASILLA = 30;
@@ -56,19 +57,21 @@ public class PanelJuego extends JPanel {
 	private JScrollPane scrollPane;
 	private JLabel modificadorDelCursor;
 	private boolean botonPresionado = false;
-
+	JLabel fondoL;
 	// para mostrarOpciones(...)
 	private Casilla caminoElegido = null;
 	private Jugador jugadorSeleccionado = null;
 
 	private Partida partida;
-	private VentanaJuego ventanaJuego;
+	//private VentanaJuego ventanaJuego;
 	private Cliente cliente;
 	private boolean mostrarBoton = true;
-
-	public PanelJuego(Cliente client, VentanaJuego ventanaJuego) {
+	
+	private Cartelito cartel;
+	
+	public PanelJuego(Cliente client) {
 		this.cliente = client;
-		this.ventanaJuego = ventanaJuego;
+		//this.ventanaJuego = ventanaJuego;
 		this.partida = cliente.getPartidaActual();
 
 		setLayout(null);
@@ -92,8 +95,10 @@ public class PanelJuego extends JPanel {
 		partida = cliente.getPartidaActual();
 		LOGGER.info("llego a las imagenes!!!");
 		try {
-			fondo = ImgExtra.FONDO;
 			dado_boton = ImgExtra.BOTON_DADO;
+			fondoL = new JLabel(ImgExtra.FONDO);
+			fondoL.setBounds(0, 0, 733, 550);
+			add(fondoL,0, 0);
 		} catch (Exception e) {
 			UtilesLog.loggerStackTrace(e, this.getClass());
 		}
@@ -101,28 +106,29 @@ public class PanelJuego extends JPanel {
 		modificadorDelCursor.setBounds(280, 30, 100, 100);
 		modificadorDelCursor.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
 		modificadorDelCursor.setVisible(false);
-		add(modificadorDelCursor);
-
+		add(modificadorDelCursor, 5, 0);
+		
+		cartel = new Cartelito();
+		cartel.setVisible(false);
+		cartel.setBounds(25, 25, 200, 62);
+		add(cartel, 3, 0);
+		
 		repaint();
 	}
 
 	@Override
 	public void paint(Graphics g) {
 		super.paint(g);
-		g.drawImage(fondo, 0, 0, null);
+		//g.drawImage(fondo, 0, 0, null);
 
 		if (dado != null) {
 			g.drawImage(dado, 302, 50, null);
 			modificadorDelCursor.setVisible(false);
 		}
 		if (mostrarBoton) {
-			g.drawImage(ImgExtra.CUADR_TEXTO, 25, 25, null);
-			g.drawString("Haga clic sobre los dados", 50, 50);
-			g.drawString("para iniciar su turno", 50, 65);
 			g.drawImage(dado_boton, 280, 30, null);
-			// modificadorDelCursor.setVisible(true);
 		}
-
+		
 		// Dibujo las casillas
 		for (Casilla casilla : partida.getTablero().getCasilleros()) {
 			g.setColor(casilla.getTipo().getColor());
@@ -137,7 +143,7 @@ public class PanelJuego extends JPanel {
 		}
 
 		imprimirPuntajes(g);
-
+		//revalidate();
 	}
 
 	public void nuevaRonda() {
@@ -146,12 +152,10 @@ public class PanelJuego extends JPanel {
 
 	public void lanzamiento_dado(String nombre, int dadoValor) {
 		mostrarBoton = false;
+		
 		dado = Dado.getImgCara(dadoValor);
 		this.textArea.append(nombre + " avanza " + dadoValor + " casillas" + "\n");
-		Graphics2D g = (Graphics2D) this.getGraphics();
-		g.drawImage(dado, 302, 50, null);
 		repaint();
-		revalidate();
 	}
 
 	public void casilla_activada(Jugador jugadorActual) {
@@ -195,24 +199,6 @@ public class PanelJuego extends JPanel {
 		
 	}
 
-//	public void actualizar(Operacion operacion, Jugador jugadorActual) {
-//
-//		switch (operacion) {
-//
-//		case PERDIO_TURNO:
-//			
-//			break;
-//
-//		case PUNTAJES_FINALES:
-
-//			break;
-//
-//		default:
-//			break;
-//		}
-//		repaint();
-//	}
-
 	public void nuevaRonda(int rondaActual) {
 		partida.setRondaActual(rondaActual);
 		this.textArea.append("*** INICIANDO RONDA " + partida.getRondaActual() + " ***\n");
@@ -225,6 +211,8 @@ public class PanelJuego extends JPanel {
 	}
 
 	public void esperarLanzamientoDelDado() {
+		cartel.mostrarIniciarTurno();
+		cartel.setVisible(true);
 		modificadorDelCursor.setVisible(true);
 		dado = null;
 		addMouseListener(new MouseAdapter() {
@@ -243,7 +231,7 @@ public class PanelJuego extends JPanel {
 		}
 		mostrarBoton = false;
 		botonPresionado = false;
-		modificadorDelCursor.setVisible(false);
+		cartel.setVisible(false);
 		cliente.enviarMensaje(new MsjPartidaBotonAccion(null));
 		repaint();
 	}

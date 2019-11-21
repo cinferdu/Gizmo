@@ -241,7 +241,7 @@ public class ListenerThread extends Thread {
 		}
 	}
 	
-	public void notificarCasillaElegina(Casilla casilla) {
+	public void notificarCasillaElegida(Casilla casilla) {
 		synchronized (Servidor.partidas) {
 			PartidaThread thread = Servidor.partidas.get(this.getId_partidaActiva());
 			synchronized (thread) {
@@ -251,7 +251,7 @@ public class ListenerThread extends Thread {
 		}
 	}
 	
-	public void notificarCasillaElegina(int indexObjeto, Jugador jugObjetivo) {
+	public void notificarObjetoElegido(int indexObjeto, Jugador jugObjetivo) {
 		synchronized (Servidor.partidas) {
 			PartidaThread thread = Servidor.partidas.get(this.getId_partidaActiva());
 			synchronized (thread) {

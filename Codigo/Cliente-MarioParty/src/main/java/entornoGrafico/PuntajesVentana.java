@@ -29,7 +29,7 @@ public class PuntajesVentana extends JFrame {
 	private JLabel mLabel_tabla;
 	private ArrayList<Jugador> jugadores;
 	private Jugador ganador;
-
+	
 	public PuntajesVentana(ArrayList<Jugador> jugadores, Jugador ganador) {
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(100, 100, 920, 690);
@@ -53,7 +53,7 @@ public class PuntajesVentana extends JFrame {
 
 		this.jugadores = jugadores;
 		this.ganador = ganador;
-
+		
 		repaint();
 		setVisible(true);
 	}
@@ -71,7 +71,9 @@ public class PuntajesVentana extends JFrame {
 
 		for (int i = 0; i < jugadores.size(); i++) {
 			if (ganador.getNombre().equals(jugadores.get(i).getNombre())) {
-				g2d.drawString("*", 55, 240 + NOMBRE_SEPARACION * i);
+				g2d.setColor(Color.white);
+				g2d.drawString("WINNER", 45, 240 + NOMBRE_SEPARACION * i);
+				g2d.setColor(Color.BLACK);
 			}
 			g2d.drawString(jugadores.get(i).getNombre(), NOMBRE_INICIO_X, 240 + NOMBRE_SEPARACION * i);
 			g2d.drawString(jugadores.get(i).getMonedas()+"", MONEDA_INICIO_X, 240 + NOMBRE_SEPARACION * i);

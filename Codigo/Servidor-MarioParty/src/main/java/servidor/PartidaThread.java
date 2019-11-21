@@ -87,12 +87,12 @@ public class PartidaThread extends Thread {
 						avisar(new MsjPartidaSelecObjAccion(jugadorActual), jugadorActual);
 						esperarNofify();
 						String nombreobj = null;
-						if (this.objetoSelecionado != -1)
+						if (this.objetoSelecionado != -1) {
 							nombreobj = jugadorActual.usarObjeto(objetoSelecionado, jugadorSeleccionado).getNombre();
 
-						listener.enviarMensajeBroadcast(new MsjPartidaObjetoUsado(
-								jugadorActual.getNombre() + " utilizo " + nombreobj + "\n", jugadorActual));
-
+							listener.enviarMensajeBroadcast(new MsjPartidaObjetoUsado(
+									jugadorActual.getNombre() + " utilizo " + nombreobj + "\n", jugadorActual));
+						}
 					} else {
 						avisar(new MsjPartidaSinAccion(jugadorActual));
 					}
@@ -217,11 +217,11 @@ public class PartidaThread extends Thread {
 	public ArrayList<Jugador> getJugadores() {
 		return partida.getJugadores();
 	}
-	
+
 	public ArrayList<String> getNombreJugadores() {
 		return this.nombresJugadores;
 	}
-	
+
 	public void setNombreJugadores(ArrayList<String> jugadores) {
 		this.nombresJugadores = jugadores;
 	}

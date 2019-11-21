@@ -29,7 +29,7 @@ public class MsjPartidaElegirCaminoAccion extends Mensaje {
 
 	@Override
 	public void ejecutar() {
-		listenerServer.notificarCasillaElegina(casillaElegida);
+		listenerServer.notificarCasillaElegida(casillaElegida);
 	}
 
 	public Casilla getCasillaElegida() {
