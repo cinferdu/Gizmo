@@ -137,6 +137,10 @@ public class JSala extends JFrame {
 		this.listModel.addElement(userNuevo);
 	}
 
+	public void eliminarDeSala(String user) {
+		this.listModel.removeElement(user);
+	}
+	
 	public ArrayList<String> obtenerNombreDeJugadores() {
 		ArrayList<String> listaNombres = new ArrayList<String>();
 

@@ -20,6 +20,8 @@ import casilla.Casilla;
 import game.Jugador;
 import game.Partida;
 import mensaje.Mensaje;
+import mensaje.MsjAvisarClienteAbandonoSala;
+import mensaje.MsjAvisarNuevaSala;
 import mensaje.MsjPartidaPuntajesFinales;
 import util.UtilesLog;
 
@@ -72,20 +74,33 @@ public class ListenerThread extends Thread {
 			
 		} catch (IOException e ) {
 			clientesConectados.remove(nombreCliente);
-			PartidaThread partidaThread = Servidor.partidas.get(id_partidaActiva);
-			Partida partida = partidaThread.getPartida();
-			ArrayList<String> jugadores = partidaThread.getNombreJugadores();
-			jugadores.remove(nombreCliente);
-			partidaThread.setNombreJugadores(jugadores);
-			ArrayList<Jugador> jugadoresX = partida.getJugadores();
-			jugadoresX.remove(new Jugador(nombreCliente));
-			partida.setJugadores(jugadoresX);
-			if(jugadores.size() == 1) {
-				partida.setJugadorGanador(partidaThread.getJugadores().get(0));
-				partida.setHayGanador(true);
+			
+			if (id_salaActiva == 0) {
+				lobby.removeCliente(nombreCliente);
 			}
 			
-			partidaThread.avisar(new MsjPartidaPuntajesFinales(partida.getJugadorGanador(),partida.getJugadores()));
+			if (id_salaActiva > 0) {
+				salas.get(id_salaActiva).removeCliente(nombreCliente);
+				enviarMensajeBroadcast(new MsjAvisarClienteAbandonoSala(nombreCliente), salas.get(id_salaActiva).getNombreJugadores());
+			}
+			
+			PartidaThread partidaThread = Servidor.partidas.get(id_partidaActiva);
+			
+			if (partidaThread != null) {
+				Partida partida = partidaThread.getPartida();
+				ArrayList<String> jugadores = partidaThread.getNombreJugadores();
+				jugadores.remove(nombreCliente);
+				partidaThread.setNombreJugadores(jugadores);
+				ArrayList<Jugador> jugadoresX = partida.getJugadores();
+				jugadoresX.remove(new Jugador(nombreCliente));
+				partida.setJugadores(jugadoresX);
+				if(jugadores.size() == 1) {
+					partida.setJugadorGanador(partidaThread.getJugadores().get(0));
+					partida.setHayGanador(true);
+				}
+				
+				partidaThread.avisar(new MsjPartidaPuntajesFinales(partida.getJugadorGanador(),partida.getJugadores()));
+			}
 			
 			LOGGER.error("Error de conexion con el cliente " + nombreCliente);
 			UtilesLog.loggerStackTrace(e, this.getClass());
