@@ -14,7 +14,7 @@ public class CajaMisteriosa extends Objeto {
 		if (cantidad < 0) {
 			jugador.decrementarMonedas(cantidad);
 		} else {
-			jugador.aumentarMonedas(cantidad);
+			jugador.aumentarMonedas(cantidad * -1);
 		}
 	}
 }
