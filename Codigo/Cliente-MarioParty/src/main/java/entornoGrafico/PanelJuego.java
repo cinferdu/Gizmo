@@ -4,7 +4,6 @@ import java.awt.Color;
 import java.awt.Cursor;
 import java.awt.Font;
 import java.awt.Graphics;
-import java.awt.Graphics2D;
 import java.awt.Image;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -15,7 +14,6 @@ import java.util.Enumeration;
 
 import javax.swing.AbstractButton;
 import javax.swing.ButtonGroup;
-import javax.swing.Icon;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JFrame;
@@ -38,7 +36,6 @@ import mensaje.MsjPartidaBotonAccion;
 import mensaje.MsjPartidaElegirCaminoAccion;
 import mensaje.MsjPartidaSelecObjAccion;
 import objeto.Objeto;
-import util.UtilesLog;
 
 public class PanelJuego extends JLayeredPane {
 	private static final int INICIO_PUNTAJES = 730;
@@ -47,8 +44,7 @@ public class PanelJuego extends JLayeredPane {
 	private static final int TIEMPO_ELEGIR_OPCION = 10; // en segundos
 
 	private final static Logger LOGGER = Logger.getLogger(PanelJuego.class);
-	
-	private Image fondo;
+
 	private Image dado = null;
 	private Image dado_boton;
 
@@ -63,15 +59,15 @@ public class PanelJuego extends JLayeredPane {
 	private Jugador jugadorSeleccionado = null;
 
 	private Partida partida;
-	//private VentanaJuego ventanaJuego;
+	// private VentanaJuego ventanaJuego;
 	private Cliente cliente;
 	private boolean mostrarBoton = true;
-	
+
 	private Cartelito cartel;
-	
+
 	public PanelJuego(Cliente client) {
 		this.cliente = client;
-		//this.ventanaJuego = ventanaJuego;
+		// this.ventanaJuego = ventanaJuego;
 		this.partida = cliente.getPartidaActual();
 
 		setLayout(null);
@@ -93,33 +89,31 @@ public class PanelJuego extends JLayeredPane {
 		add(separator);
 
 		partida = cliente.getPartidaActual();
+		
 		LOGGER.info("llego a las imagenes!!!");
-		try {
-			dado_boton = ImgExtra.BOTON_DADO;
-			fondoL = new JLabel(ImgExtra.FONDO);
-			fondoL.setBounds(0, 0, 733, 550);
-			add(fondoL,0, 0);
-		} catch (Exception e) {
-			UtilesLog.loggerStackTrace(e, this.getClass());
-		}
+		dado_boton = ImgExtra.BOTON_DADO;
+		fondoL = new JLabel(ImgExtra.FONDO);
+		fondoL.setBounds(0, 0, 733, 550);
+		add(fondoL, 0, 0);
+		
 		modificadorDelCursor = new JLabel();
 		modificadorDelCursor.setBounds(280, 30, 100, 100);
 		modificadorDelCursor.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
 		modificadorDelCursor.setVisible(false);
 		add(modificadorDelCursor, 5, 0);
-		
+
 		cartel = new Cartelito();
 		cartel.setVisible(false);
 		cartel.setBounds(25, 25, 200, 62);
 		add(cartel, 3, 0);
-		
+
 		repaint();
 	}
 
 	@Override
 	public void paint(Graphics g) {
 		super.paint(g);
-		//g.drawImage(fondo, 0, 0, null);
+		// g.drawImage(fondo, 0, 0, null);
 
 		if (dado != null) {
 			g.drawImage(dado, 302, 50, null);
@@ -128,7 +122,7 @@ public class PanelJuego extends JLayeredPane {
 		if (mostrarBoton) {
 			g.drawImage(dado_boton, 280, 30, null);
 		}
-		
+
 		// Dibujo las casillas
 		for (Casilla casilla : partida.getTablero().getCasilleros()) {
 			g.setColor(casilla.getTipo().getColor());
@@ -137,13 +131,15 @@ public class PanelJuego extends JLayeredPane {
 
 		// Dibujo los jugadores
 		for (Jugador jugador : partida.getJugadores()) {
-			Image image = new ImageIcon(ImgExtra.class.getResource("/Personajes/" + jugador.getPersonaje().getName() + "-body.png")).getImage();
+			Image image = new ImageIcon(
+					ImgExtra.class.getResource("/Personajes/" + jugador.getPersonaje().getName() + "-body.png"))
+							.getImage();
 			g.drawImage(image, jugador.getPosicionActual().getPosX(), jugador.getPosicionActual().getPosY() - 12, 30,
 					40, null);
 		}
 
 		imprimirPuntajes(g);
-		//revalidate();
+		// revalidate();
 	}
 
 	public void nuevaRonda() {
@@ -152,7 +148,7 @@ public class PanelJuego extends JLayeredPane {
 
 	public void lanzamiento_dado(String nombre, int dadoValor) {
 		mostrarBoton = false;
-		
+
 		dado = Dado.getImgCara(dadoValor);
 		this.textArea.append(nombre + " avanza " + dadoValor + " casillas" + "\n");
 		repaint();
@@ -189,14 +185,13 @@ public class PanelJuego extends JLayeredPane {
 
 	public void mostrarVentanaPuntajesFinales(Jugador ganador) {
 		JFrame ventanaActual = cliente.getVentanaActual();
-		PuntajesVentana ventanaPuntos = new PuntajesVentana((ArrayList<Jugador>) partida.getJugadores(),
-				ganador);
+		PuntajesVentana ventanaPuntos = new PuntajesVentana((ArrayList<Jugador>) partida.getJugadores(), ganador);
 		ventanaPuntos.setVisible(true);
 		ventanaPuntos.setFocusable(true);
-		
+
 		ventanaActual.dispose();
 		cliente.setVentanaActual(ventanaPuntos);
-		
+
 	}
 
 	public void nuevaRonda(int rondaActual) {
@@ -258,7 +253,7 @@ public class PanelJuego extends JLayeredPane {
 
 		// Lo clono para que el remove no borre ese jugador en la partida
 		ArrayList<Jugador> posiblesObjetivos = new ArrayList<Jugador>();
-		//partida.getJugadores()
+		// partida.getJugadores()
 		for (Jugador jugador : partida.getJugadores()) {
 			if (!jugadorActual.getNombre().equals(jugador.getNombre())) {
 				posiblesObjetivos.add(jugador);
@@ -471,7 +466,7 @@ public class PanelJuego extends JLayeredPane {
 			g.drawString(jugador.getMonedas() + "", INICIO_PUNTAJES + 135, 70 + jugador_nro * SEPARACION_PUNTAJES);
 
 			// Si pierde o no su proximo turno
-			g.setColor(Color.GREEN);
+			g.setColor(Color.WHITE);
 			g.setFont(new Font(Font.SANS_SERIF, Font.BOLD, 10));
 			if (jugador.isPierdeTurno()) {
 				g.drawString("SI", INICIO_PUNTAJES + 130, 50 + jugador_nro * SEPARACION_PUNTAJES);
@@ -484,8 +479,8 @@ public class PanelJuego extends JLayeredPane {
 		}
 	}
 
-	public void agregarTextoAlTextArea(String cadena) {
-		this.textArea.append(cadena);
+	public void informarObjetoUtilizado(String jugador, String nombreobj) {
+		this.textArea.append(jugador + " utilizo " + nombreobj + "\n");
 	}
 
 }

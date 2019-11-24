@@ -88,10 +88,13 @@ public class PartidaThread extends Thread {
 						esperarNofify();
 						String nombreobj = null;
 						if (this.objetoSelecionado != -1) {
+							if (jugadorSeleccionado != null) { // busco al jugador si el objeto es con objetivo
+								jugadorSeleccionado = partida.getJugadores().get(partida.getJugadores().indexOf(jugadorSeleccionado)); // obtengo la refencia a ese jugador
+							}
 							nombreobj = jugadorActual.usarObjeto(objetoSelecionado, jugadorSeleccionado).getNombre();
 
-							listener.enviarMensajeBroadcast(new MsjPartidaObjetoUsado(
-									jugadorActual.getNombre() + " utilizo " + nombreobj + "\n", jugadorActual));
+							listener.enviarMensajeBroadcast(new MsjPartidaObjetoUsado(jugadorActual.getNombre(),
+									nombreobj, partida.getJugadores()));
 						}
 					} else {
 						avisar(new MsjPartidaSinAccion(jugadorActual));

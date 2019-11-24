@@ -1,48 +1,59 @@
 package mensaje;
 
+import java.util.ArrayList;
+
 import entornoGrafico.VentanaJuego;
 import game.Jugador;
-import game.Partida;
 
 public class MsjPartidaObjetoUsado extends Mensaje {
 
 	private static final long serialVersionUID = 1L;
-	private String texto;
-	private Jugador jugadorAct;
-
-	public MsjPartidaObjetoUsado(String texto, Jugador jugadorAct) {
+	private String objeto;
+	private String jugadorAct;
+	private ArrayList<Jugador> jugadores;
+	
+	public MsjPartidaObjetoUsado(String jugadorAct, String objetoUtilizado, ArrayList<Jugador> jugadores) {
 		clase = getClass().getSimpleName();
-		this.setTexto(texto);
-		this.setJugadorAct(jugadorAct);
+		this.jugadorAct = jugadorAct;
+		this.objeto = objetoUtilizado;
+		this.jugadores = jugadores;
 	}
 	
 	@Override
 	public void ejecutar() {
-		((VentanaJuego) listenerClient.getCliente().getVentanaActual()).getPanel().agregarTextoAlTextArea(texto);
+		((VentanaJuego) listenerClient.getCliente().getVentanaActual()).getPanel().informarObjetoUtilizado(jugadorAct, objeto);
 		
-		Partida game = listenerClient.getCliente().getPartidaActual();
-		for (Jugador jugador : game.getJugadores()) {
-			if (jugador.getNombre().equals(jugadorAct.getNombre())) {
-				jugador.setMonedas(jugadorAct.getMonedas());
-			}
+		ArrayList<Jugador> game = listenerClient.getCliente().getPartidaActual().getJugadores();
+
+		for (int i = 0; i < game.size(); i++) {
+			game.get(i).setMonedas(jugadores.get(i).getMonedas());
+			game.get(i).setPierdeTurno(jugadores.get(i).isPierdeTurno());
 		}
 		((VentanaJuego) listenerClient.getCliente().getVentanaActual()).getPanel().movimiento();
 	}
 
-	public String getTexto() {
-		return texto;
+	public String getObjeto() {
+		return objeto;
 	}
 
-	public void setTexto(String texto) {
-		this.texto = texto;
-	}
-
-	public Jugador getJugadorAct() {
+	public String getJugadorAct() {
 		return jugadorAct;
 	}
 
-	public void setJugadorAct(Jugador jugadorAct) {
+	public ArrayList<Jugador> getJugadores() {
+		return jugadores;
+	}
+
+	public void setObjeto(String objeto) {
+		this.objeto = objeto;
+	}
+
+	public void setJugadorAct(String jugadorAct) {
 		this.jugadorAct = jugadorAct;
+	}
+
+	public void setJugadores(ArrayList<Jugador> jugadores) {
+		this.jugadores = jugadores;
 	}
 
 }

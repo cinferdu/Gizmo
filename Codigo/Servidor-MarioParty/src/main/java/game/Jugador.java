@@ -27,7 +27,6 @@ public class Jugador {
 		miniJuegoPuntos = 0;
 
 		mochila_objetos = new ArrayList<Objeto>(3);
-		// this.setColor(color);
 	}
 
 	public void setPersonaje(Personaje personaje) {

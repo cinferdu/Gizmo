@@ -9,6 +9,7 @@ import game.Partida;
 import game.Personaje;
 import game.Sprite;
 import objeto.CajaMisteriosa;
+import objeto.GuanteBlanco;
 import servidor.PartidaThread;
 import servidor.Servidor;
 
@@ -31,6 +32,7 @@ public class MsjIniciarPartida extends Mensaje {
 		for (String name : nombresJugadores) {
 			Jugador jug = new Jugador(name);
 			jug.setPersonaje(new Personaje(Sprite.SpriteById(cont % Sprite.values().length).getNombre()));
+			jug.addMochila_objetos(new GuanteBlanco());
 			jug.addMochila_objetos(new CajaMisteriosa());
 			participantes.add(jug);
 			cont ++;
