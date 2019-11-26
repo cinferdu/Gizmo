@@ -84,25 +84,20 @@ public class JSala extends JFrame {
 		lblJugadoresOnline.setBounds(148, 47, 126, 14);
 		contentPane.add(lblJugadoresOnline);
 		/*
-		btnIniciarPartida = new JButton("Iniciar Partida");
-		btnIniciarPartida.setBounds(10, 220, 120, 30);
-		contentPane.add(btnIniciarPartida);
-
-		btnIniciarPartida.addActionListener(new ActionListener() {
-
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				if (listModel.getSize() >= 2) {
-
-					cliente.enviarMensaje(new MsjIniciarPartida(obtenerNombreDeJugadores()));
-
-				} else {
-					JOptionPane.showMessageDialog(contentPane,
-							"Para iniciar la partida deben ser al menos 2 jugadores en la sala");
-				}
-			}
-		});
-		*/
+		 * btnIniciarPartida = new JButton("Iniciar Partida");
+		 * btnIniciarPartida.setBounds(10, 220, 120, 30);
+		 * contentPane.add(btnIniciarPartida);
+		 * 
+		 * btnIniciarPartida.addActionListener(new ActionListener() {
+		 * 
+		 * @Override public void actionPerformed(ActionEvent e) { if
+		 * (listModel.getSize() >= 2) {
+		 * 
+		 * cliente.enviarMensaje(new MsjIniciarPartida(obtenerNombreDeJugadores()));
+		 * 
+		 * } else { JOptionPane.showMessageDialog(contentPane,
+		 * "Para iniciar la partida deben ser al menos 2 jugadores en la sala"); } } });
+		 */
 	}
 
 	public void inicializarSala(Sala sala) {
@@ -112,24 +107,7 @@ public class JSala extends JFrame {
 			this.listModel.addElement(nombre);
 		}
 		if (sala.getNombreDuenio().equals(cliente.getNombreCliente())) {
-			btnIniciarPartida = new JButton("Iniciar Partida");
-			btnIniciarPartida.setBounds(10, 220, 120, 30);
-			contentPane.add(btnIniciarPartida);
-
-			btnIniciarPartida.addActionListener(new ActionListener() {
-
-				@Override
-				public void actionPerformed(ActionEvent e) {
-					if (listModel.getSize() >= 2) {
-
-						cliente.enviarMensaje(new MsjIniciarPartida(obtenerNombreDeJugadores()));
-
-					} else {
-						JOptionPane.showMessageDialog(contentPane,
-								"Para iniciar la partida deben ser al menos 2 jugadores en la sala");
-					}
-				}
-			});
+			agregarBotonIniciarPartida();
 		}
 	}
 
@@ -151,4 +129,25 @@ public class JSala extends JFrame {
 		return listaNombres;
 	}
 
+	public void agregarBotonIniciarPartida() {
+		btnIniciarPartida = new JButton("Iniciar Partida");
+		btnIniciarPartida.setBounds(10, 220, 120, 30);
+		contentPane.add(btnIniciarPartida);
+
+		btnIniciarPartida.addActionListener(new ActionListener() {
+
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				if (listModel.getSize() >= 2) {
+
+					cliente.enviarMensaje(new MsjIniciarPartida(obtenerNombreDeJugadores()));
+
+				} else {
+					JOptionPane.showMessageDialog(contentPane,
+							"Para iniciar la partida deben ser al menos 2 jugadores en la sala");
+				}
+			}
+		});
+		repaint();
+	}
 }

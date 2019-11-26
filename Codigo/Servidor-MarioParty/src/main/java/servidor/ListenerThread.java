@@ -19,7 +19,9 @@ import game.Jugador;
 import game.Partida;
 import mensaje.Mensaje;
 import mensaje.MsjAvisarClienteAbandonoSala;
+import mensaje.MsjAvisarNuevaSala;
 import mensaje.MsjPartidaPuntajesFinales;
+import mensaje.MsjSalaNuevoLider;
 import util.UtilesLog;
 
 public class ListenerThread extends Thread {
@@ -31,12 +33,13 @@ public class ListenerThread extends Thread {
 	private DataOutputStream salida;
 	private Sala lobby;
 	private TreeMap<Integer, Sala> salas;
-	
+
 	private final static Logger LOGGER = Logger.getLogger(ListenerThread.class);
-	
+
 	private Gson gson = new Gson();
 
-	public ListenerThread(Socket clienteRead, Socket clienteWrite, HashMap<String, ListenerThread> clientesConectados, Sala lobby, TreeMap<Integer, Sala> salas, TreeMap<Integer, PartidaThread> partidas) {
+	public ListenerThread(Socket clienteRead, Socket clienteWrite, HashMap<String, ListenerThread> clientesConectados,
+			Sala lobby, TreeMap<Integer, Sala> salas, TreeMap<Integer, PartidaThread> partidas) {
 
 		try {
 			salida = new DataOutputStream(new BufferedOutputStream(clienteWrite.getOutputStream()));
@@ -52,13 +55,13 @@ public class ListenerThread extends Thread {
 		id_salaActiva = -1;
 		setId_partidaActiva(-1);
 	}
-	
+
 	@Override
 	public void run() {
 		Mensaje msj = null;
 		try {
 			String cadenaLeida = entrada.readUTF();
-			while (true) {//preguntar si es Desconectar
+			while (true) {// preguntar si es Desconectar
 				LOGGER.info("nombre del cliente : " + this.nombreCliente);
 				msj = Mensaje.getMensaje(cadenaLeida);
 				LOGGER.info("mjs leido!");
@@ -67,21 +70,39 @@ public class ListenerThread extends Thread {
 				LOGGER.info("mjs ejecutado!");
 				cadenaLeida = entrada.readUTF();
 			}
-			
-		} catch (IOException e ) {
+
+		} catch (IOException e) {
 			clientesConectados.remove(nombreCliente);
-			
+
 			if (id_salaActiva == 0) {
 				lobby.removeCliente(nombreCliente);
 			}
-			
+
 			if (id_salaActiva > 0) {
-				salas.get(id_salaActiva).removeCliente(nombreCliente);
-				enviarMensajeBroadcast(new MsjAvisarClienteAbandonoSala(nombreCliente), salas.get(id_salaActiva).getNombreJugadores());
+				Sala salaActual = salas.get(id_salaActiva);
+				synchronized (salaActual) {
+					salaActual.removeCliente(nombreCliente);
+					
+					if (nombreCliente.equals(salaActual.getNombreDuenio())) {
+						salaActual.setNombreDuenio(salaActual.getNombreJugadores().get(0));
+						enviarMensaje(new MsjSalaNuevoLider(), salaActual.getNombreJugadores().get(0));
+					} 
+					
+					if (salaActual.getNombreJugadores().size() >= 1) {
+						enviarMensajeBroadcast(new MsjAvisarClienteAbandonoSala(nombreCliente),
+								salaActual.getNombreJugadores());
+					} else {
+						// elimino la sala si era el unico en ella
+						synchronized (salas) {
+							salas.remove(id_salaActiva);
+						}
+						enviarMensajeBroadcast(new MsjAvisarNuevaSala(salas), lobby.getNombreJugadores());
+					}
+				}
 			}
-			
+
 			PartidaThread partidaThread = Servidor.partidas.get(id_partidaActiva);
-			
+
 			if (partidaThread != null) {
 				Partida partida = partidaThread.getPartida();
 				ArrayList<String> jugadores = partidaThread.getNombreJugadores();
@@ -90,18 +111,19 @@ public class ListenerThread extends Thread {
 				ArrayList<Jugador> jugadoresX = partida.getJugadores();
 				jugadoresX.remove(new Jugador(nombreCliente));
 				partida.setJugadores(jugadoresX);
-				if(jugadores.size() == 1) {
+				if (jugadores.size() == 1) {
 					partida.setJugadorGanador(partidaThread.getJugadores().get(0));
 					partida.setHayGanador(true);
 				}
-				
-				partidaThread.avisar(new MsjPartidaPuntajesFinales(partida.getJugadorGanador(),partida.getJugadores()));
+
+				partidaThread
+						.avisar(new MsjPartidaPuntajesFinales(partida.getJugadorGanador(), partida.getJugadores()));
 			}
-			
+
 			LOGGER.error("Error de conexion con el cliente " + nombreCliente);
 			UtilesLog.loggerStackTrace(e, this.getClass());
 		}
-	
+
 	}
 
 	public String getNombreCliente() {
@@ -185,7 +207,7 @@ public class ListenerThread extends Thread {
 			e.printStackTrace();
 		}
 	}
-	
+
 	public synchronized void enviarMensajeBroadcast(Object mensaje, ArrayList<String> nombres) {
 		for (String string : nombres) {
 			this.clientesConectados.get(string).enviarMensaje(mensaje);
@@ -197,21 +219,21 @@ public class ListenerThread extends Thread {
 			this.salas.put(nuevaSala.getId_sala(), nuevaSala);
 		}
 	}
-	
-	public void agregarClienteAlLobby(String nombre){
+
+	public void agregarClienteAlLobby(String nombre) {
 		synchronized (lobby) {
 			lobby.addCliente(nombre);
 		}
 	}
-	
-	public void sacarClienteAlLobby(String nombre){
+
+	public void sacarClienteAlLobby(String nombre) {
 		synchronized (lobby) {
 			lobby.removeCliente(nombre);
 		}
 	}
 
 	public PartidaThread crearHiloPartida(Partida game, ArrayList<String> nombresJugadores) {
-		PartidaThread hilo = new PartidaThread(game,nombresJugadores, this);
+		PartidaThread hilo = new PartidaThread(game, nombresJugadores, this);
 		hilo.start();
 		return hilo;
 	}
@@ -220,13 +242,13 @@ public class ListenerThread extends Thread {
 		for (String name : nombresJugadores) {
 			this.clientesConectados.get(name).asignarPartida(id);
 		}
-		
+
 	}
-	
+
 	public void asignarPartida(int id) {
 		this.setId_partidaActiva(id);
 	}
-	
+
 	public void notificarPartida() {
 		synchronized (Servidor.partidas) {
 			PartidaThread thread = Servidor.partidas.get(this.getId_partidaActiva());
@@ -235,7 +257,7 @@ public class ListenerThread extends Thread {
 			}
 		}
 	}
-	
+
 	public void notificarCasillaElegida(Casilla casilla) {
 		synchronized (Servidor.partidas) {
 			PartidaThread thread = Servidor.partidas.get(this.getId_partidaActiva());
@@ -245,7 +267,7 @@ public class ListenerThread extends Thread {
 			}
 		}
 	}
-	
+
 	public void notificarObjetoElegido(int indexObjeto, Jugador jugObjetivo) {
 		synchronized (Servidor.partidas) {
 			PartidaThread thread = Servidor.partidas.get(this.getId_partidaActiva());
@@ -258,7 +280,7 @@ public class ListenerThread extends Thread {
 	}
 
 	public synchronized void enviarMensaje(Mensaje msjPartida, String nombre) {
-		
+
 		try {
 			clientesConectados.get(nombre).getSalida().writeUTF(gson.toJson(msjPartida));
 			clientesConectados.get(nombre).getSalida().flush();
@@ -275,6 +297,6 @@ public class ListenerThread extends Thread {
 			nombres.add(jugador.getNombre());
 		}
 		enviarMensajeBroadcast(msj, nombres);
-		
+
 	}
 }
