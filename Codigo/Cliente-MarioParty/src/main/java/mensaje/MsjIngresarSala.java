@@ -32,8 +32,8 @@ public class MsjIngresarSala extends Mensaje {
 			this.listenerClient.getCliente().getVentanaActual().dispose();
 			ventanaActual.setVisible(false);
 			ventanaActual = new JSala(listenerClient.getCliente());
-			ventanaActual.setVisible(true);
 			((JSala) ventanaActual).inicializarSala(this.sala);
+			ventanaActual.setVisible(true);
 			listenerClient.getCliente().setVentanaActual(ventanaActual);
 			// }
 

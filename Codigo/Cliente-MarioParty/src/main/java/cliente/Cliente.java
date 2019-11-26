@@ -37,11 +37,11 @@ public class Cliente {
 
 	private final Gson gson = new Gson();
 
-	public Cliente(String ipServidor, int puerto) {
+	public Cliente() {
 
 		try {
-			readSocket = new Socket(ipServidor, puerto);
-			writeSocket = new Socket(ipServidor, puerto);
+			readSocket = new Socket(IPSERVIDOR, PUERTO);
+			writeSocket = new Socket(IPSERVIDOR, PUERTO);
 			salida = new DataOutputStream(writeSocket.getOutputStream());
 			salida.flush();
 			entrada = new DataInputStream(readSocket.getInputStream());
@@ -51,15 +51,10 @@ public class Cliente {
 			System.exit(1);
 		}
 
-		salaActual = null;
-		partidaActual = null;
-		jugador = null;
-
 		new Listener(this).start();
 
-		ventanaActual = new Login(this);
-		ventanaActual.setVisible(true);
-
+		//ventanaActual = new Login();
+		//ventanaActual.setVisible(true);
 	}
 
 	public void enviarMensaje(Mensaje mensaje) {
@@ -72,7 +67,7 @@ public class Cliente {
 	}
 
 	public static void main(String[] args) throws SecurityException, IOException {
-		new Cliente(IPSERVIDOR, PUERTO);
+		new Login();
 	}
 
 	public String recibirMsg() {
