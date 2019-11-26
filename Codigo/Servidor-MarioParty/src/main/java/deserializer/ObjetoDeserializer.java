@@ -28,7 +28,7 @@ public class ObjetoDeserializer implements JsonDeserializer<Objeto> {
 		case "Pistola Congelante":
 			return context.deserialize(json, PistolaCongelante.class);
 		default:
-			throw new IllegalArgumentException("Se espera un objeto de tipo Objeto");
+			throw new IllegalArgumentException("No se recibio un objeto Objeto");
 		}
 	}
 

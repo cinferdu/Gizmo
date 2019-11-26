@@ -8,19 +8,20 @@ import javax.swing.ImageIcon;
 
 // Imagenes Adicionales y funciones
 public class ImgExtra {
-	
+
 	public final static ImageIcon FONDO = new ImageIcon(ImgExtra.class.getResource("/img/background.png"));
 	public final static Image BOTON_DADO = new ImageIcon(ImgExtra.class.getResource("/img/boton_dado.png")).getImage();
-	public final static Image CUADR_TEXTO = modificarTamanio(new ImageIcon(ImgExtra.class.getResource("/img/tabla_puntajes.png")).getImage(),200, 60);
-	
+	public final static Image CUADR_TEXTO = modificarTamanio(
+			new ImageIcon(ImgExtra.class.getResource("/img/tabla_puntajes.png")).getImage(), 200, 60);
+
 	public static Image modificarTamanio(Image imagen, int ancho, int alto) {
 		return imagen.getScaledInstance(ancho, alto, Image.SCALE_SMOOTH);
 	}
-	
+
 	public static Image modificarTamanioRapido(Image imagen, int ancho, int alto) {
 		return imagen.getScaledInstance(ancho, alto, Image.SCALE_FAST);
 	}
-	 
+
 	public static Image recortarImagen(Image img, Rectangle rect) {
 		BufferedImage bimage = new BufferedImage(img.getWidth(null), img.getHeight(null), BufferedImage.TYPE_INT_ARGB);
 		return bimage.getSubimage(rect.x, rect.y, rect.width, rect.height);

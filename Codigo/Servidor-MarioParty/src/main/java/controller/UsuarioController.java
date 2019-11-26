@@ -44,10 +44,10 @@ public class UsuarioController {
 		}
 		return user;
 	}
-	
+
 	public static boolean loggin(Usuario user) {
 		Usuario usuario = get(user.getUser());
-		if(usuario == null)
+		if (usuario == null)
 			return false;
 		return usuario.getPass().equals(DigestUtils.md5Hex(user.getPass()));
 	}

@@ -25,7 +25,6 @@ public class Jugador {
 		miniJuegoPuntos = 0;
 
 		mochila_objetos = new ArrayList<Objeto>(3);
-		// this.setColor(color);
 	}
 
 	public void setPersonaje(Personaje personaje) {
@@ -40,11 +39,6 @@ public class Jugador {
 		// Activa el efecto del objeto
 		mochila_objetos.get(indice).activarEfecto(this);
 		mochila_objetos.remove(indice);
-	}
-
-	public void usarPoder() {
-		// Activa el efecto del poder
-		// this.getPoder().efecto(this);
 	}
 
 	public void aumentarMonedas(int cantidad) {

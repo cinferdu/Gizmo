@@ -11,18 +11,19 @@ public class MsjPartidaObjetoUsado extends Mensaje {
 	private String objeto;
 	private String jugadorAct;
 	private ArrayList<Jugador> jugadores;
-	
+
 	public MsjPartidaObjetoUsado(String jugadorAct, String objetoUtilizado, ArrayList<Jugador> jugadores) {
 		clase = getClass().getSimpleName();
 		this.jugadorAct = jugadorAct;
 		this.objeto = objetoUtilizado;
 		this.jugadores = jugadores;
 	}
-	
+
 	@Override
 	public void ejecutar() {
-		((VentanaJuego) listenerClient.getCliente().getVentanaActual()).getPanel().informarObjetoUtilizado(jugadorAct, objeto);
-		
+		((VentanaJuego) listenerClient.getCliente().getVentanaActual()).getPanel().informarObjetoUtilizado(jugadorAct,
+				objeto);
+
 		ArrayList<Jugador> game = listenerClient.getCliente().getPartidaActual().getJugadores();
 
 		for (int i = 0; i < game.size(); i++) {

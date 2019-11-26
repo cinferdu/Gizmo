@@ -74,8 +74,8 @@ public class Login extends JFrame {
 					JOptionPane.showMessageDialog(contentPane, "La contraseña no puede estar vacia.");
 					return;
 				}
-				
-				cliente.enviarMensaje(new MsjLogin(user,pass));
+
+				cliente.enviarMensaje(new MsjLogin(user, pass));
 			}
 		});
 		btnNewButton.setBounds(29, 163, 100, 23);

@@ -12,12 +12,12 @@ public class MsjIngresarSala extends Mensaje {
 
 	private Sala sala;
 	private int id_sala;
-	
+
 	public MsjIngresarSala(Sala sala) {
 		this.setSala(sala);
 		this.clase = this.getClass().getSimpleName();
 	}
-	
+
 	public MsjIngresarSala(int id_sala) {
 		this.id_sala = id_sala;
 		this.clase = this.getClass().getSimpleName();
@@ -25,9 +25,9 @@ public class MsjIngresarSala extends Mensaje {
 
 	@Override
 	public void ejecutar() {
-		
+
 		if (resultado) {
-			//CambiarVentana(Jframe ...){
+			// CambiarVentana(Jframe ...){
 			JFrame ventanaActual = this.listenerClient.getCliente().getVentanaActual();
 			this.listenerClient.getCliente().getVentanaActual().dispose();
 			ventanaActual.setVisible(false);
@@ -35,8 +35,8 @@ public class MsjIngresarSala extends Mensaje {
 			ventanaActual.setVisible(true);
 			((JSala) ventanaActual).inicializarSala(this.sala);
 			listenerClient.getCliente().setVentanaActual(ventanaActual);
-			//}
-			
+			// }
+
 		} else {
 			JOptionPane.showMessageDialog(null, "Sala llena");
 		}
@@ -57,5 +57,5 @@ public class MsjIngresarSala extends Mensaje {
 	public void setId_sala(int id_sala) {
 		this.id_sala = id_sala;
 	}
-	
+
 }

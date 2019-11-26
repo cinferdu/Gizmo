@@ -13,7 +13,7 @@ public class Tablero {
 	}
 	
 	public Tablero(String file) {
-		//Lectura.cargarTablero(file, this);
+		// Lectura.cargarTablero(file, this);
 		// Supongo que la primera casilla del arraylist es la inicial
 		casillaInicial = casilleros.get(0);
 	}

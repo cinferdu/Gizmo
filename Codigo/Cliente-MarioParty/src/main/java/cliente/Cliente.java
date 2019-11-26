@@ -20,9 +20,9 @@ public class Cliente {
 
 	private final static String IPSERVIDOR = "127.0.0.1";
 	private final static int PUERTO = 10200;
-	
+
 	private final static Logger LOGGER = Logger.getLogger(Cliente.class);
-	
+
 	private String nombreCliente;
 	Socket readSocket;
 	Socket writeSocket;
@@ -30,7 +30,7 @@ public class Cliente {
 	private JFrame ventanaActual;
 	private Sala salaActual;
 	private Partida partidaActual;
-	private Jugador jugador; // jugador en la partida???
+	private Jugador jugador;
 
 	DataInputStream entrada;
 	DataOutputStream salida;
@@ -56,7 +56,6 @@ public class Cliente {
 		jugador = null;
 
 		new Listener(this).start();
-		// System.out.println("escuchando");
 
 		ventanaActual = new Login(this);
 		ventanaActual.setVisible(true);
@@ -71,7 +70,7 @@ public class Cliente {
 			e.printStackTrace();
 		}
 	}
-	
+
 	public static void main(String[] args) throws SecurityException, IOException {
 		new Cliente(IPSERVIDOR, PUERTO);
 	}

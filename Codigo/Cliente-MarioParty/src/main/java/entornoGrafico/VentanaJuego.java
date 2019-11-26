@@ -16,9 +16,9 @@ public class VentanaJuego extends JFrame {
 		contentPane.setLayout(null);
 		setLocationRelativeTo(null);
 		setResizable(false);
-		setTitle("MARIO PARTY");
+		setTitle("MARIO PARTY" + " (" + client.getNombreCliente() + ")");
 	}
-	
+
 	public PanelJuego getPanel() {
 		return contentPane;
 	}

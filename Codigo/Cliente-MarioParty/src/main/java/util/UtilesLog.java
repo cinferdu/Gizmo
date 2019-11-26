@@ -33,7 +33,7 @@ public class UtilesLog {
 				log.warn(mensaje);
 		}
 	}
-	
+
 	public static void loggerStackTrace(Exception e, Class<?> className) {
 		Logger log = Logger.getLogger(className);
 		StringWriter stack = new StringWriter();

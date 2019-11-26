@@ -89,13 +89,13 @@ public class PanelJuego extends JLayeredPane {
 		add(separator);
 
 		partida = cliente.getPartidaActual();
-		
+
 		LOGGER.info("llego a las imagenes!!!");
 		dado_boton = ImgExtra.BOTON_DADO;
 		fondoL = new JLabel(ImgExtra.FONDO);
 		fondoL.setBounds(0, 0, 733, 550);
 		add(fondoL, 0, 0);
-		
+
 		modificadorDelCursor = new JLabel();
 		modificadorDelCursor.setBounds(280, 30, 100, 100);
 		modificadorDelCursor.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));

@@ -12,16 +12,16 @@ import game.Partida;
 public class MsjIniciarPartida extends Mensaje {
 
 	private final static Logger LOGGER = Logger.getLogger(MsjIniciarPartida.class);
-	
+
 	private static final long serialVersionUID = 1L;
 	private ArrayList<String> nombresJugadores;
 	private Partida game;
-	
+
 	public MsjIniciarPartida(ArrayList<String> nombresJugadores) {
 		this.nombresJugadores = nombresJugadores;
 		this.clase = this.getClass().getSimpleName();
 	}
-	
+
 	@Override
 	public void ejecutar() {
 		JFrame ventana = listenerClient.getCliente().getVentanaActual();

@@ -16,7 +16,7 @@ import deserializer.TipoDeCasillaJsonDeserializer;
 import objeto.Objeto;
 
 public abstract class Mensaje implements Serializable {
-	
+
 	private final static Logger LOGGER = Logger.getLogger(Mensaje.class);
 
 	private static final long serialVersionUID = -6544865381140109432L;
@@ -26,8 +26,7 @@ public abstract class Mensaje implements Serializable {
 
 	private final static Gson gson = new GsonBuilder()
 			.registerTypeAdapter(TipoDeCasilla.class, new TipoDeCasillaJsonDeserializer())
-			.registerTypeAdapter(Objeto.class, new ObjetoDeserializer())
-			.create();
+			.registerTypeAdapter(Objeto.class, new ObjetoDeserializer()).create();
 
 	public abstract void ejecutar();
 
@@ -51,18 +50,12 @@ public abstract class Mensaje implements Serializable {
 		this.resultado = resultado;
 	}
 
-	// se encargar de crear el mensaje correspondiente (con el getComando) y
-	// cargarlo con la infomacion (transformando cadenaLeida al paquete que
-	// necesite)
 	public static Mensaje getMensaje(String cadenaLeida) {
 		Mensaje msj = null;
 		JSONParser parser = new JSONParser();
 		LOGGER.info(cadenaLeida);
 		try {
 			JSONObject json = (JSONObject) parser.parse(cadenaLeida);
-			// Gson gson = new GsonBuilder().registerTypeAdapter(TipoDeCasilla.class, new
-			// TipoDeCasillaJsonDeserializer()).create();
-//			Gson gson = new Gson();
 			msj = (Mensaje) gson.fromJson(cadenaLeida, Class.forName("mensaje." + json.get("clase")));
 		} catch (ParseException e) {
 			e.printStackTrace();

@@ -7,7 +7,7 @@ public class MsjPartidaCasillaActivada extends Mensaje {
 
 	private static final long serialVersionUID = 1L;
 	private Jugador jugadorActual;
-	
+
 	public MsjPartidaCasillaActivada(Jugador jugadorActual) {
 		super();
 		this.clase = this.getClass().getSimpleName();
@@ -17,7 +17,7 @@ public class MsjPartidaCasillaActivada extends Mensaje {
 	@Override
 	public void ejecutar() {
 		((VentanaJuego) listenerClient.getCliente().getVentanaActual()).getPanel().casilla_activada(jugadorActual);
-		
+
 	}
 
 }

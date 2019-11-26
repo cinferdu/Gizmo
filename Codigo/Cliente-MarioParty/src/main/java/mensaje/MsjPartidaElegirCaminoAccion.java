@@ -13,14 +13,14 @@ public class MsjPartidaElegirCaminoAccion extends Mensaje {
 	private Casilla casillaElegida;
 	private ArrayList<Casilla> caminosPosibles;
 	private Jugador jugadorActual;
-	
+
 	public MsjPartidaElegirCaminoAccion(Jugador jugAct, Casilla casillaElegida) {
 		super();
 		this.casillaElegida = casillaElegida;
 		jugadorActual = jugAct;
 		this.clase = this.getClass().getSimpleName();
 	}
-	
+
 	public MsjPartidaElegirCaminoAccion(Jugador jugAct, List<Casilla> caminosPosibles) {
 		super();
 		this.caminosPosibles = (ArrayList<Casilla>) caminosPosibles;
@@ -30,7 +30,8 @@ public class MsjPartidaElegirCaminoAccion extends Mensaje {
 
 	@Override
 	public void ejecutar() {
-		((VentanaJuego) listenerClient.getCliente().getVentanaActual()).getPanel().mostrarOpcionesCamino(caminosPosibles);
+		((VentanaJuego) listenerClient.getCliente().getVentanaActual()).getPanel()
+				.mostrarOpcionesCamino(caminosPosibles);
 	}
 
 	public Casilla getCasillaElegida() {
@@ -57,5 +58,4 @@ public class MsjPartidaElegirCaminoAccion extends Mensaje {
 		this.jugadorActual = jugadorActual;
 	}
 
-	
 }

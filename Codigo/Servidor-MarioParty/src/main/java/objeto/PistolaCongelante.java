@@ -5,7 +5,7 @@ import game.Jugador;
 public class PistolaCongelante extends Objeto {
 
 	public PistolaCongelante() {
-		super("Pistola Congelante", "Otro jugador pierde 1 turno",true);
+		super("Pistola Congelante", "Otro jugador pierde 1 turno", true);
 	}
 
 	public void activarEfecto(Jugador jugador) {

@@ -140,7 +140,7 @@ public class JSala extends JFrame {
 	public void eliminarDeSala(String user) {
 		this.listModel.removeElement(user);
 	}
-	
+
 	public ArrayList<String> obtenerNombreDeJugadores() {
 		ArrayList<String> listaNombres = new ArrayList<String>();
 

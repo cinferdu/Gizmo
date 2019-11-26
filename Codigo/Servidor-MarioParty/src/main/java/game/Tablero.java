@@ -7,11 +7,11 @@ import casilla.Casilla;
 public class Tablero {
 	private Casilla casillaInicial = null;
 	private ArrayList<Casilla> casilleros = null;
-	
+
 	public Tablero(int filas, int columnas) {
 		casilleros = new ArrayList<Casilla>();
 	}
-	
+
 	public Tablero(String file) {
 		Lectura.cargarTablero(file, this);
 		// Supongo que la primera casilla del arraylist es la inicial

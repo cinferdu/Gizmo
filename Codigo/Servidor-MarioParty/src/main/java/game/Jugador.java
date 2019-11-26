@@ -17,7 +17,6 @@ public class Jugador {
 	private int miniJuegoPuntos;
 	private Personaje personaje;
 
-	// Constructor de jugador con color
 	public Jugador(String nombre) {
 		this.nombre = nombre;
 		pierdeTurno = false;

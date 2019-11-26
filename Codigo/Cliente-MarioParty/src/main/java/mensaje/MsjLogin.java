@@ -16,7 +16,7 @@ public class MsjLogin extends Mensaje {
 	// si resultado=false lo siguiente sera NULL
 	private TreeMap<Integer, Sala> salas;
 
-	public MsjLogin(String user,String pass) {
+	public MsjLogin(String user, String pass) {
 		super();
 		this.user = user;
 		this.pass = pass;
@@ -24,21 +24,21 @@ public class MsjLogin extends Mensaje {
 		this.salas = null;
 		this.clase = this.getClass().getSimpleName();
 	}
-	
+
 	@Override
 	public void ejecutar() {
 		if (resultado) {
 			JFrame ventana = listenerClient.getCliente().getVentanaActual();
-			
+
 			ventana.dispose();
 			ventana = new LobbyVentana(listenerClient.getCliente());
 			ventana.setVisible(true);
 			ventana.setTitle("Bienvenido/a " + user);
 			((LobbyVentana) ventana).mostrarSala(salas);
-			
+
 			listenerClient.getCliente().setVentanaActual(ventana);
 			listenerClient.getCliente().setNombreCliente(user);
-		}else {
+		} else {
 			JOptionPane.showMessageDialog(null, "El nombre de usuario o la contraseña son incorrectas.");
 		}
 	}

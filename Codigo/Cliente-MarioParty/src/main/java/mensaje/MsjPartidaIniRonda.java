@@ -6,13 +6,13 @@ public class MsjPartidaIniRonda extends Mensaje {
 
 	private static final long serialVersionUID = 1L;
 	private int rondaNro;
-	
+
 	public MsjPartidaIniRonda(int ronda) {
 		rondaNro = ronda;
-		
+
 		this.clase = this.getClass().getSimpleName();
 	}
-	
+
 	@Override
 	public void ejecutar() {
 		listenerClient.getCliente().getPartidaActual().setRondaActual(rondaNro);
@@ -28,5 +28,4 @@ public class MsjPartidaIniRonda extends Mensaje {
 		this.rondaNro = rondaNro;
 	}
 
-	
 }

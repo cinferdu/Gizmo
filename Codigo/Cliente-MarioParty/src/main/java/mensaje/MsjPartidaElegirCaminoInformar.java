@@ -7,7 +7,7 @@ public class MsjPartidaElegirCaminoInformar extends Mensaje {
 
 	private static final long serialVersionUID = 1L;
 	private Jugador jugadorActual;
-	
+
 	public MsjPartidaElegirCaminoInformar(Jugador jugadorActual) {
 		super();
 		this.clase = this.getClass().getSimpleName();
@@ -17,7 +17,7 @@ public class MsjPartidaElegirCaminoInformar extends Mensaje {
 	@Override
 	public void ejecutar() {
 		((VentanaJuego) listenerClient.getCliente().getVentanaActual()).getPanel().seleccionar_camino(jugadorActual);
-		
+
 	}
 
 }

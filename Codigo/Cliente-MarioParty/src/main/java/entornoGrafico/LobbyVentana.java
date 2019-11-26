@@ -117,7 +117,7 @@ public class LobbyVentana extends JFrame {
 		listModel.clear();
 		for (Entry<Integer, Sala> entry : salasActivas.entrySet()) {
 			listModel.addElement(entry.getKey() + ". " + entry.getValue().getNombreSala() + " [Max Players: "
-					+ entry.getValue().getLimiteJugadores() + " Lider: " + entry.getValue().getNombreDuenio()+"]");
+					+ entry.getValue().getLimiteJugadores() + " Lider: " + entry.getValue().getNombreDuenio() + "]");
 		}
 	}
 

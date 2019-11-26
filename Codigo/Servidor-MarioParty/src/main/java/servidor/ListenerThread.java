@@ -10,8 +10,6 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.TreeMap;
 
-import javax.swing.text.Utilities;
-
 import org.apache.log4j.Logger;
 
 import com.google.gson.Gson;
@@ -21,7 +19,6 @@ import game.Jugador;
 import game.Partida;
 import mensaje.Mensaje;
 import mensaje.MsjAvisarClienteAbandonoSala;
-import mensaje.MsjAvisarNuevaSala;
 import mensaje.MsjPartidaPuntajesFinales;
 import util.UtilesLog;
 
@@ -34,14 +31,13 @@ public class ListenerThread extends Thread {
 	private DataOutputStream salida;
 	private Sala lobby;
 	private TreeMap<Integer, Sala> salas;
-	//private TreeMap<Integer, PartidaThread> partidas;
 	
 	private final static Logger LOGGER = Logger.getLogger(ListenerThread.class);
 	
 	private Gson gson = new Gson();
 
 	public ListenerThread(Socket clienteRead, Socket clienteWrite, HashMap<String, ListenerThread> clientesConectados, Sala lobby, TreeMap<Integer, Sala> salas, TreeMap<Integer, PartidaThread> partidas) {
-		//this.partidas = new TreeMap<Integer, PartidaThread>();
+
 		try {
 			salida = new DataOutputStream(new BufferedOutputStream(clienteWrite.getOutputStream()));
 			salida.flush();
@@ -105,14 +101,6 @@ public class ListenerThread extends Thread {
 			LOGGER.error("Error de conexion con el cliente " + nombreCliente);
 			UtilesLog.loggerStackTrace(e, this.getClass());
 		}
-		/*
-		comando.setListener(this);
-		comando.ejecutar();
-		*/
-		// DESCONEXION
-		// lo borro de las listas de conectado
-		// .close() a todo
-		// mensaje cliente X desconectado si esta en alguna sala
 	
 	}
 
@@ -179,14 +167,6 @@ public class ListenerThread extends Thread {
 	public void setSalaActiva(int salaActiva) {
 		this.id_salaActiva = salaActiva;
 	}
-/*
-	public TreeMap<Integer, PartidaThread> getPartidas() {
-		return partidas;
-	}
-
-	public void setPartidas(TreeMap<Integer, PartidaThread> partidas) {
-		this.partidas = partidas;
-	}*/
 
 	public int getId_partidaActiva() {
 		return id_partidaActiva;

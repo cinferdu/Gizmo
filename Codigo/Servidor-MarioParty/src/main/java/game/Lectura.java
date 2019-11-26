@@ -16,7 +16,7 @@ import util.UtilesLog;
 
 public class Lectura {
 	private final static Logger LOGGER = Logger.getLogger(Lectura.class);
-	
+
 	public static void cargarTablero(String archivo, Tablero tablero) {
 		BufferedReader br = null;
 		HashMap<Integer, Casilla> casillasHM = new HashMap<Integer, Casilla>();
@@ -29,8 +29,8 @@ public class Lectura {
 
 		try {
 			LOGGER.info("llego antes del reader!");
-			LOGGER.info(Lectura.class.getResourceAsStream( "/" + archivo));
-			br = new BufferedReader(new InputStreamReader(Lectura.class.getResourceAsStream( "/" + archivo)));
+			LOGGER.info(Lectura.class.getResourceAsStream("/" + archivo));
+			br = new BufferedReader(new InputStreamReader(Lectura.class.getResourceAsStream("/" + archivo)));
 
 			String[] linea = br.readLine().split(" ");
 			LOGGER.info(linea);
@@ -60,16 +60,16 @@ public class Lectura {
 				}
 
 			}
-			
+
 			br.close();
-			
+
 			ArrayList<Casilla> caminos = new ArrayList<Casilla>();
 			for (int i = 0; i < casillasHM.size(); i++) {
 				caminos.add(casillasHM.get(i));
 			}
-			
+
 			tablero.setCasilleros(caminos);
-			
+
 		} catch (FileNotFoundException e) {
 			UtilesLog.loggerStackTrace(e, Lectura.class);
 		} catch (IOException e) {
@@ -77,5 +77,5 @@ public class Lectura {
 		}
 
 	}
-	
+
 }

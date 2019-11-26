@@ -15,5 +15,5 @@ public class ConPremio extends TipoDeCasilla {
 	public void activarCasilla(Jugador objetivo) {
 		objetivo.aumentarMonedas(5);
 	}
-	
+
 }

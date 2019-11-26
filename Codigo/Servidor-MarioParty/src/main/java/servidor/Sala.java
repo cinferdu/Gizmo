@@ -3,7 +3,7 @@ package servidor;
 import java.util.ArrayList;
 
 public class Sala implements Comparable<Sala> {
-	
+
 	private int id_sala;
 	private String nombreSala;
 	private ArrayList<String> nombreJugadores = new ArrayList<String>();
@@ -11,7 +11,7 @@ public class Sala implements Comparable<Sala> {
 	private String estado; // cambiar por una Clase
 	private int limiteJugadores;
 	private static int salasCreadas = 0;
-	
+
 	public Sala() { // lobby
 		this.id_sala = 0;
 		nombreSala = "Lobby";
@@ -20,7 +20,7 @@ public class Sala implements Comparable<Sala> {
 		limiteJugadores = Integer.MAX_VALUE;
 		nombreJugadores = new ArrayList<String>();
 	}
-	
+
 	public Sala(String nombre, String duenio, int limite) { // salas creadas por los clientes
 		this.id_sala = ++salasCreadas;
 		nombreSala = nombre;
@@ -28,7 +28,7 @@ public class Sala implements Comparable<Sala> {
 		estado = "Abierta";
 		limiteJugadores = limite;
 	}
-	
+
 	public Sala(int id) { // Solo para comparar
 		this.id_sala = id;
 	}
@@ -84,7 +84,7 @@ public class Sala implements Comparable<Sala> {
 	public void addCliente(String nombreCliente) {
 		nombreJugadores.add(nombreCliente);
 	}
-	
+
 	public void removeCliente(String nombreCliente) {
 		nombreJugadores.remove(nombreCliente);
 	}
@@ -115,6 +115,5 @@ public class Sala implements Comparable<Sala> {
 	public int compareTo(Sala o) {
 		return o.id_sala - this.id_sala;
 	}
-	
-	
+
 }

@@ -66,7 +66,5 @@ public abstract class Objeto {
 			return false;
 		return true;
 	}
-	
-	
 
 }
