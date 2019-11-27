@@ -9,10 +9,10 @@ public class MsjPartidaPuntajesFinales extends Mensaje {
 	private static final long serialVersionUID = 1L;
 	private Jugador jugadorActual;
 
-	public MsjPartidaPuntajesFinales(Jugador jugAct, ArrayList<Jugador> players) {
+	public MsjPartidaPuntajesFinales(Jugador jugadorGanador, ArrayList<Jugador> players) {
 		super();
 		this.clase = getClass().getSimpleName();
-		setJugadorActual(jugAct);
+		setJugadorActual(jugadorGanador);
 	}
 
 	@Override

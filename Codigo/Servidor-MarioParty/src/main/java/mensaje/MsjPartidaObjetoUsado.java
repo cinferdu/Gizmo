@@ -1,17 +1,21 @@
 package mensaje;
 
+import java.util.ArrayList;
+
 import game.Jugador;
 
 public class MsjPartidaObjetoUsado extends Mensaje {
 
 	private static final long serialVersionUID = 1L;
-	private String texto;
-	private Jugador jugadorAct;
+	private String objeto;
+	private String jugadorAct;
+	private ArrayList<Jugador> jugadores;
 	
-	public MsjPartidaObjetoUsado(String texto, Jugador jugadorAct) {
+	public MsjPartidaObjetoUsado(String jugadorAct, String objetoUtilizado, ArrayList<Jugador> jugadores) {
 		clase = getClass().getSimpleName();
-		this.setTexto(texto);
-		this.setJugadorAct(jugadorAct);
+		this.jugadorAct = jugadorAct;
+		this.objeto = objetoUtilizado;
+		this.jugadores = jugadores;
 	}
 	
 	@Override
@@ -19,20 +23,28 @@ public class MsjPartidaObjetoUsado extends Mensaje {
 
 	}
 
-	public String getTexto() {
-		return texto;
+	public String getObjeto() {
+		return objeto;
 	}
 
-	public void setTexto(String texto) {
-		this.texto = texto;
-	}
-
-	public Jugador getJugadorAct() {
+	public String getJugadorAct() {
 		return jugadorAct;
 	}
 
-	public void setJugadorAct(Jugador jugadorAct) {
+	public ArrayList<Jugador> getJugadores() {
+		return jugadores;
+	}
+
+	public void setObjeto(String objeto) {
+		this.objeto = objeto;
+	}
+
+	public void setJugadorAct(String jugadorAct) {
 		this.jugadorAct = jugadorAct;
+	}
+
+	public void setJugadores(ArrayList<Jugador> jugadores) {
+		this.jugadores = jugadores;
 	}
 
 }

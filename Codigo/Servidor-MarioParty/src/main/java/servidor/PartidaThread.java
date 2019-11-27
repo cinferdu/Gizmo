@@ -87,19 +87,24 @@ public class PartidaThread extends Thread {
 						avisar(new MsjPartidaSelecObjAccion(jugadorActual), jugadorActual);
 						esperarNofify();
 						String nombreobj = null;
-						if (this.objetoSelecionado != -1)
+						if (this.objetoSelecionado != -1) {
+							if (jugadorSeleccionado != null) { // busco al jugador si el objeto es con objetivo
+								jugadorSeleccionado = partida.getJugadores().get(partida.getJugadores().indexOf(jugadorSeleccionado)); // obtengo la refencia a ese jugador
+							}
 							nombreobj = jugadorActual.usarObjeto(objetoSelecionado, jugadorSeleccionado).getNombre();
 
-						listener.enviarMensajeBroadcast(new MsjPartidaObjetoUsado(
-								jugadorActual.getNombre() + " utilizo " + nombreobj + "\n", jugadorActual));
-
+							listener.enviarMensajeBroadcast(new MsjPartidaObjetoUsado(jugadorActual.getNombre(),
+									nombreobj, partida.getJugadores()));
+						}
 					} else {
 						avisar(new MsjPartidaSinAccion(jugadorActual));
 					}
 
 					// Verifico si el jugador cumplio con el objetivo
-					if (partida.verificarObjetivo(jugadorActual))
+					if (partida.verificarObjetivo(jugadorActual)) {
 						partida.setJugadorGanador(jugadorActual);// El jugador gano la partida
+						partida.setHayGanador(true);
+					}
 				} else {
 					// Activo el turno del jugador
 					jugadorActual.setPierdeTurno(false);
@@ -129,7 +134,7 @@ public class PartidaThread extends Thread {
 
 		}
 		// avisar(Operacion.PUNTAJES_FINALES, partida.getJugadorGanador());
-		avisar(new MsjPartidaPuntajesFinales(partida.getJugadorGanador(),partida.getJugadores()));
+		avisar(new MsjPartidaPuntajesFinales(partida.getJugadorGanador(), partida.getJugadores()));
 	}
 
 	public void avanzar(Jugador jugador) {
@@ -188,11 +193,6 @@ public class PartidaThread extends Thread {
 	public void avisar(Mensaje msjPartida, Jugador jugadorActual) {
 		listener.enviarMensaje(msjPartida, jugadorActual.getNombre());
 
-		try {
-			Thread.sleep(500);
-		} catch (InterruptedException e) {
-			e.printStackTrace();
-		}
 	}
 
 	private void esperarNofify() {
@@ -220,11 +220,11 @@ public class PartidaThread extends Thread {
 	public ArrayList<Jugador> getJugadores() {
 		return partida.getJugadores();
 	}
-	
+
 	public ArrayList<String> getNombreJugadores() {
 		return this.nombresJugadores;
 	}
-	
+
 	public void setNombreJugadores(ArrayList<String> jugadores) {
 		this.nombresJugadores = jugadores;
 	}

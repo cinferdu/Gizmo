@@ -4,14 +4,12 @@ import java.util.ArrayList;
 import java.util.List;
 
 import game.Jugador;
-import objeto.Objeto;
 
 public class Casilla {
 	private int posX;
 	private int posY;
 	private TipoDeCasilla tipo;
 	private transient List<Casilla> siguientesCasillas;
-	private Objeto poder;
 
 	public Casilla(int posX, int posY, TipoDeCasilla tipo) {
 		this.posX = posX;
@@ -66,14 +64,6 @@ public class Casilla {
 
 	public void setSiguientesCasillas(List<Casilla> siguientesCasillas) {
 		this.siguientesCasillas = siguientesCasillas;
-	}
-
-	public Objeto getPoder() {
-		return poder;
-	}
-
-	public void setPoder(Objeto poder) {
-		this.poder = poder;
 	}
 	
 	public void addSiguiente(Casilla sig) {

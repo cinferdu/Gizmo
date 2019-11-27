@@ -21,7 +21,8 @@ public class MsjCrearSala extends Mensaje {
 		Sala nuevaSala = new Sala(nombreSala, duenio, capMax);
 		nuevaSala.addCliente(duenio);
 		listenerServer.agregarSala(nuevaSala);
-
+		listenerServer.setSalaActiva(nuevaSala.getId_sala());
+		
 		MsjIngresarSala aEnviar = new MsjIngresarSala(nuevaSala);
 		aEnviar.setResultado(true);
 		listenerServer.getLobby().removeCliente(duenio);

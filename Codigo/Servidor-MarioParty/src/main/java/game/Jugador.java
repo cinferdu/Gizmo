@@ -10,11 +10,9 @@ public class Jugador {
 	private int nroPasos;
 	private String nombre;
 	private int monedas;
-	private int puntos;
 	private boolean pierdeTurno;
 	private Casilla posicionActual;
 	private ArrayList<Objeto> mochila_objetos;
-	private Objeto poder;
 	private Color color;
 	private int miniJuegoPuntos;
 	private Personaje personaje;
@@ -26,11 +24,9 @@ public class Jugador {
 		posicionActual = null;
 
 		monedas = 0;
-		puntos = 0;
 		miniJuegoPuntos = 0;
 
 		mochila_objetos = new ArrayList<Objeto>(3);
-		// this.setColor(color);
 	}
 
 	public void setPersonaje(Personaje personaje) {
@@ -45,15 +41,6 @@ public class Jugador {
 		// Activa el efecto del objeto
 		mochila_objetos.get(indice).activarEfecto(this);
 		return mochila_objetos.remove(indice);
-	}
-
-	public void usarPoder() {
-		// Activa el efecto del poder
-		// this.getPoder().efecto(this);
-	}
-
-	public Objeto activarPoder() {
-		return this.poder;
 	}
 
 	public void aumentarMonedas(int cantidad) {
@@ -80,28 +67,12 @@ public class Jugador {
 		this.monedas = monedas;
 	}
 
-	public int getPuntos() {
-		return puntos;
-	}
-
-	public void setPuntos(int puntos) {
-		this.puntos = puntos;
-	}
-
 	public Casilla getPosicionActual() {
 		return posicionActual;
 	}
 
 	public void setPosicionActual(Casilla posicionActual) {
 		this.posicionActual = posicionActual;
-	}
-
-	public Objeto getPoder() {
-		return poder;
-	}
-
-	public void setPoder(Objeto poder) {
-		this.poder = poder;
 	}
 
 	public int getNroPasos() {

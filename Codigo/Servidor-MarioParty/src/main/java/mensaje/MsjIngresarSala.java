@@ -23,7 +23,8 @@ public class MsjIngresarSala extends Mensaje {
 			this.resultado = true;
 			listenerServer.sacarClienteAlLobby(listenerServer.getNombreCliente());
 			this.sala = salaSolicitada;
-
+			listenerServer.setSalaActiva(salaSolicitada.getId_sala());
+			
 			listenerServer.enviarMensajeBroadcast(new MsjAvisarNuevoClienteEnSala(listenerServer.getNombreCliente()),
 					sala.getNombreJugadores());
 			

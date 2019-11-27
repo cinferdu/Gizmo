@@ -5,14 +5,10 @@ import java.util.ArrayList;
 import casilla.Casilla;
 
 public class Tablero {
-	private int filas;
-	private int columnas;
 	private Casilla casillaInicial = null;
 	private ArrayList<Casilla> casilleros = null;
 	
-	public Tablero(int filas, int columnas) {
-		this.filas = filas;
-		this.columnas = columnas;
+	public Tablero() {
 		casilleros = new ArrayList<Casilla>();
 	}
 	
@@ -20,22 +16,6 @@ public class Tablero {
 		//Lectura.cargarTablero(file, this);
 		// Supongo que la primera casilla del arraylist es la inicial
 		casillaInicial = casilleros.get(0);
-	}
-	
-	public int getFilas() {
-		return filas;
-	}
-
-	public void setFilas(int filas) {
-		this.filas = filas;
-	}
-
-	public int getColumnas() {
-		return columnas;
-	}
-
-	public void setColumnas(int columnas) {
-		this.columnas = columnas;
 	}
 
 	public Casilla getCasillaInicial() {

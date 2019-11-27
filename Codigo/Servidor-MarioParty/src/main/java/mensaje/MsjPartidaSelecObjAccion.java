@@ -22,7 +22,7 @@ public class MsjPartidaSelecObjAccion extends Mensaje {
 
 	@Override
 	public void ejecutar() {
-		listenerServer.notificarCasillaElegina(objetoElegido, jugObjetivo);
+		listenerServer.notificarObjetoElegido(objetoElegido, jugObjetivo);
 	}
 
 	public Jugador getJugadorAct() {

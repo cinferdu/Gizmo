@@ -6,7 +6,6 @@ import javax.swing.JFrame;
 
 import org.apache.log4j.Logger;
 
-import cliente.Listener;
 import entornoGrafico.VentanaJuego;
 import game.Partida;
 

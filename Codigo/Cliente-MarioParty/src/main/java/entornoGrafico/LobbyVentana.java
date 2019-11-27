@@ -114,6 +114,7 @@ public class LobbyVentana extends JFrame {
 	}
 
 	public void mostrarSala(TreeMap<Integer, Sala> salasActivas) {
+		listModel.clear();
 		for (Entry<Integer, Sala> entry : salasActivas.entrySet()) {
 			listModel.addElement(entry.getKey() + ". " + entry.getValue().getNombreSala() + " [Max Players: "
 					+ entry.getValue().getLimiteJugadores() + " Lider: " + entry.getValue().getNombreDuenio()+"]");
