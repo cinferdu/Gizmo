@@ -41,12 +41,6 @@ public class PartidaThread extends Thread {
 	@Override
 	public void run() {
 
-		try {
-			sleep(500);
-		} catch (InterruptedException e1) {
-			e1.printStackTrace();
-		}
-
 		Jugador jugadorActual;
 		Iterator<Jugador> iteradorJugador;
 
@@ -145,7 +139,6 @@ public class PartidaThread extends Thread {
 			if ((sigcamino = jugador.getPosicionActual().caminoUnico()) != null)
 				jugador.setPosicionActual(sigcamino);
 			else {
-				// avisar(Operacion.SELECCIONAR_CAMINO, jugador);
 				avisar(new MsjPartidaElegirCaminoInformar(jugador));
 				avisar(new MsjPartidaElegirCaminoAccion(jugador, jugador.getPosicionActual().getSiguientesCasillas()),
 						jugador);
@@ -177,11 +170,9 @@ public class PartidaThread extends Thread {
 	 */
 	public void avisar(Mensaje msjPartida) {
 		listener.enviarMensajeBroadcast(msjPartida, this.nombresJugadores);
-		try {
-			Thread.sleep(500);
-		} catch (InterruptedException e) {
-			e.printStackTrace();
-		}
+
+		long ini = System.currentTimeMillis();
+		while (System.currentTimeMillis() - ini < 500);
 	}
 
 	/**
