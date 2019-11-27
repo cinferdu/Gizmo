@@ -79,26 +79,7 @@ public class ListenerThread extends Thread {
 			}
 
 			if (id_salaActiva > 0) {
-				Sala salaActual = salas.get(id_salaActiva);
-				synchronized (salaActual) {
-					salaActual.removeCliente(nombreCliente);
-					
-					if (nombreCliente.equals(salaActual.getNombreDuenio())) {
-						salaActual.setNombreDuenio(salaActual.getNombreJugadores().get(0));
-						enviarMensaje(new MsjSalaNuevoLider(), salaActual.getNombreJugadores().get(0));
-					} 
-					
-					if (salaActual.getNombreJugadores().size() >= 1) {
-						enviarMensajeBroadcast(new MsjAvisarClienteAbandonoSala(nombreCliente),
-								salaActual.getNombreJugadores());
-					} else {
-						// elimino la sala si era el unico en ella
-						synchronized (salas) {
-							salas.remove(id_salaActiva);
-						}
-						enviarMensajeBroadcast(new MsjAvisarNuevaSala(salas), lobby.getNombreJugadores());
-					}
-				}
+				eliminarClienteDeSala();
 			}
 
 			PartidaThread partidaThread = Servidor.partidas.get(id_partidaActiva);
@@ -231,7 +212,31 @@ public class ListenerThread extends Thread {
 			lobby.removeCliente(nombre);
 		}
 	}
-
+	
+	public void eliminarClienteDeSala() {
+		Sala salaActual = salas.get(id_salaActiva);
+		synchronized (salaActual) {
+			salaActual.removeCliente(nombreCliente);
+			
+			if (salaActual.getNombreJugadores().size() >= 1) {
+				if (nombreCliente.equals(salaActual.getNombreDuenio())) {
+					salaActual.setNombreDuenio(salaActual.getNombreJugadores().get(0));
+					enviarMensaje(new MsjSalaNuevoLider(), salaActual.getNombreJugadores().get(0));
+				} 
+				enviarMensajeBroadcast(new MsjAvisarClienteAbandonoSala(nombreCliente),
+						salaActual.getNombreJugadores());
+			} else {
+				// elimino la sala si era el unico en ella
+				synchronized (salas) {
+					salas.remove(id_salaActiva);
+				}
+				enviarMensajeBroadcast(new MsjAvisarNuevaSala(salas), lobby.getNombreJugadores());
+			}
+		}
+		id_salaActiva = -1;
+	}
+	
+	
 	public PartidaThread crearHiloPartida(Partida game, ArrayList<String> nombresJugadores) {
 		PartidaThread hilo = new PartidaThread(game, nombresJugadores, this);
 		hilo.start();

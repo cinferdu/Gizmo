@@ -110,7 +110,8 @@ public class LobbyVentana extends JFrame {
 		lblLobby.setHorizontalAlignment(SwingConstants.CENTER);
 		lblLobby.setBounds(183, 11, 129, 27);
 		contentPane.add(lblLobby);
-
+		
+		setTitle("Bienvenido/a " + cliente.getNombreCliente());
 	}
 
 	public void mostrarSala(TreeMap<Integer, Sala> salasActivas) {
