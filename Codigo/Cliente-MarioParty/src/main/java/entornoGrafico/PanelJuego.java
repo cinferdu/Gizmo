@@ -54,7 +54,7 @@ public class PanelJuego extends JLayeredPane {
 	private JLabel modificadorDelCursor;
 	private boolean botonPresionado;
 	JLabel fondoL;
-	
+
 	// para mostrarOpciones(...)
 	private Casilla caminoElegido;
 	private Jugador jugadorSeleccionado;
@@ -242,7 +242,7 @@ public class PanelJuego extends JLayeredPane {
 
 		// creo los componentes
 		JLabel mensaje = new JLabel(
-				"Seleccione un objeto para utilizarlo (tiene " + TIEMPO_ELEGIR_OPCION + " segundos)");
+				"Seleccione un objeto para utilizarlo (tiene " + TIEMPO_ELEGIR_OPCION / 1000 + " segundos)");
 		mensaje.setBounds(345, 555, 400, 35);
 		add(mensaje);
 
@@ -337,9 +337,13 @@ public class PanelJuego extends JLayeredPane {
 
 		// espero a que aprete el boton o pasen los segundos
 		long tiempo_limite_ini = System.currentTimeMillis();
-		long tiempo_limite_fin = System.currentTimeMillis();
-		while (botonPresionado == false && (tiempo_limite_fin - tiempo_limite_ini) < TIEMPO_ELEGIR_OPCION) {
-			tiempo_limite_fin = System.currentTimeMillis();
+
+		while (botonPresionado == false && (System.currentTimeMillis() - tiempo_limite_ini) < TIEMPO_ELEGIR_OPCION) {
+			try {
+				Thread.sleep(20);
+			} catch (InterruptedException e) {
+				e.printStackTrace();
+			}
 		}
 
 		int objetoElegido = -1;
@@ -391,7 +395,7 @@ public class PanelJuego extends JLayeredPane {
 
 		// creo los componentes
 		JLabel mensaje = new JLabel(
-				"Haga clic la siguiente casilla, para avanzar (tiene " + TIEMPO_ELEGIR_OPCION + " segundos)");
+				"Haga clic la siguiente casilla, para avanzar (tiene " + TIEMPO_ELEGIR_OPCION / 1000 + " segundos)");
 		mensaje.setBounds(345, 565, 400, 20);
 
 		add(mensaje);
@@ -416,9 +420,13 @@ public class PanelJuego extends JLayeredPane {
 
 		// espero a que aprete el boton o pasen 10 segundos
 		long tiempo_limite_ini = System.currentTimeMillis();
-		long tiempo_limite_fin = System.currentTimeMillis();
-		while (botonPresionado == false && (tiempo_limite_fin - tiempo_limite_ini) < TIEMPO_ELEGIR_OPCION) {
-			tiempo_limite_fin = System.currentTimeMillis();
+
+		while (botonPresionado == false && (System.currentTimeMillis() - tiempo_limite_ini) < TIEMPO_ELEGIR_OPCION) {
+			try {
+				Thread.sleep(20);
+			} catch (InterruptedException e) {
+				e.printStackTrace();
+			}
 		}
 
 		remove(mensaje);
