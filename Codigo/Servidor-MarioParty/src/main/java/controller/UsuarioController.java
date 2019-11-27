@@ -1,17 +1,20 @@
 package controller;
 
 import org.apache.commons.codec.digest.DigestUtils;
+import org.apache.log4j.Logger;
 import org.hibernate.Criteria;
 import org.hibernate.HibernateException;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
 import org.hibernate.criterion.Restrictions;
 
+import mensaje.Mensaje;
 import model.Usuario;
 import util.HibernateUtil;
+import util.UtilesLog;
 
 public class UsuarioController {
-
+	
 	public static Long save(Usuario usuario) {
 		usuario.setPass(DigestUtils.md5Hex(usuario.getPass()));
 		Session session = HibernateUtil.getSession();
@@ -23,7 +26,7 @@ public class UsuarioController {
 		} catch (HibernateException e) {
 			if (tx != null)
 				tx.rollback();
-			e.printStackTrace();
+			UtilesLog.loggerStackTrace(e, UsuarioController.class);
 		} finally {
 			session.close();
 		}
@@ -38,7 +41,7 @@ public class UsuarioController {
 			criteria.add(Restrictions.like("user", userName));
 			return (Usuario) criteria.uniqueResult();
 		} catch (HibernateException e) {
-			e.printStackTrace();
+			UtilesLog.loggerStackTrace(e, UsuarioController.class);
 		} finally {
 			session.close();
 		}

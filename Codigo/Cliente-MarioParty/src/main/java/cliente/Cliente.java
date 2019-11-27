@@ -18,7 +18,7 @@ import mensaje.Mensaje;
 
 public class Cliente {
 
-	private final static String IPSERVIDOR = "127.0.0.1";
+	private final static String IPSERVIDOR = "10.11.4.12";
 	private final static int PUERTO = 10200;
 	
 	private final static Logger LOGGER = Logger.getLogger(Cliente.class);
