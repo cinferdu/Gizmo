@@ -10,7 +10,8 @@ public class MsjIngresarLobby extends Mensaje {
 	private static final long serialVersionUID = 1L;
 
 	private TreeMap<Integer, Sala> salas;
-	
+	private boolean espectador;
+
 	public MsjIngresarLobby() {
 		this.clase = this.getClass().getSimpleName();
 	}
@@ -19,7 +20,7 @@ public class MsjIngresarLobby extends Mensaje {
 	public void ejecutar() {
 		this.salas = listenerServer.getSalas();
 		int idsala = listenerServer.getSalaActiva();
-		if (resultado) { // si un espectador solicito volver al lobby
+		if (espectador) { // si un espectador solicito volver al lobby
 			Servidor.partidas.get(listenerServer.getId_partidaEspectador()).removeSpect(listenerServer.getNombreCliente());
 		}
 		if (idsala != -1) {
@@ -36,5 +37,14 @@ public class MsjIngresarLobby extends Mensaje {
 	public void setSalas(TreeMap<Integer, Sala> salas) {
 		this.salas = salas;
 	}
+
+	public boolean isEspectador() {
+		return espectador;
+	}
+
+	public void setEspectador(boolean espectador) {
+		this.espectador = espectador;
+	}
+	
 	
 }

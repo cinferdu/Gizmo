@@ -21,6 +21,7 @@ public class MsjIniciarPartida extends Mensaje {
 	private static final long serialVersionUID = 1L;
 	private ArrayList<String> nombresJugadores;
 	private Partida game;
+	private boolean espectador;
 
 	public MsjIniciarPartida(Partida game) {
 		this.game = game;
@@ -72,6 +73,14 @@ public class MsjIniciarPartida extends Mensaje {
 
 	public void setGame(Partida game) {
 		this.game = game;
+	}
+
+	public boolean isEspectador() {
+		return espectador;
+	}
+
+	public void setEspectador(boolean espectador) {
+		this.espectador = espectador;
 	}
 
 }

@@ -12,7 +12,7 @@ public class MsjPartidaEspectador extends Mensaje {
 	public void ejecutar() {
 		PartidaThread gameThread = Servidor.partidas.get(id);
 		MsjIniciarPartida mensaje = new MsjIniciarPartida(gameThread.getPartida());
-		mensaje.resultado = true;
+		mensaje.setEspectador(true);
 		listenerServer.enviarMensaje(mensaje);
 		listenerServer.setId_partidaEspectador(gameThread.getPartida().getIdpartida());
 		listenerServer.setSalaActiva(-1);

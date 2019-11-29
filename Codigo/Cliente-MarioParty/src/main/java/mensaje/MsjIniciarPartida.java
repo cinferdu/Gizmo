@@ -16,6 +16,7 @@ public class MsjIniciarPartida extends Mensaje {
 	private static final long serialVersionUID = 1L;
 	private ArrayList<String> nombresJugadores;
 	private Partida game;
+	private boolean espectador;
 
 	public MsjIniciarPartida(ArrayList<String> nombresJugadores) {
 		this.nombresJugadores = nombresJugadores;
@@ -29,7 +30,7 @@ public class MsjIniciarPartida extends Mensaje {
 		listenerClient.getCliente().setPartidaActual(game);
 		LOGGER.info("Cierra ventana!!!");
 		ventana = new VentanaJuego(listenerClient.getCliente());
-		if (resultado) {
+		if (espectador) {
 			((VentanaJuego) ventana).modoEspectador();
 		}
 		LOGGER.info("Abre ventana!!!");
@@ -51,6 +52,14 @@ public class MsjIniciarPartida extends Mensaje {
 
 	public void setGame(Partida game) {
 		this.game = game;
+	}
+
+	public boolean isEspectador() {
+		return espectador;
+	}
+
+	public void setEspectador(boolean espectador) {
+		this.espectador = espectador;
 	}
 
 }

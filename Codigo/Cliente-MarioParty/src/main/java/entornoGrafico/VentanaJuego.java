@@ -40,7 +40,7 @@ public class VentanaJuego extends JFrame {
 						"Salir", JOptionPane.YES_NO_OPTION);
 				if (dialogResult == JOptionPane.YES_OPTION) {
 					MsjIngresarLobby msj = new MsjIngresarLobby();
-					msj.setResultado(true);
+					msj.setEspectador(true);
 					cliente.enviarMensaje(msj);
 				}
 			}

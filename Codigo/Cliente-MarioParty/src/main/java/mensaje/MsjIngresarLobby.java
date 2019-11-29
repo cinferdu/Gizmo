@@ -12,6 +12,7 @@ public class MsjIngresarLobby extends Mensaje {
 	private static final long serialVersionUID = 1L;
 
 	private TreeMap<Integer, Sala> salas;
+	private boolean espectador;
 	
 	public MsjIngresarLobby() {
 		this.clase = this.getClass().getSimpleName();
@@ -35,6 +36,14 @@ public class MsjIngresarLobby extends Mensaje {
 
 	public void setSalas(TreeMap<Integer, Sala> salas) {
 		this.salas = salas;
+	}
+
+	public boolean isEspectador() {
+		return espectador;
+	}
+
+	public void setEspectador(boolean espectador) {
+		this.espectador = espectador;
 	}
 	
 }
