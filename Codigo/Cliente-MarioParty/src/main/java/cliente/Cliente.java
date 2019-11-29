@@ -15,14 +15,15 @@ import entornoGrafico.Login;
 import game.Jugador;
 import game.Partida;
 import mensaje.Mensaje;
+import sala.Sala;
 
 public class Cliente {
 
 	private final static String IPSERVIDOR = "10.11.4.12";
 	private final static int PUERTO = 10200;
-	
+
 	private final static Logger LOGGER = Logger.getLogger(Cliente.class);
-	
+
 	private String nombreCliente;
 	Socket readSocket;
 	Socket writeSocket;
@@ -30,18 +31,18 @@ public class Cliente {
 	private JFrame ventanaActual;
 	private Sala salaActual;
 	private Partida partidaActual;
-	private Jugador jugador; // jugador en la partida???
+	private Jugador jugador;
 
 	DataInputStream entrada;
 	DataOutputStream salida;
 
 	private final Gson gson = new Gson();
 
-	public Cliente(String ipServidor, int puerto) {
+	public Cliente() {
 
 		try {
-			readSocket = new Socket(ipServidor, puerto);
-			writeSocket = new Socket(ipServidor, puerto);
+			readSocket = new Socket(IPSERVIDOR, PUERTO);
+			writeSocket = new Socket(IPSERVIDOR, PUERTO);
 			salida = new DataOutputStream(writeSocket.getOutputStream());
 			salida.flush();
 			entrada = new DataInputStream(readSocket.getInputStream());
@@ -51,16 +52,10 @@ public class Cliente {
 			System.exit(1);
 		}
 
-		salaActual = null;
-		partidaActual = null;
-		jugador = null;
-
 		new Listener(this).start();
-		// System.out.println("escuchando");
 
-		ventanaActual = new Login(this);
-		ventanaActual.setVisible(true);
-
+		//ventanaActual = new Login();
+		//ventanaActual.setVisible(true);
 	}
 
 	public void enviarMensaje(Mensaje mensaje) {
@@ -71,9 +66,9 @@ public class Cliente {
 			e.printStackTrace();
 		}
 	}
-	
+
 	public static void main(String[] args) throws SecurityException, IOException {
-		new Cliente(IPSERVIDOR, PUERTO);
+		new Login();
 	}
 
 	public String recibirMsg() {

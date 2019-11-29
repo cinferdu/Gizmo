@@ -4,15 +4,14 @@ import java.util.TreeMap;
 
 import javax.swing.JFrame;
 
-import cliente.Sala;
 import entornoGrafico.LobbyVentana;
+import sala.Sala;
 
 public class MsjAvisarNuevaSala extends Mensaje {
 
 	private static final long serialVersionUID = 1L;
 	private TreeMap<Integer, Sala> salas;
-	
-	
+
 	public MsjAvisarNuevaSala(TreeMap<Integer, Sala> salas) {
 		this.setSalas(salas);
 		this.clase = this.getClass().getSimpleName();

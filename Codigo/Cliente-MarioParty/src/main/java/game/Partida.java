@@ -10,11 +10,11 @@ public class Partida {
 	private Tablero tablero;
 	private Jugador jugadorGanador;
 	private int rondaActual;
-	private int idpartida; 
-	
+	private int idpartida;
+
 	private Object respuestaDePanel = null;
 	private static int partidasCreadas;
-	
+
 	public Partida(ArrayList<Jugador> participantes, int objetivo) {
 		setIdpartida(partidasCreadas);
 		jugadores = participantes;

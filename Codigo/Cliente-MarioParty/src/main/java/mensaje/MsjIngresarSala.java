@@ -3,8 +3,9 @@ package mensaje;
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 
-import cliente.Sala;
 import entornoGrafico.JSala;
+import sala.ErrorAlIngresar;
+import sala.Sala;
 
 public class MsjIngresarSala extends Mensaje {
 
@@ -12,12 +13,13 @@ public class MsjIngresarSala extends Mensaje {
 
 	private Sala sala;
 	private int id_sala;
-	
+	private ErrorAlIngresar error;
+
 	public MsjIngresarSala(Sala sala) {
 		this.setSala(sala);
 		this.clase = this.getClass().getSimpleName();
 	}
-	
+
 	public MsjIngresarSala(int id_sala) {
 		this.id_sala = id_sala;
 		this.clase = this.getClass().getSimpleName();
@@ -25,20 +27,34 @@ public class MsjIngresarSala extends Mensaje {
 
 	@Override
 	public void ejecutar() {
-		
+
 		if (resultado) {
-			//CambiarVentana(Jframe ...){
+			// CambiarVentana(Jframe ...){
 			JFrame ventanaActual = this.listenerClient.getCliente().getVentanaActual();
 			this.listenerClient.getCliente().getVentanaActual().dispose();
 			ventanaActual.setVisible(false);
 			ventanaActual = new JSala(listenerClient.getCliente());
-			ventanaActual.setVisible(true);
 			((JSala) ventanaActual).inicializarSala(this.sala);
+			ventanaActual.setVisible(true);
 			listenerClient.getCliente().setVentanaActual(ventanaActual);
-			//}
-			
+			// }
+
 		} else {
-			JOptionPane.showMessageDialog(null, "Sala llena");
+			switch (error) {
+			case SALA_LLENA:
+				JOptionPane.showMessageDialog(null, "Sala llena");
+				break;
+			case EN_PARTIDA:
+				int dialogResult = JOptionPane.showConfirmDialog(null, "¿Desea entrar como espectador?",
+						"Spec", JOptionPane.YES_NO_OPTION);
+				if (dialogResult == JOptionPane.YES_OPTION) {
+					// verificar que tiene id_sala y sala
+					listenerClient.getCliente().enviarMensaje(new MsjPartidaEspectador(id_sala));
+				}
+				break;
+			default:
+				break;
+			}
 		}
 	}
 
@@ -57,5 +73,13 @@ public class MsjIngresarSala extends Mensaje {
 	public void setId_sala(int id_sala) {
 		this.id_sala = id_sala;
 	}
-	
+
+	public ErrorAlIngresar getError() {
+		return error;
+	}
+
+	public void setError(ErrorAlIngresar error) {
+		this.error = error;
+	}
+
 }

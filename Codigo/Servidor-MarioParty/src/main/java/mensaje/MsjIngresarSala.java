@@ -1,6 +1,7 @@
 package mensaje;
 
-import servidor.Sala;
+import sala.ErrorAlIngresar;
+import sala.Sala;
 
 public class MsjIngresarSala extends Mensaje {
 
@@ -8,6 +9,7 @@ public class MsjIngresarSala extends Mensaje {
 
 	private Sala sala;
 	private int id_sala;
+	private ErrorAlIngresar error;
 
 	public MsjIngresarSala(Sala sala) {
 		this.setSala(sala);
@@ -18,10 +20,10 @@ public class MsjIngresarSala extends Mensaje {
 	public void ejecutar() {
 		// si alguien pide entrar en una sala
 		Sala salaSolicitada = listenerServer.getSalas().get(id_sala);
-		if ((listenerServer.getSalas().containsKey(id_sala) == true)
+		if ((listenerServer.getSalas().containsKey(id_sala) && !salaSolicitada.isEnPartida())
 				&& salaSolicitada.getNombreJugadores().size() < salaSolicitada.getLimiteJugadores()) {
 			this.resultado = true;
-			listenerServer.sacarClienteAlLobby(listenerServer.getNombreCliente());
+			listenerServer.sacarClienteDelLobby(listenerServer.getNombreCliente());
 			this.sala = salaSolicitada;
 			listenerServer.setSalaActiva(salaSolicitada.getId_sala());
 			
@@ -31,6 +33,14 @@ public class MsjIngresarSala extends Mensaje {
 			this.sala.addCliente(listenerServer.getNombreCliente());
 		} else {
 			this.resultado = false;
+			
+			if (salaSolicitada.getNombreJugadores().size() == salaSolicitada.getLimiteJugadores()) {
+				error = ErrorAlIngresar.SALA_LLENA;
+			}
+			
+			if (salaSolicitada.isEnPartida()) {
+				error = ErrorAlIngresar.EN_PARTIDA;
+			}
 		}
 
 		listenerServer.enviarMensaje(this);
@@ -51,6 +61,14 @@ public class MsjIngresarSala extends Mensaje {
 
 	public void setId_sala(int id_sala) {
 		this.id_sala = id_sala;
+	}
+
+	public ErrorAlIngresar getError() {
+		return error;
+	}
+
+	public void setError(ErrorAlIngresar error) {
+		this.error = error;
 	}
 
 }

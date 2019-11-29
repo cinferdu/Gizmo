@@ -25,7 +25,6 @@ public class Jugador {
 		miniJuegoPuntos = 0;
 
 		mochila_objetos = new ArrayList<Objeto>(3);
-		// this.setColor(color);
 	}
 
 	public void setPersonaje(Personaje personaje) {
@@ -40,11 +39,6 @@ public class Jugador {
 		// Activa el efecto del objeto
 		mochila_objetos.get(indice).activarEfecto(this);
 		mochila_objetos.remove(indice);
-	}
-
-	public void usarPoder() {
-		// Activa el efecto del poder
-		// this.getPoder().efecto(this);
 	}
 
 	public void aumentarMonedas(int cantidad) {
@@ -136,6 +130,31 @@ public class Jugador {
 
 	public boolean isMochilaVacia() {
 		return mochila_objetos.isEmpty();
+	}
+
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		result = prime * result + ((nombre == null) ? 0 : nombre.hashCode());
+		return result;
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		Jugador other = (Jugador) obj;
+		if (nombre == null) {
+			if (other.nombre != null)
+				return false;
+		} else if (!nombre.equals(other.nombre))
+			return false;
+		return true;
 	}
 
 }

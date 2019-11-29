@@ -13,7 +13,7 @@ public class MsjPartidaMovimiento extends Mensaje {
 		super();
 		this.clase = this.getClass().getSimpleName();
 		jugadorActual = jugAct;
-		
+
 	}
 
 	@Override

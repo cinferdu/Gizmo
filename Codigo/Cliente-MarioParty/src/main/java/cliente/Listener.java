@@ -7,22 +7,22 @@ import org.apache.log4j.Logger;
 import mensaje.Mensaje;
 
 public class Listener extends Thread {
-	
+
 	private final static Logger LOGGER = Logger.getLogger(Listener.class);
-	
+
 	private Cliente cliente;
 	private DataInputStream leer;
-	
+
 	public Listener(Cliente cliente) {
 		this.cliente = cliente;
-		leer = cliente.entrada; 
+		leer = cliente.entrada;
 	}
-	
+
 	@Override
 	public void run() {
 		boolean escuchando = true;
 		Mensaje msj = null;
-		
+
 		while (escuchando) {
 			try {
 				LOGGER.info(cliente);
@@ -32,8 +32,7 @@ public class Listener extends Thread {
 				msj.setListener(this);
 				msj.ejecutar();
 				LOGGER.info("mjs ejecutado!");
-			}
-			catch (Exception ex) {
+			} catch (Exception ex) {
 				escuchando = false;
 				LOGGER.error(ex.getStackTrace());
 			}
@@ -47,5 +46,5 @@ public class Listener extends Thread {
 	public void setCliente(Cliente cliente) {
 		this.cliente = cliente;
 	}
-	
+
 }

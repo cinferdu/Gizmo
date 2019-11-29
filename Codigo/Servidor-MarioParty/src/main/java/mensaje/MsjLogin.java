@@ -4,7 +4,7 @@ import java.util.TreeMap;
 
 import controller.UsuarioController;
 import model.Usuario;
-import servidor.Sala;
+import sala.Sala;
 
 public class MsjLogin extends Mensaje {
 

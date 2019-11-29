@@ -14,11 +14,10 @@ public class Casilla {
 	public Casilla(int posX, int posY, TipoDeCasilla tipo) {
 		this.posX = posX;
 		this.posY = posY;
-		
+
 		// Define el tipo de casillero
 		this.tipo = tipo;
-		
-		// Enlaza los casilleros
+
 		siguientesCasillas = new ArrayList<Casilla>();
 	}
 
@@ -65,15 +64,14 @@ public class Casilla {
 	public void setSiguientesCasillas(List<Casilla> siguientesCasillas) {
 		this.siguientesCasillas = siguientesCasillas;
 	}
-	
+
 	public void addSiguiente(Casilla sig) {
 		this.siguientesCasillas.add(sig);
 	}
 
 	@Override
 	public String toString() {
-		return "Casilla "+ tipo;
+		return "Casilla " + tipo;
 	}
 
-	
 }

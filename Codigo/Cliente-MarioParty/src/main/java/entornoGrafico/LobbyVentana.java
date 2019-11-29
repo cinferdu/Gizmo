@@ -19,8 +19,8 @@ import javax.swing.SwingConstants;
 import javax.swing.border.EmptyBorder;
 
 import cliente.Cliente;
-import cliente.Sala;
 import mensaje.MsjIngresarSala;
+import sala.Sala;
 
 public class LobbyVentana extends JFrame {
 
@@ -83,10 +83,6 @@ public class LobbyVentana extends JFrame {
 
 				client.enviarMensaje(new MsjIngresarSala(idSala)); // TODO enviar mjs al server para recuperar sala de x
 																	// cliente
-//				CrearSalaVentana ventana = new CrearSalaVentana(cliente);
-//				ventana.setVisible(true);
-//				cliente.setVentanaActual(ventana);
-//				dispose();
 			}
 		});
 		btnIngresar.setBounds(41, 54, 142, 63);
@@ -110,14 +106,15 @@ public class LobbyVentana extends JFrame {
 		lblLobby.setHorizontalAlignment(SwingConstants.CENTER);
 		lblLobby.setBounds(183, 11, 129, 27);
 		contentPane.add(lblLobby);
-
+		
+		setTitle("Bienvenido/a " + cliente.getNombreCliente());
 	}
 
 	public void mostrarSala(TreeMap<Integer, Sala> salasActivas) {
 		listModel.clear();
 		for (Entry<Integer, Sala> entry : salasActivas.entrySet()) {
 			listModel.addElement(entry.getKey() + ". " + entry.getValue().getNombreSala() + " [Max Players: "
-					+ entry.getValue().getLimiteJugadores() + " Lider: " + entry.getValue().getNombreDuenio()+"]");
+					+ entry.getValue().getLimiteJugadores() + " Lider: " + entry.getValue().getNombreDuenio() + "]");
 		}
 	}
 

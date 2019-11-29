@@ -9,6 +9,8 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
 import java.util.ArrayList;
 import java.util.Enumeration;
 
@@ -19,6 +21,7 @@ import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JLayeredPane;
+import javax.swing.JOptionPane;
 import javax.swing.JRadioButton;
 import javax.swing.JScrollPane;
 import javax.swing.JSeparator;
@@ -32,34 +35,36 @@ import cliente.Cliente;
 import game.Dado;
 import game.Jugador;
 import game.Partida;
+import mensaje.MsjIngresarLobby;
 import mensaje.MsjPartidaBotonAccion;
 import mensaje.MsjPartidaElegirCaminoAccion;
 import mensaje.MsjPartidaSelecObjAccion;
 import objeto.Objeto;
 
 public class PanelJuego extends JLayeredPane {
+	private static final long serialVersionUID = 3007758429335180626L;
+	
 	private static final int INICIO_PUNTAJES = 730;
 	private static final int SEPARACION_PUNTAJES = 50;
 	private static final int TAMANIO_CASILLA = 30;
-	private static final int TIEMPO_ELEGIR_OPCION = 10; // en segundos
+	private static final int TIEMPO_ELEGIR_OPCION = 10000; // en milisegundos
 
 	private final static Logger LOGGER = Logger.getLogger(PanelJuego.class);
 
-	private Image dado = null;
+	private Image dado;
 	private Image dado_boton;
 
-	private static final long serialVersionUID = 3007758429335180626L;
 	private JTextArea textArea;
 	private JScrollPane scrollPane;
 	private JLabel modificadorDelCursor;
-	private boolean botonPresionado = false;
-	JLabel fondoL;
+	private boolean botonPresionado;
+	private JLabel fondoL;
+
 	// para mostrarOpciones(...)
-	private Casilla caminoElegido = null;
-	private Jugador jugadorSeleccionado = null;
+	private Casilla caminoElegido;
+	private Jugador jugadorSeleccionado;
 
 	private Partida partida;
-	// private VentanaJuego ventanaJuego;
 	private Cliente cliente;
 	private boolean mostrarBoton = true;
 
@@ -67,7 +72,6 @@ public class PanelJuego extends JLayeredPane {
 
 	public PanelJuego(Cliente client) {
 		this.cliente = client;
-		// this.ventanaJuego = ventanaJuego;
 		this.partida = cliente.getPartidaActual();
 
 		setLayout(null);
@@ -79,8 +83,6 @@ public class PanelJuego extends JLayeredPane {
 		DefaultCaret caret = (DefaultCaret) textArea.getCaret();
 		caret.setUpdatePolicy(DefaultCaret.ALWAYS_UPDATE);
 		scrollPane = new JScrollPane(textArea);
-		this.revalidate();
-
 		scrollPane.setBounds(0, 565, 330, 100);
 		add(scrollPane);
 
@@ -89,13 +91,13 @@ public class PanelJuego extends JLayeredPane {
 		add(separator);
 
 		partida = cliente.getPartidaActual();
-		
+
 		LOGGER.info("llego a las imagenes!!!");
 		dado_boton = ImgExtra.BOTON_DADO;
 		fondoL = new JLabel(ImgExtra.FONDO);
 		fondoL.setBounds(0, 0, 733, 550);
 		add(fondoL, 0, 0);
-		
+
 		modificadorDelCursor = new JLabel();
 		modificadorDelCursor.setBounds(280, 30, 100, 100);
 		modificadorDelCursor.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
@@ -185,13 +187,11 @@ public class PanelJuego extends JLayeredPane {
 
 	public void mostrarVentanaPuntajesFinales(Jugador ganador) {
 		JFrame ventanaActual = cliente.getVentanaActual();
-		PuntajesVentana ventanaPuntos = new PuntajesVentana((ArrayList<Jugador>) partida.getJugadores(), ganador);
+		PuntajesVentana ventanaPuntos = new PuntajesVentana(cliente, (ArrayList<Jugador>) partida.getJugadores(), ganador);
 		ventanaPuntos.setVisible(true);
 		ventanaPuntos.setFocusable(true);
-
-		ventanaActual.dispose();
 		cliente.setVentanaActual(ventanaPuntos);
-
+		ventanaActual.dispose();
 	}
 
 	public void nuevaRonda(int rondaActual) {
@@ -243,7 +243,7 @@ public class PanelJuego extends JLayeredPane {
 
 		// creo los componentes
 		JLabel mensaje = new JLabel(
-				"Seleccione un objeto para utilizarlo (tiene " + TIEMPO_ELEGIR_OPCION + " segundos)");
+				"Seleccione un objeto para utilizarlo (tiene " + TIEMPO_ELEGIR_OPCION / 1000 + " segundos)");
 		mensaje.setBounds(345, 555, 400, 35);
 		add(mensaje);
 
@@ -251,11 +251,9 @@ public class PanelJuego extends JLayeredPane {
 		mensajeObj.setBounds(345, 600, 400, 35);
 		add(mensajeObj);
 
-		// Lo clono para que el remove no borre ese jugador en la partida
 		ArrayList<Jugador> posiblesObjetivos = new ArrayList<Jugador>();
-		// partida.getJugadores()
 		for (Jugador jugador : partida.getJugadores()) {
-			if (!jugadorActual.getNombre().equals(jugador.getNombre())) {
+			if (!jugadorActual.equals(jugador)) {
 				posiblesObjetivos.add(jugador);
 			}
 		}
@@ -285,44 +283,41 @@ public class PanelJuego extends JLayeredPane {
 		// cargo los objetos
 		for (Objeto elemento : aListar) {
 
-			// si es distinto de null lo agrego
-			if (elemento != null) {
-				JRadioButton jrButton = new JRadioButton(elemento.toString());
-				jrButton.setActionCommand(objetoNumero + "");
-				jrButton.setBounds(350 + elementosCargados * 150, 577, 150, 35);
+			JRadioButton jrButton = new JRadioButton(elemento.toString());
+			jrButton.setActionCommand(objetoNumero + "");
+			jrButton.setBounds(350 + elementosCargados * 150, 577, 150, 35);
 
-				if (elemento.isConObjetivo()) {
-					jrButton.addActionListener(new ActionListener() {
-						@Override
-						public void actionPerformed(ActionEvent e) {
-							mostrarObjetivos(grupoJugadores, mensajeObj);
-						}
-					});
-				} else {
-					jrButton.addActionListener(new ActionListener() {
-						@Override
-						public void actionPerformed(ActionEvent e) {
-							ocultarObjetivos(grupoJugadores, mensajeObj);
-						}
-					});
-
-				}
-
-				if (elementosCargados == 0) {
-					jrButton.setSelected(true);
-
-					if (elemento.isConObjetivo())
+			if (elemento.isConObjetivo()) {
+				jrButton.addActionListener(new ActionListener() {
+					@Override
+					public void actionPerformed(ActionEvent e) {
 						mostrarObjetivos(grupoJugadores, mensajeObj);
-					else
+					}
+				});
+			} else {
+				jrButton.addActionListener(new ActionListener() {
+					@Override
+					public void actionPerformed(ActionEvent e) {
 						ocultarObjetivos(grupoJugadores, mensajeObj);
-				}
+					}
+				});
 
-				grupoObjeto.add(jrButton);
-				this.add(jrButton);
-				elementosCargados++;
-
-				botonesUsados.add(jrButton);
 			}
+
+			if (elementosCargados == 0) {
+				jrButton.setSelected(true);
+
+				if (elemento.isConObjetivo())
+					mostrarObjetivos(grupoJugadores, mensajeObj);
+				else
+					ocultarObjetivos(grupoJugadores, mensajeObj);
+			}
+
+			grupoObjeto.add(jrButton);
+			this.add(jrButton);
+			elementosCargados++;
+
+			botonesUsados.add(jrButton);
 
 			objetoNumero++;
 		}
@@ -343,11 +338,10 @@ public class PanelJuego extends JLayeredPane {
 
 		// espero a que aprete el boton o pasen los segundos
 		long tiempo_limite_ini = System.currentTimeMillis();
-		long tiempo_limite_fin = System.currentTimeMillis();
-		while (botonPresionado == false && (tiempo_limite_fin - tiempo_limite_ini) < (TIEMPO_ELEGIR_OPCION * 1000)) {
+
+		while (botonPresionado == false && (System.currentTimeMillis() - tiempo_limite_ini) < TIEMPO_ELEGIR_OPCION) {
 			try {
 				Thread.sleep(20);
-				tiempo_limite_fin = System.currentTimeMillis();
 			} catch (InterruptedException e) {
 				e.printStackTrace();
 			}
@@ -364,13 +358,16 @@ public class PanelJuego extends JLayeredPane {
 		botonPresionado = false;
 
 		int jg_selec = Integer.valueOf(grupoJugadores.getSelection().getActionCommand());
-		jugadorSeleccionado = posiblesObjetivos.get(jg_selec);
+		if (jugadorActual.getMochila_objetos(objetoElegido).isConObjetivo()) {
+			jugadorSeleccionado = posiblesObjetivos.get(jg_selec);
+		}
 
 		limpiarGrupo(botonesUsados);
 		revalidate();
 		repaint();
 
 		MsjPartidaSelecObjAccion msj = new MsjPartidaSelecObjAccion(objetoElegido, jugadorSeleccionado);
+		jugadorSeleccionado = null;
 		msj.setJugadorAct(jugadorActual);
 		cliente.enviarMensaje(msj);
 
@@ -402,7 +399,7 @@ public class PanelJuego extends JLayeredPane {
 
 		// creo los componentes
 		JLabel mensaje = new JLabel(
-				"Haga clic la siguiente casilla, para avanzar (tiene " + TIEMPO_ELEGIR_OPCION + " segundos)");
+				"Haga clic la siguiente casilla, para avanzar (tiene " + TIEMPO_ELEGIR_OPCION / 1000 + " segundos)");
 		mensaje.setBounds(345, 565, 400, 20);
 
 		add(mensaje);
@@ -427,11 +424,10 @@ public class PanelJuego extends JLayeredPane {
 
 		// espero a que aprete el boton o pasen 10 segundos
 		long tiempo_limite_ini = System.currentTimeMillis();
-		long tiempo_limite_fin = System.currentTimeMillis();
-		while (botonPresionado == false && (tiempo_limite_fin - tiempo_limite_ini) < (TIEMPO_ELEGIR_OPCION * 1000)) {
+
+		while (botonPresionado == false && (System.currentTimeMillis() - tiempo_limite_ini) < TIEMPO_ELEGIR_OPCION) {
 			try {
 				Thread.sleep(20);
-				tiempo_limite_fin = System.currentTimeMillis();
 			} catch (InterruptedException e) {
 				e.printStackTrace();
 			}

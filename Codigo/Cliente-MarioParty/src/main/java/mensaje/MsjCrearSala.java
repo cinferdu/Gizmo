@@ -18,8 +18,9 @@ public class MsjCrearSala extends Mensaje {
 
 	@Override
 	public void ejecutar() {
-		
+
 	}
+
 	public String getDuenio() {
 		return duenio;
 	}
@@ -43,6 +44,5 @@ public class MsjCrearSala extends Mensaje {
 	public void setNombreSala(String nombreSala) {
 		this.nombreSala = nombreSala;
 	}
-	
 
 }

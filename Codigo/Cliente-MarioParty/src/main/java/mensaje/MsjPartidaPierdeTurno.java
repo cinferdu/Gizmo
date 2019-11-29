@@ -27,5 +27,4 @@ public class MsjPartidaPierdeTurno extends Mensaje {
 		this.jugadorAct = jugadorAct;
 	}
 
-
 }

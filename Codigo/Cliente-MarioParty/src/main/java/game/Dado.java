@@ -19,7 +19,7 @@ public class Dado {
 	public static int lanzarDado(int caras) {
 		return (int) (Math.random() * caras + 1);
 	}
-	
+
 	public static Image getImgCara(int nroPasos) {
 		switch (nroPasos) {
 		case 1:
@@ -38,5 +38,5 @@ public class Dado {
 			return null;
 		}
 	}
-	
+
 }

@@ -7,7 +7,7 @@ public class MsjPartidaSinAccion extends Mensaje {
 
 	private static final long serialVersionUID = 1L;
 	private Jugador jugadorAct;
-	
+
 	public MsjPartidaSinAccion(Jugador jugAct) {
 		super();
 		setJugadorAct(jugAct);

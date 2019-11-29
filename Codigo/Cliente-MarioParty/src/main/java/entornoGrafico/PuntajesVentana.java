@@ -1,18 +1,23 @@
 package entornoGrafico;
 
 import java.awt.Color;
+import java.awt.Font;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
 import java.util.ArrayList;
 
 import javax.swing.ImageIcon;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
 
+import cliente.Cliente;
 import game.Jugador;
-import java.awt.Font;
+import mensaje.MsjIngresarLobby;
 
 public class PuntajesVentana extends JFrame {
 
@@ -20,7 +25,7 @@ public class PuntajesVentana extends JFrame {
 	private static final int NOMBRE_INICIO_X = 200;
 	private static final int NOMBRE_SEPARACION = 60;
 	private static final int TITULO_Y = 180;
-	
+
 	private static final long serialVersionUID = 4095766066350057723L;
 	private JPanel contentPane;
 	private ImageIcon tabla_puntajes = new ImageIcon(PuntajesVentana.class.getResource("/img/tabla_puntajes.png"));
@@ -30,8 +35,11 @@ public class PuntajesVentana extends JFrame {
 	private ArrayList<Jugador> jugadores;
 	private Jugador ganador;
 	
-	public PuntajesVentana(ArrayList<Jugador> jugadores, Jugador ganador) {
-		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+	private Cliente cliente;
+
+	public PuntajesVentana(Cliente client, ArrayList<Jugador> jugadores, Jugador ganador) {
+		cliente = client;
+		setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
 		setBounds(100, 100, 920, 690);
 		contentPane = new JPanel();
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
@@ -53,8 +61,18 @@ public class PuntajesVentana extends JFrame {
 
 		this.jugadores = jugadores;
 		this.ganador = ganador;
+
+		addWindowListener(new WindowAdapter() {
+			@Override
+			public void windowClosing(WindowEvent e) {
+				int dialogResult = JOptionPane.showConfirmDialog(null, "¿Desea volver al Lobby?",
+						"Salir", JOptionPane.YES_NO_OPTION);
+				if (dialogResult == JOptionPane.YES_OPTION) {
+					cliente.enviarMensaje(new MsjIngresarLobby());
+				}
+			}
+		});
 		
-		repaint();
 		setVisible(true);
 	}
 
@@ -76,7 +94,7 @@ public class PuntajesVentana extends JFrame {
 				g2d.setColor(Color.BLACK);
 			}
 			g2d.drawString(jugadores.get(i).getNombre(), NOMBRE_INICIO_X, 240 + NOMBRE_SEPARACION * i);
-			g2d.drawString(jugadores.get(i).getMonedas()+"", MONEDA_INICIO_X, 240 + NOMBRE_SEPARACION * i);
+			g2d.drawString(jugadores.get(i).getMonedas() + "", MONEDA_INICIO_X, 240 + NOMBRE_SEPARACION * i);
 		}
 
 	}

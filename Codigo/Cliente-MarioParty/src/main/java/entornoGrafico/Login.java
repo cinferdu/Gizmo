@@ -26,14 +26,14 @@ public class Login extends JFrame {
 	private Cliente cliente;
 
 	public static void main(String[] args) {
-		new Login(null).setVisible(true);
+		new Login();
 	}
 
 	/**
 	 * Create the frame.
 	 */
-	public Login(Cliente client) {
-		this.cliente = client;
+	public Login() {
+		//this.cliente = client;
 		setResizable(false);
 		setTitle("Ingreso");
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -43,7 +43,7 @@ public class Login extends JFrame {
 		setContentPane(contentPane);
 		contentPane.setLayout(null);
 		setResizable(false);
-
+		
 		textFieldUser = new JTextField();
 		textFieldUser.setBounds(29, 86, 100, 20);
 		contentPane.add(textFieldUser);
@@ -74,8 +74,10 @@ public class Login extends JFrame {
 					JOptionPane.showMessageDialog(contentPane, "La contraseña no puede estar vacia.");
 					return;
 				}
-				
-				cliente.enviarMensaje(new MsjLogin(user,pass));
+				if (cliente == null) {
+					crearCliente();
+				}
+				cliente.enviarMensaje(new MsjLogin(user, pass));
 			}
 		});
 		btnNewButton.setBounds(29, 163, 100, 23);
@@ -88,5 +90,12 @@ public class Login extends JFrame {
 		JLabel lblPass = new JLabel("Contraseña");
 		lblPass.setBounds(29, 104, 100, 30);
 		contentPane.add(lblPass);
+		
+		setVisible(true);
+	}
+
+	protected void crearCliente() {
+		cliente = new Cliente();
+		cliente.setVentanaActual(this);
 	}
 }

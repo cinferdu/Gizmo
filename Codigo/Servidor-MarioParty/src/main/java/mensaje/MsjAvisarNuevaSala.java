@@ -2,7 +2,7 @@ package mensaje;
 
 import java.util.TreeMap;
 
-import servidor.Sala;
+import sala.Sala;
 
 public class MsjAvisarNuevaSala extends Mensaje {
 
