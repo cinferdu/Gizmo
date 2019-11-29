@@ -9,6 +9,8 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
 import java.util.ArrayList;
 import java.util.Enumeration;
 
@@ -19,6 +21,7 @@ import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JLayeredPane;
+import javax.swing.JOptionPane;
 import javax.swing.JRadioButton;
 import javax.swing.JScrollPane;
 import javax.swing.JSeparator;
@@ -32,12 +35,15 @@ import cliente.Cliente;
 import game.Dado;
 import game.Jugador;
 import game.Partida;
+import mensaje.MsjIngresarLobby;
 import mensaje.MsjPartidaBotonAccion;
 import mensaje.MsjPartidaElegirCaminoAccion;
 import mensaje.MsjPartidaSelecObjAccion;
 import objeto.Objeto;
 
 public class PanelJuego extends JLayeredPane {
+	private static final long serialVersionUID = 3007758429335180626L;
+	
 	private static final int INICIO_PUNTAJES = 730;
 	private static final int SEPARACION_PUNTAJES = 50;
 	private static final int TAMANIO_CASILLA = 30;
@@ -48,12 +54,11 @@ public class PanelJuego extends JLayeredPane {
 	private Image dado;
 	private Image dado_boton;
 
-	private static final long serialVersionUID = 3007758429335180626L;
 	private JTextArea textArea;
 	private JScrollPane scrollPane;
 	private JLabel modificadorDelCursor;
 	private boolean botonPresionado;
-	JLabel fondoL;
+	private JLabel fondoL;
 
 	// para mostrarOpciones(...)
 	private Casilla caminoElegido;
@@ -78,8 +83,6 @@ public class PanelJuego extends JLayeredPane {
 		DefaultCaret caret = (DefaultCaret) textArea.getCaret();
 		caret.setUpdatePolicy(DefaultCaret.ALWAYS_UPDATE);
 		scrollPane = new JScrollPane(textArea);
-		this.revalidate();
-
 		scrollPane.setBounds(0, 565, 330, 100);
 		add(scrollPane);
 
@@ -184,13 +187,11 @@ public class PanelJuego extends JLayeredPane {
 
 	public void mostrarVentanaPuntajesFinales(Jugador ganador) {
 		JFrame ventanaActual = cliente.getVentanaActual();
-		PuntajesVentana ventanaPuntos = new PuntajesVentana((ArrayList<Jugador>) partida.getJugadores(), ganador);
+		PuntajesVentana ventanaPuntos = new PuntajesVentana(cliente, (ArrayList<Jugador>) partida.getJugadores(), ganador);
 		ventanaPuntos.setVisible(true);
 		ventanaPuntos.setFocusable(true);
-
-		ventanaActual.dispose();
 		cliente.setVentanaActual(ventanaPuntos);
-
+		ventanaActual.dispose();
 	}
 
 	public void nuevaRonda(int rondaActual) {
@@ -357,13 +358,16 @@ public class PanelJuego extends JLayeredPane {
 		botonPresionado = false;
 
 		int jg_selec = Integer.valueOf(grupoJugadores.getSelection().getActionCommand());
-		jugadorSeleccionado = posiblesObjetivos.get(jg_selec);
+		if (jugadorActual.getMochila_objetos(objetoElegido).isConObjetivo()) {
+			jugadorSeleccionado = posiblesObjetivos.get(jg_selec);
+		}
 
 		limpiarGrupo(botonesUsados);
 		revalidate();
 		repaint();
 
 		MsjPartidaSelecObjAccion msj = new MsjPartidaSelecObjAccion(objetoElegido, jugadorSeleccionado);
+		jugadorSeleccionado = null;
 		msj.setJugadorAct(jugadorActual);
 		cliente.enviarMensaje(msj);
 

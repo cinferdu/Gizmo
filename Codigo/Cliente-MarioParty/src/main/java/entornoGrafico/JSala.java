@@ -14,9 +14,9 @@ import javax.swing.ListSelectionModel;
 import javax.swing.border.EmptyBorder;
 
 import cliente.Cliente;
-import cliente.Sala;
 import mensaje.MsjIniciarPartida;
 import mensaje.MsjSalirDeLaSala;
+import sala.Sala;
 
 import javax.swing.JLabel;
 import javax.swing.JList;

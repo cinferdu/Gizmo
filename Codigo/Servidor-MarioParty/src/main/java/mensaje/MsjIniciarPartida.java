@@ -10,6 +10,7 @@ import game.Personaje;
 import game.Sprite;
 import objeto.CajaMisteriosa;
 import objeto.GuanteBlanco;
+import sala.Sala;
 import servidor.PartidaThread;
 import servidor.Servidor;
 
@@ -21,6 +22,11 @@ public class MsjIniciarPartida extends Mensaje {
 	private ArrayList<String> nombresJugadores;
 	private Partida game;
 
+	public MsjIniciarPartida(Partida game) {
+		this.game = game;
+		this.clase = this.getClass().getSimpleName();
+	}
+	
 	public MsjIniciarPartida(ArrayList<String> nombresJugadores) {
 		this.clase = this.getClass().getSimpleName();
 	}
@@ -37,15 +43,18 @@ public class MsjIniciarPartida extends Mensaje {
 			participantes.add(jug);
 			cont ++;
 		}
-
-		this.game = new Partida(participantes, 50); // EN LA VENTANA DE CREAR SALA AGREGAR "OBJETIVO" o "LIMITE DE MONEDAS"
+		
+		Sala sala = listenerServer.getSalas().get(listenerServer.getSalaActiva());
+		this.game = new Partida(sala.getId_sala(), participantes, 50); // EN LA VENTANA DE CREAR SALA AGREGAR "OBJETIVO" o "LIMITE DE MONEDAS"
 		LOGGER.info(game);
 		PartidaThread hiloPartida = listenerServer.crearHiloPartida(game, nombresJugadores);
 		listenerServer.asignarThread(game.getIdpartida(), nombresJugadores);
+		sala.setEnPartida(true);
 		
 		synchronized (Servidor.partidas) {
 			Servidor.partidas.put(game.getIdpartida(), hiloPartida);
 		}
+		
 		listenerServer.enviarMensajeBroadcast(this, nombresJugadores);
 	}
 

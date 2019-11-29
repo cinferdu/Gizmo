@@ -1,6 +1,6 @@
 package mensaje;
 
-import servidor.Sala;
+import sala.Sala;
 
 public class MsjCrearSala extends Mensaje {
 

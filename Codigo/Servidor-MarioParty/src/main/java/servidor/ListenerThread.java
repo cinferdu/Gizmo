@@ -20,14 +20,15 @@ import game.Partida;
 import mensaje.Mensaje;
 import mensaje.MsjAvisarClienteAbandonoSala;
 import mensaje.MsjAvisarNuevaSala;
-import mensaje.MsjPartidaPuntajesFinales;
 import mensaje.MsjSalaNuevoLider;
+import sala.Sala;
 import util.UtilesLog;
 
 public class ListenerThread extends Thread {
 	private String nombreCliente;
 	private int id_salaActiva; // sala en la que se encuetra el cliente
 	private int id_partidaActiva; // partida en la que se encuetra el cliente
+	private int id_partidaEspectador;
 	private HashMap<String, ListenerThread> clientesConectados;
 	private DataInputStream entrada;
 	private DataOutputStream salida;
@@ -54,6 +55,7 @@ public class ListenerThread extends Thread {
 		this.salas = salas;
 		id_salaActiva = -1;
 		setId_partidaActiva(-1);
+		id_partidaEspectador = -1;
 	}
 
 	@Override
@@ -84,21 +86,33 @@ public class ListenerThread extends Thread {
 
 			PartidaThread partidaThread = Servidor.partidas.get(id_partidaActiva);
 
+			if (id_partidaEspectador != -1) {
+				partidaThread = Servidor.partidas.get(id_partidaEspectador);
+				partidaThread.removeSpect(nombreCliente);
+			}
+			
 			if (partidaThread != null) {
 				Partida partida = partidaThread.getPartida();
 				ArrayList<String> jugadores = partidaThread.getNombreJugadores();
 				jugadores.remove(nombreCliente);
-				partidaThread.setNombreJugadores(jugadores);
+				/*partidaThread.setNombreJugadores(jugadores);
 				ArrayList<Jugador> jugadoresX = partida.getJugadores();
 				jugadoresX.remove(new Jugador(nombreCliente));
 				partida.setJugadores(jugadoresX);
-				if (jugadores.size() == 1) {
+				*/
+				if (jugadores.size() == 1) { // se encarga PartidaThread
 					partida.setJugadorGanador(partidaThread.getJugadores().get(0));
 					partida.setHayGanador(true);
+					/*
+					partidaThread
+							.avisar(new MsjPartidaPuntajesFinales(partida.getJugadorGanador(), partida.getJugadores()));
+					
+					salas.remove(id_salaActiva);
+					Servidor.partidas.get(id_partidaActiva);
+					clientesConectados.get(ganador.getNombre()).setSalaActiva(-1);
+					*/
 				}
 
-				partidaThread
-						.avisar(new MsjPartidaPuntajesFinales(partida.getJugadorGanador(), partida.getJugadores()));
 			}
 
 			LOGGER.error("Error de conexion con el cliente " + nombreCliente);
@@ -179,7 +193,15 @@ public class ListenerThread extends Thread {
 		this.id_partidaActiva = id_partidaActiva;
 	}
 
-	public synchronized void enviarMensaje(Object mensaje) {
+	public int getId_partidaEspectador() {
+		return id_partidaEspectador;
+	}
+
+	public void setId_partidaEspectador(int id_partidaEspectador) {
+		this.id_partidaEspectador = id_partidaEspectador;
+	}
+
+	public void enviarMensaje(Object mensaje) {
 		try {
 			salida.writeUTF(gson.toJson(mensaje));
 			salida.flush();
@@ -189,9 +211,13 @@ public class ListenerThread extends Thread {
 		}
 	}
 
-	public synchronized void enviarMensajeBroadcast(Object mensaje, ArrayList<String> nombres) {
-		for (String string : nombres) {
-			this.clientesConectados.get(string).enviarMensaje(mensaje);
+	public void enviarMensajeBroadcast(Object mensaje, ArrayList<String> nombres) {
+		synchronized (clientesConectados) {
+			for (String name : nombres) {
+				ListenerThread lt = null;
+				if((lt = clientesConectados.get(name))!= null)
+					lt.enviarMensaje(mensaje);
+			}
 		}
 	}
 
@@ -207,7 +233,7 @@ public class ListenerThread extends Thread {
 		}
 	}
 
-	public void sacarClienteAlLobby(String nombre) {
+	public void sacarClienteDelLobby(String nombre) {
 		synchronized (lobby) {
 			lobby.removeCliente(nombre);
 		}
@@ -215,25 +241,29 @@ public class ListenerThread extends Thread {
 	
 	public void eliminarClienteDeSala() {
 		Sala salaActual = salas.get(id_salaActiva);
-		synchronized (salaActual) {
-			salaActual.removeCliente(nombreCliente);
+		if (salaActual != null && !salaActual.isEnPartida()) {
 			
-			if (salaActual.getNombreJugadores().size() >= 1) {
-				if (nombreCliente.equals(salaActual.getNombreDuenio())) {
-					salaActual.setNombreDuenio(salaActual.getNombreJugadores().get(0));
-					enviarMensaje(new MsjSalaNuevoLider(), salaActual.getNombreJugadores().get(0));
-				} 
-				enviarMensajeBroadcast(new MsjAvisarClienteAbandonoSala(nombreCliente),
-						salaActual.getNombreJugadores());
-			} else {
-				// elimino la sala si era el unico en ella
-				synchronized (salas) {
-					salas.remove(id_salaActiva);
+			synchronized (salaActual) {
+				salaActual.removeCliente(nombreCliente);
+				
+				if (salaActual.getNombreJugadores().size() >= 1) {
+					if (nombreCliente.equals(salaActual.getNombreDuenio())) {
+						
+						salaActual.setNombreDuenio(salaActual.getNombreJugadores().get(0));
+						enviarMensaje(new MsjSalaNuevoLider(), salaActual.getNombreJugadores().get(0));
+					} 
+					enviarMensajeBroadcast(new MsjAvisarClienteAbandonoSala(nombreCliente),
+							salaActual.getNombreJugadores());
+				} else {
+					// elimino la sala si era el unico en ella
+					synchronized (salas) {
+						salas.remove(id_salaActiva);
+					}
+					enviarMensajeBroadcast(new MsjAvisarNuevaSala(salas), lobby.getNombreJugadores());
 				}
-				enviarMensajeBroadcast(new MsjAvisarNuevaSala(salas), lobby.getNombreJugadores());
 			}
 		}
-		id_salaActiva = -1;
+		//id_salaActiva = -1;
 	}
 	
 	
@@ -264,23 +294,19 @@ public class ListenerThread extends Thread {
 	}
 
 	public void notificarCasillaElegida(Casilla casilla) {
-		synchronized (Servidor.partidas) {
-			PartidaThread thread = Servidor.partidas.get(this.getId_partidaActiva());
-			synchronized (thread) {
-				thread.setCaminoSeleccionado(casilla);
-				thread.notify();
-			}
+		PartidaThread thread = Servidor.partidas.get(this.getId_partidaActiva());
+		synchronized (thread) {
+			thread.setCaminoSeleccionado(casilla);
+			thread.notify();
 		}
 	}
 
 	public void notificarObjetoElegido(int indexObjeto, Jugador jugObjetivo) {
-		synchronized (Servidor.partidas) {
-			PartidaThread thread = Servidor.partidas.get(this.getId_partidaActiva());
-			synchronized (thread) {
-				thread.setObjetoSelecionado(indexObjeto);
-				thread.setJugadorSelecionado(jugObjetivo);
-				thread.notify();
-			}
+		PartidaThread thread = Servidor.partidas.get(this.getId_partidaActiva());
+		synchronized (thread) {
+			thread.setObjetoSelecionado(indexObjeto);
+			thread.setJugadorSelecionado(jugObjetivo);
+			thread.notify();
 		}
 	}
 
@@ -303,5 +329,22 @@ public class ListenerThread extends Thread {
 		}
 		enviarMensajeBroadcast(msj, nombres);
 
+	}
+
+	public void terminarPartida(int idpartida, ArrayList<String> nombresJugadores) {
+		synchronized (Servidor.partidas) {
+			Servidor.partidas.remove(idpartida);
+		}
+		
+		synchronized (clientesConectados) {
+			for (String cliente : nombresJugadores) {
+				ListenerThread clienteModif = clientesConectados.get(cliente);
+				clienteModif.id_salaActiva = -1;
+				clienteModif.id_partidaActiva = -1;
+				clienteModif.id_partidaEspectador = -1;
+			}
+		}
+		
+		salas.remove(idpartida);
 	}
 }

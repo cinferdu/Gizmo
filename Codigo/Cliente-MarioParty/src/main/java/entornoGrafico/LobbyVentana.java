@@ -19,8 +19,8 @@ import javax.swing.SwingConstants;
 import javax.swing.border.EmptyBorder;
 
 import cliente.Cliente;
-import cliente.Sala;
 import mensaje.MsjIngresarSala;
+import sala.Sala;
 
 public class LobbyVentana extends JFrame {
 
@@ -83,10 +83,6 @@ public class LobbyVentana extends JFrame {
 
 				client.enviarMensaje(new MsjIngresarSala(idSala)); // TODO enviar mjs al server para recuperar sala de x
 																	// cliente
-//				CrearSalaVentana ventana = new CrearSalaVentana(cliente);
-//				ventana.setVisible(true);
-//				cliente.setVentanaActual(ventana);
-//				dispose();
 			}
 		});
 		btnIngresar.setBounds(41, 54, 142, 63);

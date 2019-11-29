@@ -31,11 +31,15 @@ public class PartidaThread extends Thread {
 	private Casilla caminoSeleccionado;
 	private Jugador jugadorSeleccionado;
 	private int objetoSelecionado; // indice del objeto seleccionado
+	private boolean hiloVivo = true;
+
+	private ArrayList<String> nombreSpec;
 
 	public PartidaThread(Partida juego, ArrayList<String> nombres, ListenerThread listener) {
 		partida = juego;
 		this.listener = listener;
 		nombresJugadores = nombres;
+		nombreSpec = new ArrayList<String>();
 	}
 
 	@Override
@@ -44,7 +48,7 @@ public class PartidaThread extends Thread {
 		Jugador jugadorActual;
 		Iterator<Jugador> iteradorJugador;
 
-		while (!partida.isHayGanador()) {
+		while (!partida.isHayGanador() && hiloVivo) {
 
 			// Incremento la ronda
 			partida.aumentarRonda();
@@ -52,9 +56,13 @@ public class PartidaThread extends Thread {
 
 			avisar(new MsjPartidaIniRonda(partida.getRondaActual()));
 
-			while (iteradorJugador.hasNext() && partida.isHayGanador() == false) {
+			while (iteradorJugador.hasNext() && partida.isHayGanador() == false  && hiloVivo) {
 				jugadorActual = iteradorJugador.next();
-
+				
+				if (!nombresJugadores.contains(jugadorActual.getNombre())) {
+					continue;
+				}
+				
 				if (!jugadorActual.isPierdeTurno()) {
 
 					avisar(new MsjPartidaBotonInformar(jugadorActual));
@@ -76,19 +84,25 @@ public class PartidaThread extends Thread {
 					// un mensaje
 					if (!jugadorActual.isMochilaVacia()) {
 						objetoSelecionado = -1;
+						
 						// El jugador elije su proxima accion
 						avisar(new MsjPartidaSelecObjInf(jugadorActual));
 						avisar(new MsjPartidaSelecObjAccion(jugadorActual), jugadorActual);
 						esperarNofify();
+						
 						String nombreobj = null;
 						if (this.objetoSelecionado != -1) {
-							if (jugadorSeleccionado != null) { // busco al jugador si el objeto es con objetivo
-								jugadorSeleccionado = partida.getJugadores().get(partida.getJugadores().indexOf(jugadorSeleccionado)); // obtengo la refencia a ese jugador
+							if (jugadorSeleccionado != null) { // busco al jugador, si el objeto es con objetivo
+								// obtengo la refencia a ese jugador
+								jugadorSeleccionado = partida.getJugadores()
+										.get(partida.getJugadores().indexOf(jugadorSeleccionado));
 							}
 							nombreobj = jugadorActual.usarObjeto(objetoSelecionado, jugadorSeleccionado).getNombre();
-
-							listener.enviarMensajeBroadcast(new MsjPartidaObjetoUsado(jugadorActual.getNombre(),
-									nombreobj, partida.getJugadores()));
+							
+							
+							// CAMBIAR
+							//listener.enviarMensajeBroadcast(new MsjPartidaObjetoUsado(jugadorActual.getNombre(),nombreobj, partida.getJugadores()));
+							avisar(new MsjPartidaObjetoUsado(jugadorActual.getNombre(),nombreobj, partida.getJugadores()));
 						}
 					} else {
 						avisar(new MsjPartidaSinAccion(jugadorActual));
@@ -102,39 +116,26 @@ public class PartidaThread extends Thread {
 				} else {
 					// Activo el turno del jugador
 					jugadorActual.setPierdeTurno(false);
-					// avisar(Operacion.PERDIO_TURNO, jugadorActual); // Perdio su turno
 					avisar(new MsjPartidaPierdeTurno(jugadorActual));
 				}
 
-				// avisar(Operacion.ACTUALIZAR_TABLERO, jugadorActual); // Mostrar monedas y
-				// estrellas??
 
 				// Fin del turno del jugador.
 				// Turno del siguiente jugador.
 			}
-			/*
-			 * if (!partida.isHayGanador()) { for (Iterator<Jugador> iterator =
-			 * partida.getJugadores().iterator(); iterator.hasNext();) { Jugador jugador =
-			 * iterator.next(); // MINIJUEGO MiniTenis miniGame = new MiniTenis(); try {
-			 * miniGame.setGamerName(jugador.getNombre()); int score =
-			 * miniGame.iniciarMiniTenis(jugador.getNombre());
-			 * jugador.setMiniJuegoPuntos(score); } catch (InterruptedException e) {
-			 * e.printStackTrace(); } } //Jugador mejor = getMejorPuntajeEnMiniJuego();
-			 * //mejor.aumentarMonedas(mejor.getMiniJuegoPuntos() / 3);
-			 * //this.limpiarMiniPuntajes();
-			 * 
-			 * }
-			 */
-
+			
+			// Minijuego
 		}
-		// avisar(Operacion.PUNTAJES_FINALES, partida.getJugadorGanador());
 		avisar(new MsjPartidaPuntajesFinales(partida.getJugadorGanador(), partida.getJugadores()));
+		
+		listener.terminarPartida(partida.getIdpartida(), nombresJugadores);
+		
 	}
 
 	public void avanzar(Jugador jugador) {
 		Casilla sigcamino = null;
 
-		while (jugador.getNroPasos() > 0) {
+		while (jugador.getNroPasos() > 0  && hiloVivo) {
 
 			if ((sigcamino = jugador.getPosicionActual().caminoUnico()) != null)
 				jugador.setPosicionActual(sigcamino);
@@ -169,10 +170,12 @@ public class PartidaThread extends Thread {
 	 * @param msjPartida
 	 */
 	public void avisar(Mensaje msjPartida) {
-		listener.enviarMensajeBroadcast(msjPartida, this.nombresJugadores);
+		listener.enviarMensajeBroadcast(msjPartida, nombresJugadores);
+		listener.enviarMensajeBroadcast(msjPartida, nombreSpec);
 
-		long ini = System.currentTimeMillis();
-		while (System.currentTimeMillis() - ini < 500);
+		long ini = System.currentTimeMillis() + 500;
+		while (System.currentTimeMillis() < ini)
+			;
 	}
 
 	/**
@@ -222,6 +225,14 @@ public class PartidaThread extends Thread {
 
 	public Partida getPartida() {
 		return partida;
+	}
+
+	public void addSpec(String nombreCliente) {
+		nombreSpec.add(nombreCliente);
+	}
+	
+	public void removeSpect(String nombreCliente){
+		nombreSpec.remove(nombreCliente);
 	}
 
 }

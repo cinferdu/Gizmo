@@ -1,4 +1,4 @@
-package cliente;
+package sala;
 
 import java.util.ArrayList;
 

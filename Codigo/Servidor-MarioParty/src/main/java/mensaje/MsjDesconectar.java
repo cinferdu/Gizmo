@@ -6,8 +6,8 @@ import java.util.HashMap;
 
 import com.google.gson.Gson;
 
+import sala.Sala;
 import servidor.ListenerThread;
-import servidor.Sala;
 
 												// 	Rehacer //
 public class MsjDesconectar extends Mensaje {

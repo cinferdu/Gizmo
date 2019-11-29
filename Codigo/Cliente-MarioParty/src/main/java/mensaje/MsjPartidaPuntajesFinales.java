@@ -8,8 +8,11 @@ public class MsjPartidaPuntajesFinales extends Mensaje {
 	private static final long serialVersionUID = 1L;
 	private Jugador jugadorActual;
 
+	public MsjPartidaPuntajesFinales() {
+		this.clase = getClass().getSimpleName();
+	}
+	
 	public MsjPartidaPuntajesFinales(Jugador jugAct) {
-		super();
 		this.clase = getClass().getSimpleName();
 		this.jugadorActual = jugAct;
 	}

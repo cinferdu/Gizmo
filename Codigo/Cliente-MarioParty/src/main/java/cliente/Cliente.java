@@ -15,6 +15,7 @@ import entornoGrafico.Login;
 import game.Jugador;
 import game.Partida;
 import mensaje.Mensaje;
+import sala.Sala;
 
 public class Cliente {
 

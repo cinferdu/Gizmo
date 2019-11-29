@@ -1,4 +1,4 @@
-package servidor;
+package sala;
 
 import java.util.ArrayList;
 
@@ -9,6 +9,7 @@ public class Sala implements Comparable<Sala> {
 	private ArrayList<String> nombreJugadores = new ArrayList<String>();
 	private String nombreDuenio;
 	private String estado; // cambiar por una Clase
+	private boolean enPartida;
 	private int limiteJugadores;
 	private static int salasCreadas = 0;
 
@@ -87,6 +88,14 @@ public class Sala implements Comparable<Sala> {
 
 	public void removeCliente(String nombreCliente) {
 		nombreJugadores.remove(nombreCliente);
+	}
+
+	public boolean isEnPartida() {
+		return enPartida;
+	}
+
+	public void setEnPartida(boolean enPartida) {
+		this.enPartida = enPartida;
 	}
 
 	@Override

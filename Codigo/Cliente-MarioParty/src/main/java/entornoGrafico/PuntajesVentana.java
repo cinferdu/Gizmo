@@ -1,18 +1,23 @@
 package entornoGrafico;
 
 import java.awt.Color;
+import java.awt.Font;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
 import java.util.ArrayList;
 
 import javax.swing.ImageIcon;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
 
+import cliente.Cliente;
 import game.Jugador;
-import java.awt.Font;
+import mensaje.MsjIngresarLobby;
 
 public class PuntajesVentana extends JFrame {
 
@@ -29,9 +34,12 @@ public class PuntajesVentana extends JFrame {
 	private JLabel mLabel_tabla;
 	private ArrayList<Jugador> jugadores;
 	private Jugador ganador;
+	
+	private Cliente cliente;
 
-	public PuntajesVentana(ArrayList<Jugador> jugadores, Jugador ganador) {
-		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+	public PuntajesVentana(Cliente client, ArrayList<Jugador> jugadores, Jugador ganador) {
+		cliente = client;
+		setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
 		setBounds(100, 100, 920, 690);
 		contentPane = new JPanel();
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
@@ -54,7 +62,17 @@ public class PuntajesVentana extends JFrame {
 		this.jugadores = jugadores;
 		this.ganador = ganador;
 
-		repaint();
+		addWindowListener(new WindowAdapter() {
+			@Override
+			public void windowClosing(WindowEvent e) {
+				int dialogResult = JOptionPane.showConfirmDialog(null, "¿Desea volver al Lobby?",
+						"Salir", JOptionPane.YES_NO_OPTION);
+				if (dialogResult == JOptionPane.YES_OPTION) {
+					cliente.enviarMensaje(new MsjIngresarLobby());
+				}
+			}
+		});
+		
 		setVisible(true);
 	}
 

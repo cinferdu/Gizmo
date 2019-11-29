@@ -4,8 +4,8 @@ import java.util.TreeMap;
 
 import javax.swing.JFrame;
 
-import cliente.Sala;
 import entornoGrafico.LobbyVentana;
+import sala.Sala;
 
 public class MsjAvisarNuevaSala extends Mensaje {
 

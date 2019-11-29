@@ -12,10 +12,9 @@ public class Partida {
 	private int rondaActual;
 	private int idpartida;
 
-	private transient static int partidasCreadas = 0;
-
-	public Partida(ArrayList<Jugador> participantes, int objetivo) {
-		setIdpartida(++partidasCreadas);
+	public Partida(int id, ArrayList<Jugador> participantes, int objetivo) {
+		idpartida = id;
+		//setIdpartida(++partidasCreadas);
 		jugadores = participantes;
 		rondaActual = 0;
 		this.objetivo = objetivo;
