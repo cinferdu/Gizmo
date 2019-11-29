@@ -1,0 +1,5 @@
+#NOTE: This is a Maven Resolver internal implementation file, its format can be changed without prior notice.
+#Sat Nov 16 17:12:30 ART 2019
+hibernate4-sqlite-dialect-0.1.2.jar>central=
+hibernate4-sqlite-dialect-0.1.2-sources.jar>central=
+hibernate4-sqlite-dialect-0.1.2.pom>central=
