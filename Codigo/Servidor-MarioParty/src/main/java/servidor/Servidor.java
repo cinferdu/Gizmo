@@ -8,7 +8,10 @@ import java.util.TreeMap;
 
 import org.apache.log4j.Logger;
 
+import controller.UsuarioController;
+import model.Usuario;
 import sala.Sala;
+import util.HibernateUtil;
 import util.UtilesLog;
 
 public class Servidor {
@@ -28,6 +31,10 @@ public class Servidor {
 		salas = new TreeMap<Integer, Sala>();
 
 		try {
+			HibernateUtil.getSession();
+			
+//			initUsers();
+			
 			serverSocket = new ServerSocket(PUERTO);
 			Socket clientewrite;
 			Socket clienteread;
@@ -47,6 +54,13 @@ public class Servidor {
 			LOGGER.error("Ocurrio un problema en el servidor");
 			UtilesLog.loggerStackTrace(e, this.getClass());
 		}
+	}
+
+	private void initUsers() {
+		UsuarioController.save(new Usuario("123", "123"));
+		UsuarioController.save(new Usuario("asd", "asd"));
+		UsuarioController.save(new Usuario("qwe", "qwe"));
+		UsuarioController.save(new Usuario("zxc", "zxc"));
 	}
 
 	public static void main(String[] args) throws SecurityException, IOException {

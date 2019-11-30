@@ -41,6 +41,11 @@ public class Usuario implements Serializable{
 		this.pass = pass;
 	}
 	
+	public Usuario(String user) {
+		super();
+		this.user = user;
+	}
+	
 	public Long getId() {
 		return id;
 	}

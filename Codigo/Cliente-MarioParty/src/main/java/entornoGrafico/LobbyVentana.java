@@ -52,7 +52,7 @@ public class LobbyVentana extends JFrame {
 	public LobbyVentana(Cliente client) {
 		this.cliente = client;
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		setBounds(100, 100, 521, 346);
+		setBounds(100, 100, 518, 400);
 		contentPane = new JPanel();
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 		setContentPane(contentPane);
@@ -100,6 +100,21 @@ public class LobbyVentana extends JFrame {
 		});
 		btnCrearSala.setBounds(313, 54, 142, 63);
 		contentPane.add(btnCrearSala);
+		
+		
+		JButton btnVerHistorial = new JButton("Historial");
+		btnVerHistorial.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				HistorialVentana ventana = new HistorialVentana(cliente);
+				ventana.setVisible(true);
+				cliente.getVentanaActual().dispose();
+				cliente.setVentanaActual(ventana);
+				dispose();
+			}
+		});
+		btnVerHistorial.setBounds(390, 306, 100, 50);
+		contentPane.add(btnVerHistorial);
+		
 
 		JLabel lblLobby = new JLabel("Lobby");
 		lblLobby.setFont(new Font("Tahoma", Font.PLAIN, 14));

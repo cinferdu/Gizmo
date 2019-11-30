@@ -1,14 +1,12 @@
 package controller;
 
 import org.apache.commons.codec.digest.DigestUtils;
-import org.apache.log4j.Logger;
 import org.hibernate.Criteria;
 import org.hibernate.HibernateException;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
 import org.hibernate.criterion.Restrictions;
 
-import mensaje.Mensaje;
 import model.Usuario;
 import util.HibernateUtil;
 import util.UtilesLog;
@@ -35,16 +33,23 @@ public class UsuarioController {
 
 	public static Usuario get(String userName) {
 		Session session = HibernateUtil.getSession();
-		Usuario user = null;
+		Usuario usuario = null;
 		try {
-			Criteria criteria = session.createCriteria(Usuario.class);
-			criteria.add(Restrictions.like("user", userName));
-			return (Usuario) criteria.uniqueResult();
+			usuario = get(session, userName);
 		} catch (HibernateException e) {
 			UtilesLog.loggerStackTrace(e, UsuarioController.class);
 		} finally {
 			session.close();
 		}
+		
+		return usuario;
+	}
+	
+	public static Usuario get(Session session, String userName) throws HibernateException {
+		Usuario user = null;
+		Criteria criteria = session.createCriteria(Usuario.class);
+		criteria.add(Restrictions.like("user", userName));
+		user = (Usuario) criteria.uniqueResult();
 		return user;
 	}
 
