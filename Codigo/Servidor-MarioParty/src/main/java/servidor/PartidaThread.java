@@ -7,9 +7,7 @@ import casilla.Casilla;
 import game.Dado;
 import game.Jugador;
 import game.Partida;
-import loteria.Loteria;
 import mensaje.Mensaje;
-import mensaje.MsjIniciarMinijuego;
 import mensaje.MsjPartidaBotonAccion;
 import mensaje.MsjPartidaBotonInformar;
 import mensaje.MsjPartidaCasillaActivada;
@@ -33,7 +31,6 @@ public class PartidaThread extends Thread {
 	private Casilla caminoSeleccionado;
 	private Jugador jugadorSeleccionado;
 	private int objetoSelecionado; // indice del objeto seleccionado
-	private boolean hiloVivo = true;
 
 	private ArrayList<String> nombreSpec;
 
@@ -50,7 +47,7 @@ public class PartidaThread extends Thread {
 		Jugador jugadorActual;
 		Iterator<Jugador> iteradorJugador;
 
-		while (!partida.isHayGanador() && hiloVivo) {
+		while (!partida.isHayGanador()) {
 
 			// Incremento la ronda
 			partida.aumentarRonda();
@@ -58,7 +55,7 @@ public class PartidaThread extends Thread {
 
 			avisar(new MsjPartidaIniRonda(partida.getRondaActual()));
 
-			while (iteradorJugador.hasNext() && partida.isHayGanador() == false  && hiloVivo) {
+			while (iteradorJugador.hasNext() && partida.isHayGanador() == false) {
 				jugadorActual = iteradorJugador.next();
 				
 				if (!nombresJugadores.contains(jugadorActual.getNombre())) {
@@ -70,8 +67,6 @@ public class PartidaThread extends Thread {
 					avisar(new MsjPartidaBotonInformar(jugadorActual));
 					avisar(new MsjPartidaBotonAccion(jugadorActual), jugadorActual);
 
-					esperarNofify();
-
 					jugadorActual.setNroPasos(Dado.lanzarDado());
 
 					avisar(new MsjPartidaLanzamientoDado(jugadorActual.getNombre(), jugadorActual.getNroPasos()));
@@ -82,6 +77,10 @@ public class PartidaThread extends Thread {
 					jugadorActual.activarCasilla();
 					avisar(new MsjPartidaCasillaActivada(jugadorActual));
 
+					if (!nombresJugadores.contains(jugadorActual.getNombre())) {
+						continue;
+					}
+					
 					// Si tiene objetos entra en la etapa de SELECCIONAR_ACCION, sino solo mostrara
 					// un mensaje
 					if (!jugadorActual.isMochilaVacia()) {
@@ -90,7 +89,6 @@ public class PartidaThread extends Thread {
 						// El jugador elije su proxima accion
 						avisar(new MsjPartidaSelecObjInf(jugadorActual));
 						avisar(new MsjPartidaSelecObjAccion(jugadorActual), jugadorActual);
-						esperarNofify();
 						
 						String nombreobj = null;
 						if (this.objetoSelecionado != -1) {
@@ -139,7 +137,7 @@ public class PartidaThread extends Thread {
 	public void avanzar(Jugador jugador) {
 		Casilla sigcamino = null;
 
-		while (jugador.getNroPasos() > 0  && hiloVivo) {
+		while (jugador.getNroPasos() > 0) {
 
 			if ((sigcamino = jugador.getPosicionActual().caminoUnico()) != null)
 				jugador.setPosicionActual(sigcamino);
@@ -147,7 +145,6 @@ public class PartidaThread extends Thread {
 				avisar(new MsjPartidaElegirCaminoInformar(jugador));
 				avisar(new MsjPartidaElegirCaminoAccion(jugador, jugador.getPosicionActual().getSiguientesCasillas()),
 						jugador);
-				esperarNofify();
 
 				jugador.setPosicionActual(buscarCasilla(jugador));
 			}
@@ -190,13 +187,9 @@ public class PartidaThread extends Thread {
 	 */
 	public void avisar(Mensaje msjPartida, Jugador jugadorActual) {
 		listener.enviarMensaje(msjPartida, jugadorActual.getNombre());
-
-	}
-
-	private void esperarNofify() {
 		synchronized (this) {
 			try {
-				this.wait();
+				this.wait(15000);
 			} catch (InterruptedException e) {
 				e.printStackTrace();
 			}

@@ -28,7 +28,7 @@ public class MsjCrearSala extends Mensaje {
 		listenerServer.getLobby().removeCliente(duenio);
 		listenerServer.enviarMensaje(aEnviar);
 		
-		listenerServer.enviarMensajeBroadcast(new MsjAvisarNuevaSala(listenerServer.getSalas()),listenerServer.getLobby().getNombreJugadores());
+		listenerServer.enviarMensajeBroadcast(new MsjAvisarActualizarSalas(listenerServer.getSalas()),listenerServer.getLobby().getNombreJugadores());
 	}
 
 }

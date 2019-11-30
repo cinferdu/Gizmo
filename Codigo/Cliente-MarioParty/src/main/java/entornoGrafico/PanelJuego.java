@@ -213,7 +213,9 @@ public class PanelJuego extends JLayeredPane {
 				}
 			}
 		});
-		while (!botonPresionado) {
+		
+		long inicio = System.currentTimeMillis() + TIEMPO_ELEGIR_OPCION;
+		while (!botonPresionado && System.currentTimeMillis() < inicio) {
 			try {
 				Thread.sleep(20);
 			} catch (InterruptedException e1) {
@@ -223,7 +225,7 @@ public class PanelJuego extends JLayeredPane {
 		mostrarBoton = false;
 		botonPresionado = false;
 		cartel.setVisible(false);
-		cliente.enviarMensaje(new MsjPartidaBotonAccion(null));
+		cliente.enviarMensaje(new MsjPartidaBotonAccion());
 		repaint();
 	}
 

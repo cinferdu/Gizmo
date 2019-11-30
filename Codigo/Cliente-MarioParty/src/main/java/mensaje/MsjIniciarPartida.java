@@ -32,6 +32,8 @@ public class MsjIniciarPartida extends Mensaje {
 		ventana = new VentanaJuego(listenerClient.getCliente());
 		if (espectador) {
 			((VentanaJuego) ventana).modoEspectador();
+		} else {
+			((VentanaJuego) ventana).modoJugador();
 		}
 		LOGGER.info("Abre ventana!!!");
 		listenerClient.getCliente().setVentanaActual(ventana);

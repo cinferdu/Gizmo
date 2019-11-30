@@ -1,13 +1,12 @@
 package mensaje;
 
 import entornoGrafico.VentanaJuego;
-import game.Jugador;
 
 public class MsjPartidaBotonAccion extends Mensaje {
 
 	private static final long serialVersionUID = 1L;
 
-	public MsjPartidaBotonAccion(Jugador jugAct) {
+	public MsjPartidaBotonAccion() {
 		super();
 		this.clase = this.getClass().getSimpleName();
 	}

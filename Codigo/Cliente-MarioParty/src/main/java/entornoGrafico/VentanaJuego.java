@@ -46,4 +46,19 @@ public class VentanaJuego extends JFrame {
 			}
 		});
 	}
+	
+	public void modoJugador() {
+		setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
+		addWindowListener(new WindowAdapter() {
+			@Override
+			public void windowClosing(WindowEvent e) {
+				int dialogResult = JOptionPane.showConfirmDialog(null, "¿Desea volver al Lobby?",
+						"Salir", JOptionPane.YES_NO_OPTION);
+				if (dialogResult == JOptionPane.YES_OPTION) {
+					MsjIngresarLobby msj = new MsjIngresarLobby();
+					cliente.enviarMensaje(msj);
+				}
+			}
+		});
+	}
 }

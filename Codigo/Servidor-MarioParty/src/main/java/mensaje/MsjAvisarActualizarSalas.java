@@ -4,13 +4,12 @@ import java.util.TreeMap;
 
 import sala.Sala;
 
-public class MsjAvisarNuevaSala extends Mensaje {
+public class MsjAvisarActualizarSalas extends Mensaje {
 
 	private static final long serialVersionUID = 1L;
 	private TreeMap<Integer, Sala> salas;
 	
-	
-	public MsjAvisarNuevaSala(TreeMap<Integer, Sala> salas) {
+	public MsjAvisarActualizarSalas(TreeMap<Integer, Sala> salas) {
 		this.salas = salas;
 		this.clase = this.getClass().getSimpleName();
 	}

@@ -20,13 +20,18 @@ public class MsjIngresarLobby extends Mensaje {
 	public void ejecutar() {
 		this.salas = listenerServer.getSalas();
 		int idsala = listenerServer.getSalaActiva();
+		int idpartida = listenerServer.getId_partidaActiva();
 		if (espectador) { // si un espectador solicito volver al lobby
 			Servidor.partidas.get(listenerServer.getId_partidaEspectador()).removeSpect(listenerServer.getNombreCliente());
 		}
 		if (idsala != -1) {
 			listenerServer.getSalas().get(idsala).removeCliente(listenerServer.getNombreCliente());
 		}
+		if (idpartida != -1) {
+			listenerServer.desconectarJugadorDePartida();
+		}
 		listenerServer.setSalaActiva(0);
+		listenerServer.getLobby().addCliente(listenerServer.getNombreCliente());
 		listenerServer.enviarMensaje(this);
 	}
 
