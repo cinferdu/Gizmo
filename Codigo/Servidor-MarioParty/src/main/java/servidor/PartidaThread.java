@@ -24,6 +24,7 @@ import mensaje.MsjPartidaSelecObjAccion;
 import mensaje.MsjPartidaSelecObjInf;
 import mensaje.MsjPartidaSinAccion;
 import model.Historial;
+import model.Usuario;
 
 public class PartidaThread extends Thread {
 
@@ -130,8 +131,14 @@ public class PartidaThread extends Thread {
 				avisar(new MsjIniciarMinijuego());
 			}*/
 		}
+		//grabo por cada jugador su historial
+		for (Jugador jugador : partida.getJugadores()) {
+			HistorialController.save(new Historial( new Usuario(jugador.getNombre()), partida.getRondaActual(), nombresJugadores.toString(), partida.getJugadorGanador().getNombre(), jugador.getMonedas(), jugador.getMiniJuegoPuntos(), jugador.getPersonaje().getName()));
+		}
+
 		avisar(new MsjPartidaPuntajesFinales(partida.getJugadorGanador(), partida.getJugadores()));
-//		HistorialController.save(usuario)
+		
+		
 		listener.terminarPartida(partida.getIdpartida(), nombresJugadores);
 	}
 

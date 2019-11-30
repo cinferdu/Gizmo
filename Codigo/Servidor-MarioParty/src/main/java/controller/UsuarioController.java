@@ -33,16 +33,23 @@ public class UsuarioController {
 
 	public static Usuario get(String userName) {
 		Session session = HibernateUtil.getSession();
-		Usuario user = null;
+		Usuario usuario = null;
 		try {
-			Criteria criteria = session.createCriteria(Usuario.class);
-			criteria.add(Restrictions.like("user", userName));
-			return (Usuario) criteria.uniqueResult();
+			usuario = get(session, userName);
 		} catch (HibernateException e) {
 			UtilesLog.loggerStackTrace(e, UsuarioController.class);
 		} finally {
 			session.close();
 		}
+		
+		return usuario;
+	}
+	
+	public static Usuario get(Session session, String userName) throws HibernateException {
+		Usuario user = null;
+		Criteria criteria = session.createCriteria(Usuario.class);
+		criteria.add(Restrictions.like("user", userName));
+		user = (Usuario) criteria.uniqueResult();
 		return user;
 	}
 

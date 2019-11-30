@@ -3,7 +3,6 @@ package controller;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.apache.commons.codec.digest.DigestUtils;
 import org.hibernate.Criteria;
 import org.hibernate.HibernateException;
 import org.hibernate.Session;
@@ -11,7 +10,6 @@ import org.hibernate.Transaction;
 import org.hibernate.criterion.Restrictions;
 
 import model.Historial;
-import model.Usuario;
 import util.HibernateUtil;
 import util.UtilesLog;
 
@@ -21,7 +19,7 @@ public class HistorialController {
 		Session session = HibernateUtil.getSession();
 		Transaction tx = session.beginTransaction();
 		Long save = null;
-		historial.setUser(UsuarioController.get(historial.getUser().getUser()));//traigo al user perteneciente en la db
+		historial.setUser(UsuarioController.get(session, historial.getUser().getUser()));//traigo al user perteneciente en la db
 		try {
 			save = (Long) session.save(historial);
 			tx.commit();
@@ -35,6 +33,7 @@ public class HistorialController {
 		return save;
 	}
 
+	@SuppressWarnings("unchecked")
 	public static List<Historial> get(String userName) {
 		Session session = HibernateUtil.getSession();
 		List<Historial> list = new ArrayList<Historial>();
