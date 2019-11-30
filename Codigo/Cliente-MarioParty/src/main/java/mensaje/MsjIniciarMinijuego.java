@@ -1,11 +1,16 @@
 package mensaje;
 
-public class MsjIniciarMinijuego extends Mensaje{
+import cliente.Cliente;
+import minijuego.Loteria;
 
+public class MsjIniciarMinijuego extends Mensaje{
+	
 	@Override
 	public void ejecutar() {
-		// TODO Auto-generated method stub
-		
+		Loteria game = new Loteria();
+		Cliente cliente = listenerClient.getCliente();
+		this.clase = this.getClass().getSimpleName();
+		cliente.enviarMensaje(new MsjResultadosMiniJuego(cliente,game.getNumerosElegidos()));
 	}
 	
 }

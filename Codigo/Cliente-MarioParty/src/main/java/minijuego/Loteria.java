@@ -5,6 +5,7 @@ import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.ArrayList;
 import java.util.Timer;
 import java.util.TimerTask;
 
@@ -16,6 +17,7 @@ import sun.applet.Main;
 
 @SuppressWarnings("serial")
 public class Loteria{
+	private int[] elegidos;
 	private JFrame frame;
 	private JButton[] listaBotones;
 	private JLabel etiquetaAc;
@@ -28,6 +30,7 @@ public class Loteria{
 	
 	public Loteria() {
 		//super("Loteria");
+		elegidos = new int[6];
 		frame = new JFrame();
 		frame.setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
 		frame.setSize(new Dimension(520,300));
@@ -47,6 +50,7 @@ public class Loteria{
 		constraints.weightx = 0.0;
 		constraints.weighty = 0.0;
 		///////////numeros elegidos/////////
+		
 		numerosElegidos=new JLabel[CANT_NUMEROS_ELEGIDOS];
 		for(int i=0; i< CANT_NUMEROS_ELEGIDOS;i++) {
 			numerosElegidos[i]=new JLabel();
@@ -90,13 +94,14 @@ public class Loteria{
 			constraints.gridheight = 1;
 			constraints.weightx = 1.0;
 			listaBotones[i].addActionListener(new ActionListener() {
-				
+
 				@Override
 				public void actionPerformed(ActionEvent e) {
 					if(cantPresionados<6) {
 						JButton botonPulsado = (JButton)e.getSource();
 						numerosElegidos[cantPresionados].setText(botonPulsado.getText());
 						numerosElegidos[cantPresionados].setVisible(true);
+						elegidos[cantPresionados] = Integer.parseInt(botonPulsado.getText());
 						cantPresionados++;
 					}else {
 						JOptionPane.showMessageDialog(null, "Error. Cantidad Maxima de Botones es de 6");
@@ -123,10 +128,9 @@ public class Loteria{
 			
 			@Override
 			public void run() {
-				enviarNumeros();
 				cerrarVentana();
 			}
-			
+
 		};
 		
 		timer.schedule(tarea, 10000);
@@ -137,14 +141,8 @@ public class Loteria{
 		frame.dispose();
 	}
 	
-	private void enviarNumeros() {
-		
+	public int[] getNumerosElegidos() {
+		return this.elegidos;
 	}
-	
-	public static void main(String[] args) {
-		new Loteria();
-	}
-
-        
-        
+    
 }
