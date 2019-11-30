@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.Iterator;
 
 import casilla.Casilla;
+import controller.HistorialController;
 import game.Dado;
 import game.Jugador;
 import game.Partida;
@@ -22,6 +23,7 @@ import mensaje.MsjPartidaPuntajesFinales;
 import mensaje.MsjPartidaSelecObjAccion;
 import mensaje.MsjPartidaSelecObjInf;
 import mensaje.MsjPartidaSinAccion;
+import model.Historial;
 
 public class PartidaThread extends Thread {
 
@@ -129,9 +131,8 @@ public class PartidaThread extends Thread {
 			}*/
 		}
 		avisar(new MsjPartidaPuntajesFinales(partida.getJugadorGanador(), partida.getJugadores()));
-		
+//		HistorialController.save(usuario)
 		listener.terminarPartida(partida.getIdpartida(), nombresJugadores);
-		
 	}
 
 	public void avanzar(Jugador jugador) {

@@ -1,14 +1,12 @@
 package controller;
 
 import org.apache.commons.codec.digest.DigestUtils;
-import org.apache.log4j.Logger;
 import org.hibernate.Criteria;
 import org.hibernate.HibernateException;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
 import org.hibernate.criterion.Restrictions;
 
-import mensaje.Mensaje;
 import model.Usuario;
 import util.HibernateUtil;
 import util.UtilesLog;
