@@ -7,6 +7,7 @@ public class MsjCrearSala extends Mensaje {
 	private String duenio;
 	private int capMax;
 	private String nombreSala;
+	private String password;
 
 	public MsjCrearSala(String nombreSala, int capMax, String duenio) {
 		super();
@@ -14,6 +15,14 @@ public class MsjCrearSala extends Mensaje {
 		this.capMax = capMax;
 		this.duenio = duenio;
 		this.clase = this.getClass().getSimpleName();
+	}
+	
+	public MsjCrearSala(String nombreSala, int capMax, String duenio, String pw) {
+		this.nombreSala = nombreSala;
+		this.capMax = capMax;
+		this.duenio = duenio;
+		this.clase = this.getClass().getSimpleName();
+		this.password = pw;
 	}
 
 	@Override
@@ -43,6 +52,14 @@ public class MsjCrearSala extends Mensaje {
 
 	public void setNombreSala(String nombreSala) {
 		this.nombreSala = nombreSala;
+	}
+
+	public String getPassword() {
+		return password;
+	}
+
+	public void setPassword(String password) {
+		this.password = password;
 	}
 
 }

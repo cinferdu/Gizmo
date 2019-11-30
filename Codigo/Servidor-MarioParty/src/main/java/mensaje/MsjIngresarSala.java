@@ -21,7 +21,8 @@ public class MsjIngresarSala extends Mensaje {
 		// si alguien pide entrar en una sala
 		Sala salaSolicitada = listenerServer.getSalas().get(id_sala);
 		if ((listenerServer.getSalas().containsKey(id_sala) && !salaSolicitada.isEnPartida())
-				&& salaSolicitada.getNombreJugadores().size() < salaSolicitada.getLimiteJugadores()) {
+				&& salaSolicitada.getNombreJugadores().size() < salaSolicitada.getLimiteJugadores() && salaSolicitada.getPassword() == null) {
+			
 			this.resultado = true;
 			listenerServer.sacarClienteDelLobby(listenerServer.getNombreCliente());
 			this.sala = salaSolicitada;
@@ -40,6 +41,10 @@ public class MsjIngresarSala extends Mensaje {
 			
 			if (salaSolicitada.isEnPartida()) {
 				error = ErrorAlIngresar.EN_PARTIDA;
+			}
+			
+			if (salaSolicitada.getPassword() != null) {
+				error = ErrorAlIngresar.SALA_PRIVADA;
 			}
 		}
 

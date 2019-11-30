@@ -6,18 +6,18 @@ public class Sala implements Comparable<Sala> {
 
 	private int id_sala;
 	private String nombreSala;
-	private ArrayList<String> nombreJugadores = new ArrayList<String>();
 	private String nombreDuenio;
-	private String estado; // cambiar por una Clase
-	private boolean enPartida;
+	private ArrayList<String> nombreJugadores = new ArrayList<String>();
 	private int limiteJugadores;
+	private boolean enPartida;
+	private String password;
+	
 	private static int salasCreadas = 0;
 
 	public Sala() { // lobby
 		this.id_sala = 0;
 		nombreSala = "Lobby";
 		nombreDuenio = "";
-		estado = "";
 		limiteJugadores = Integer.MAX_VALUE;
 		nombreJugadores = new ArrayList<String>();
 	}
@@ -26,7 +26,6 @@ public class Sala implements Comparable<Sala> {
 		this.id_sala = ++salasCreadas;
 		nombreSala = nombre;
 		nombreDuenio = duenio;
-		estado = "Abierta";
 		limiteJugadores = limite;
 	}
 
@@ -50,10 +49,6 @@ public class Sala implements Comparable<Sala> {
 		return nombreDuenio;
 	}
 
-	public String getEstado() {
-		return estado;
-	}
-
 	public int getLimiteJugadores() {
 		return limiteJugadores;
 	}
@@ -74,10 +69,6 @@ public class Sala implements Comparable<Sala> {
 		this.nombreDuenio = nombreDuenio;
 	}
 
-	public void setEstado(String estado) {
-		this.estado = estado;
-	}
-
 	public void setLimiteJugadores(int limiteJugadores) {
 		this.limiteJugadores = limiteJugadores;
 	}
@@ -96,6 +87,14 @@ public class Sala implements Comparable<Sala> {
 
 	public void setEnPartida(boolean enPartida) {
 		this.enPartida = enPartida;
+	}
+
+	public String getPassword() {
+		return password;
+	}
+
+	public void setPassword(String password) {
+		this.password = password;
 	}
 
 	@Override

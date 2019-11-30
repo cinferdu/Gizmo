@@ -21,6 +21,7 @@ public class CrearSalaVentana extends JFrame {
 	private JPanel contentPane;
 	private JTextField textFieldNombre;
 	private JTextField textField_MaxJug;
+	private JTextField textFieldPass;
 	private Cliente cliente;
 
 	/**
@@ -81,6 +82,15 @@ public class CrearSalaVentana extends JFrame {
 		contentPane.add(textField_MaxJug);
 		textField_MaxJug.setColumns(10);
 
+		JLabel lblpassword = new JLabel("<html>Password (si <br>es necesario)</html>");
+		lblpassword.setBounds(10, 160, 145, 30);
+		contentPane.add(lblpassword);
+
+		textFieldPass = new JTextField();
+		textFieldPass.setBounds(168, 160, 111, 20);
+		contentPane.add(textFieldPass);
+		textFieldPass.setColumns(10);
+		
 		JButton btnCrear = new JButton("Crear Sala");
 		btnCrear.setBounds(66, 216, 170, 23);
 		contentPane.add(btnCrear);
@@ -89,10 +99,14 @@ public class CrearSalaVentana extends JFrame {
 			public void actionPerformed(ActionEvent arg0) {
 				String nombreSala;
 				int limite = Integer.valueOf(textField_MaxJug.getText());
-
+				String pass = "";
 				if ((nombreSala = textFieldNombre.getText().trim()).length() > 0
 						&& (limite == 2 || limite == 3 || limite == 4)) {
-					cliente.enviarMensaje(new MsjCrearSala(nombreSala, limite, cliente.getNombreCliente()));
+					if ((pass = textFieldPass.getText().trim()).length() == 0) {
+						cliente.enviarMensaje(new MsjCrearSala(nombreSala, limite, cliente.getNombreCliente()));
+					}else {
+						cliente.enviarMensaje(new MsjCrearSala(nombreSala, limite, cliente.getNombreCliente(), pass));
+					}
 				} else {
 					JOptionPane.showMessageDialog(null, "El nombre de la sala debe contener al menos 1 caracter y "
 							+ "el limite de jugadores solo puede ser 2, 3 o 4.");

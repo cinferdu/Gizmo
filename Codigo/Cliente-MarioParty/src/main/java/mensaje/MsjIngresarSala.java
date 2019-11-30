@@ -48,11 +48,12 @@ public class MsjIngresarSala extends Mensaje {
 				int dialogResult = JOptionPane.showConfirmDialog(null, "¿Desea entrar como espectador?",
 						"Spec", JOptionPane.YES_NO_OPTION);
 				if (dialogResult == JOptionPane.YES_OPTION) {
-					// verificar que tiene id_sala y sala
 					listenerClient.getCliente().enviarMensaje(new MsjPartidaEspectador(id_sala));
 				}
 				break;
-			default:
+			case SALA_PRIVADA:
+				String cadenaIngresada = JOptionPane.showInputDialog(null, "Ingrese la password de la sala:", "Sala privada", JOptionPane.QUESTION_MESSAGE);
+				listenerClient.getCliente().enviarMensaje(new MsjVerificarPassword(cadenaIngresada, id_sala));
 				break;
 			}
 		}

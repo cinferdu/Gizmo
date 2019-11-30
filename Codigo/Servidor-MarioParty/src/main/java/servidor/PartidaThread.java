@@ -77,7 +77,7 @@ public class PartidaThread extends Thread {
 					jugadorActual.activarCasilla();
 					avisar(new MsjPartidaCasillaActivada(jugadorActual));
 
-					if (!nombresJugadores.contains(jugadorActual.getNombre())) {
+					if (!nombresJugadores.contains(jugadorActual.getNombre()) || nombresJugadores.size() == 1) {
 						continue;
 					}
 					
@@ -145,7 +145,9 @@ public class PartidaThread extends Thread {
 				avisar(new MsjPartidaElegirCaminoInformar(jugador));
 				avisar(new MsjPartidaElegirCaminoAccion(jugador, jugador.getPosicionActual().getSiguientesCasillas()),
 						jugador);
-
+				if (!nombresJugadores.contains(jugador.getNombre())) {
+					break;
+				}
 				jugador.setPosicionActual(buscarCasilla(jugador));
 			}
 

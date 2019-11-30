@@ -18,8 +18,6 @@ public class MsjLogin extends Mensaje {
 		super();
 		this.user = user;
 		this.pass = pass;
-		this.resultado = false;
-		this.salas = null;
 		this.clase = this.getClass().getSimpleName();
 	}
 	@Override

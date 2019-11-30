@@ -3,6 +3,7 @@ package mensaje;
 import java.util.TreeMap;
 
 import javax.swing.JFrame;
+import javax.swing.JOptionPane;
 
 import entornoGrafico.LobbyVentana;
 import sala.Sala;
@@ -24,15 +25,21 @@ public class MsjLogin extends Mensaje {
 
 	@Override
 	public void ejecutar() {
-		JFrame ventana = listenerClient.getCliente().getVentanaActual();
-		listenerClient.getCliente().setNombreCliente(user);
-
-		ventana.dispose();
-		ventana = new LobbyVentana(listenerClient.getCliente());
-		((LobbyVentana) ventana).mostrarSala(salas);
-		ventana.setVisible(true);
-
-		listenerClient.getCliente().setVentanaActual(ventana);
+		if (resultado) {
+			
+			JFrame ventana = listenerClient.getCliente().getVentanaActual();
+			listenerClient.getCliente().setNombreCliente(user);
+	
+			ventana.dispose();
+			ventana = new LobbyVentana(listenerClient.getCliente());
+			((LobbyVentana) ventana).mostrarSala(salas);
+			ventana.setVisible(true);
+	
+			listenerClient.getCliente().setVentanaActual(ventana);
+		} else {
+			JOptionPane.showMessageDialog(null, "User o pass incorrectos");
+		}
+		
 	}
 
 	public String getUser() {
