@@ -9,8 +9,6 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
-import java.awt.event.WindowAdapter;
-import java.awt.event.WindowEvent;
 import java.util.ArrayList;
 import java.util.Enumeration;
 
@@ -21,7 +19,6 @@ import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JLayeredPane;
-import javax.swing.JOptionPane;
 import javax.swing.JRadioButton;
 import javax.swing.JScrollPane;
 import javax.swing.JSeparator;
@@ -35,7 +32,6 @@ import cliente.Cliente;
 import game.Dado;
 import game.Jugador;
 import game.Partida;
-import mensaje.MsjIngresarLobby;
 import mensaje.MsjPartidaBotonAccion;
 import mensaje.MsjPartidaElegirCaminoAccion;
 import mensaje.MsjPartidaSelecObjAccion;
@@ -347,21 +343,22 @@ public class PanelJuego extends JLayeredPane {
 			}
 		}
 
-		int objetoElegido = -1;
-		if (botonPresionado == true)
-			objetoElegido = Integer.valueOf(grupoObjeto.getSelection().getActionCommand());
-
 		remove(aceptar);
 		remove(mensaje);
 		remove(mensajeObj);
 
-		botonPresionado = false;
+		int objetoElegido = -1;
+		
+		if (botonPresionado == true){
+			botonPresionado = false;
 
-		int jg_selec = Integer.valueOf(grupoJugadores.getSelection().getActionCommand());
-		if (jugadorActual.getMochila_objetos(objetoElegido).isConObjetivo()) {
-			jugadorSeleccionado = posiblesObjetivos.get(jg_selec);
+			objetoElegido = Integer.valueOf(grupoObjeto.getSelection().getActionCommand());
+	
+			int jg_selec = Integer.valueOf(grupoJugadores.getSelection().getActionCommand());
+			if (jugadorActual.getMochila_objetos(objetoElegido).isConObjetivo()) {
+				jugadorSeleccionado = posiblesObjetivos.get(jg_selec);
+			}
 		}
-
 		limpiarGrupo(botonesUsados);
 		revalidate();
 		repaint();
