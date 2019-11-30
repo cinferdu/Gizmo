@@ -8,6 +8,7 @@ import game.Dado;
 import game.Jugador;
 import game.Partida;
 import mensaje.Mensaje;
+import mensaje.MsjIniciarMinijuego;
 import mensaje.MsjPartidaBotonAccion;
 import mensaje.MsjPartidaBotonInformar;
 import mensaje.MsjPartidaCasillaActivada;
@@ -124,9 +125,9 @@ public class PartidaThread extends Thread {
 				// Turno del siguiente jugador.
 			}
 			
-			/*if(!partida.isHayGanador()) {
+			if(!partida.isHayGanador()) {
 				avisar(new MsjIniciarMinijuego());
-			}*/
+			}
 		}
 		avisar(new MsjPartidaPuntajesFinales(partida.getJugadorGanador(), partida.getJugadores()));
 		

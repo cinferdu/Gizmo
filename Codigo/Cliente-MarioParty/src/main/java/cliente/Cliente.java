@@ -19,7 +19,7 @@ import sala.Sala;
 
 public class Cliente {
 
-	private final static String IPSERVIDOR = "10.11.3.8";
+	private final static String IPSERVIDOR = "192.168.0.189";
 	private final static int PUERTO = 10200;
 
 	private final static Logger LOGGER = Logger.getLogger(Cliente.class);

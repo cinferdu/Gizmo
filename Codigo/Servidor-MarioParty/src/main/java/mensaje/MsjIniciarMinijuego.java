@@ -4,20 +4,23 @@ import java.util.ArrayList;
 
 import org.apache.log4j.Logger;
 
+import game.Jugador;
+import game.MiniJuego;
 import game.Partida;
+import game.Personaje;
+import game.Sprite;
 import loteria.Loteria;
+import objeto.CajaMisteriosa;
+import objeto.GuanteBlanco;
+import sala.Sala;
+import servidor.PartidaThread;
+import servidor.Servidor;
 
 public class MsjIniciarMinijuego extends Mensaje{
-	private final static Logger LOGGER = Logger.getLogger(MsjIniciarPartida.class);
-
 	private static final long serialVersionUID = 1L;
-	private ArrayList<String> nombresJugadores;
-	
+
 	public MsjIniciarMinijuego() {
-		this.clase = this.getClass().getSimpleName();
-	}
-	
-	public MsjIniciarMinijuego(ArrayList<String> nombresJugadores) {
+		super();
 		this.clase = this.getClass().getSimpleName();
 	}
 
