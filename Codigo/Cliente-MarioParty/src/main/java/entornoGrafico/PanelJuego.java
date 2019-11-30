@@ -83,7 +83,7 @@ public class PanelJuego extends JLayeredPane {
 		add(scrollPane);
 
 		JSeparator separator = new JSeparator();
-		separator.setBounds(0, 560, 900, 50);
+		separator.setBounds(0, 560, 1000, 50);
 		add(separator);
 
 		partida = cliente.getPartidaActual();
