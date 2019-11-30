@@ -16,6 +16,7 @@ import javax.swing.AbstractButton;
 import javax.swing.ButtonGroup;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
+import javax.swing.JComboBox;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JLayeredPane;
@@ -35,6 +36,7 @@ import game.Partida;
 import mensaje.MsjPartidaBotonAccion;
 import mensaje.MsjPartidaElegirCaminoAccion;
 import mensaje.MsjPartidaSelecObjAccion;
+import mensaje.MsjPredeterminado;
 import objeto.Objeto;
 
 public class PanelJuego extends JLayeredPane {
@@ -44,6 +46,8 @@ public class PanelJuego extends JLayeredPane {
 	private static final int SEPARACION_PUNTAJES = 75;
 	private static final int TAMANIO_CASILLA = 30;
 	private static final int TIEMPO_ELEGIR_OPCION = 10000; // en milisegundos
+
+	private static final String[] items = { "GG WP", "GL HF" };
 
 	private final static Logger LOGGER = Logger.getLogger(PanelJuego.class);
 
@@ -105,6 +109,8 @@ public class PanelJuego extends JLayeredPane {
 		cartel.setBounds(25, 25, 200, 62);
 		add(cartel, 3, 0);
 
+		agregarComponentes();
+
 		repaint();
 	}
 
@@ -137,7 +143,25 @@ public class PanelJuego extends JLayeredPane {
 		}
 
 		imprimirPuntajes(g);
-		// revalidate();
+
+	}
+
+	public void agregarComponentes() {
+		JButton select = new JButton("Seleccionar");
+		select.setBounds(810, 630, 125, 25);
+		add(select);
+
+		JComboBox<String> lista = new JComboBox<String>(items);
+		lista.setBounds(820, 600, 100, 20);
+		add(lista);
+
+		select.addActionListener(new ActionListener() {
+
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				cliente.enviarMensaje(new MsjPredeterminado((String) lista.getSelectedItem()));
+			}
+		});
 	}
 
 	public void nuevaRonda() {
@@ -458,11 +482,11 @@ public class PanelJuego extends JLayeredPane {
 		for (Jugador jugador : partida.getJugadores()) {
 			Image image = new ImageIcon(
 					ImgExtra.class.getResource("/Personajes/" + jugador.getPersonaje().getName() + ".png")).getImage();
-			
+
 			g.drawImage(image, INICIO_PUNTAJES, 25 + jugador_nro * SEPARACION_PUNTAJES, null);
 
 			g.drawString(jugador.getNombre(), INICIO_PUNTAJES + 60, 50 + jugador_nro * SEPARACION_PUNTAJES);
-			g.drawString("Monedas: ", INICIO_PUNTAJES  + 60, 70 + jugador_nro * SEPARACION_PUNTAJES);
+			g.drawString("Monedas: ", INICIO_PUNTAJES + 60, 70 + jugador_nro * SEPARACION_PUNTAJES);
 			g.drawString(jugador.getMonedas() + "", INICIO_PUNTAJES + 175, 70 + jugador_nro * SEPARACION_PUNTAJES);
 
 			// Si pierde o no su proximo turno
@@ -481,6 +505,10 @@ public class PanelJuego extends JLayeredPane {
 
 	public void informarObjetoUtilizado(String jugador, String nombreobj) {
 		this.textArea.append(jugador + " utilizo " + nombreobj + "\n");
+	}
+
+	public void mostrar_Mensaje(String emisor, String msjpredeterminado) {
+		textArea.append("**" + emisor + ": " + msjpredeterminado + "**" + "\n");
 	}
 
 }
