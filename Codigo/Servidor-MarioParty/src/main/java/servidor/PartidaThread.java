@@ -70,7 +70,10 @@ public class PartidaThread extends Thread {
 					jugadorActual.setNroPasos(Dado.lanzarDado());
 
 					avisar(new MsjPartidaLanzamientoDado(jugadorActual.getNombre(), jugadorActual.getNroPasos()));
-
+					
+					if (!nombresJugadores.contains(jugadorActual.getNombre()) || nombresJugadores.size() == 1) {
+						continue;
+					}
 					// El jugador avanza los pasos
 					avanzar(jugadorActual); // loop de movimientos
 

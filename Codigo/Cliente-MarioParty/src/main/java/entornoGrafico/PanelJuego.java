@@ -39,9 +39,9 @@ import objeto.Objeto;
 
 public class PanelJuego extends JLayeredPane {
 	private static final long serialVersionUID = 3007758429335180626L;
-	
+
 	private static final int INICIO_PUNTAJES = 730;
-	private static final int SEPARACION_PUNTAJES = 50;
+	private static final int SEPARACION_PUNTAJES = 75;
 	private static final int TAMANIO_CASILLA = 30;
 	private static final int TIEMPO_ELEGIR_OPCION = 10000; // en milisegundos
 
@@ -183,7 +183,8 @@ public class PanelJuego extends JLayeredPane {
 
 	public void mostrarVentanaPuntajesFinales(Jugador ganador) {
 		JFrame ventanaActual = cliente.getVentanaActual();
-		PuntajesVentana ventanaPuntos = new PuntajesVentana(cliente, (ArrayList<Jugador>) partida.getJugadores(), ganador);
+		PuntajesVentana ventanaPuntos = new PuntajesVentana(cliente, (ArrayList<Jugador>) partida.getJugadores(),
+				ganador);
 		ventanaPuntos.setVisible(true);
 		ventanaPuntos.setFocusable(true);
 		cliente.setVentanaActual(ventanaPuntos);
@@ -213,7 +214,7 @@ public class PanelJuego extends JLayeredPane {
 				}
 			}
 		});
-		
+
 		long inicio = System.currentTimeMillis() + TIEMPO_ELEGIR_OPCION;
 		while (!botonPresionado && System.currentTimeMillis() < inicio) {
 			try {
@@ -350,12 +351,12 @@ public class PanelJuego extends JLayeredPane {
 		remove(mensajeObj);
 
 		int objetoElegido = -1;
-		
-		if (botonPresionado == true){
+
+		if (botonPresionado == true) {
 			botonPresionado = false;
 
 			objetoElegido = Integer.valueOf(grupoObjeto.getSelection().getActionCommand());
-	
+
 			int jg_selec = Integer.valueOf(grupoJugadores.getSelection().getActionCommand());
 			if (jugadorActual.getMochila_objetos(objetoElegido).isConObjetivo()) {
 				jugadorSeleccionado = posiblesObjetivos.get(jg_selec);
@@ -445,28 +446,32 @@ public class PanelJuego extends JLayeredPane {
 
 	private void imprimirPuntajes(Graphics g) {
 		g.setColor(Color.LIGHT_GRAY);
-		g.fillRect(INICIO_PUNTAJES - 10, 0, 180, 550);
+		g.fillRect(INICIO_PUNTAJES - 10, 0, 300, 550);
 		g.setColor(Color.BLACK);
 		g.setFont(new Font(Font.DIALOG, Font.BOLD, 10));
-		g.drawString("¿Perdera", INICIO_PUNTAJES + 110, 12);
-		g.drawString("su", INICIO_PUNTAJES + 120, 22);
-		g.drawString("turno?", INICIO_PUNTAJES + 120, 32);
+		g.drawString("¿Perdera", INICIO_PUNTAJES + 160, 12);
+		g.drawString("su", INICIO_PUNTAJES + 170, 22);
+		g.drawString("turno?", INICIO_PUNTAJES + 170, 32);
 
 		int jugador_nro = 0;
 		g.setFont(new Font(Font.SANS_SERIF, Font.BOLD, 15));
 		for (Jugador jugador : partida.getJugadores()) {
+			Image image = new ImageIcon(
+					ImgExtra.class.getResource("/Personajes/" + jugador.getPersonaje().getName() + ".png")).getImage();
+			
+			g.drawImage(image, INICIO_PUNTAJES, 25 + jugador_nro * SEPARACION_PUNTAJES, null);
 
-			g.drawString(jugador.getNombre(), INICIO_PUNTAJES, 50 + jugador_nro * SEPARACION_PUNTAJES);
-			g.drawString("Monedas: ", INICIO_PUNTAJES, 70 + jugador_nro * SEPARACION_PUNTAJES);
-			g.drawString(jugador.getMonedas() + "", INICIO_PUNTAJES + 135, 70 + jugador_nro * SEPARACION_PUNTAJES);
+			g.drawString(jugador.getNombre(), INICIO_PUNTAJES + 60, 50 + jugador_nro * SEPARACION_PUNTAJES);
+			g.drawString("Monedas: ", INICIO_PUNTAJES  + 60, 70 + jugador_nro * SEPARACION_PUNTAJES);
+			g.drawString(jugador.getMonedas() + "", INICIO_PUNTAJES + 175, 70 + jugador_nro * SEPARACION_PUNTAJES);
 
 			// Si pierde o no su proximo turno
 			g.setColor(Color.WHITE);
 			g.setFont(new Font(Font.SANS_SERIF, Font.BOLD, 10));
 			if (jugador.isPierdeTurno()) {
-				g.drawString("SI", INICIO_PUNTAJES + 130, 50 + jugador_nro * SEPARACION_PUNTAJES);
+				g.drawString("SI", INICIO_PUNTAJES + 180, 50 + jugador_nro * SEPARACION_PUNTAJES);
 			} else {
-				g.drawString("NO", INICIO_PUNTAJES + 130, 50 + jugador_nro * SEPARACION_PUNTAJES);
+				g.drawString("NO", INICIO_PUNTAJES + 180, 50 + jugador_nro * SEPARACION_PUNTAJES);
 			}
 			g.setColor(Color.BLACK);
 			g.setFont(new Font(Font.SANS_SERIF, Font.BOLD, 15));
